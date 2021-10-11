@@ -1,0 +1,28 @@
+services:
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+
+  database:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: infomail
+      POSTGRES_PASSWORD: infomail
+      POSTGRES_DB: infomail
+
+#  infomail:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8090:8090"
+#  # stdin_open: true # docker run -i
+#  # tty: true        # docker run -t

@@ -1,0 +1,42 @@
+server:
+  port: 8090
+
+logging:
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      max-history: 10
+  file:
+    name: logs/infomail.log
+  pattern:
+    dateformat: yyyy:MM:dd HH:mm:ss |
+
+spring:
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  mail:
+    host: 'localhost'
+    port: 1025
+    username: infomail
+    password: infomail
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/infomail
+    username: infomail
+    password: infomail
