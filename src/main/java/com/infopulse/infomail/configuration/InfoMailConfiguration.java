@@ -6,8 +6,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class InfoMailConfiguration {
 
-	@Bean
+	@Bean("sendFrom")
 	public String sendFrom() {
 		return "infomail@infopulse.com";
 	}
+
 }
