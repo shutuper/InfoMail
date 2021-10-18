@@ -1,28 +1,39 @@
 package com.infopulse.infomail.services.mail;
 
-import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-@Service("EmailSenderServiceTest")
-@AllArgsConstructor
+
+@Slf4j
+@Service
 public class EmailSenderService {
 
-	private final String sendFrom;
+	@Value("${application.email.sentFrom}")
+	private String sendFrom;
 	private final JavaMailSender mailSender;
-	private final Logger log = LoggerFactory.getLogger(EmailSenderService.class);
 
-	public void sendSimpleEmail(String to, String body, String subject) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom(sendFrom);
-		message.setTo(to);
-		message.setText(body);
-		message.setSubject(subject);
-		mailSender.send(message);
-		log.info("Email send to {}, subject: {}", to, subject);
+	public EmailSenderService(JavaMailSender mailSender) {
+		this.mailSender = mailSender;
+	}
+
+	@Async
+	public void sendSimpleEmail(String to, String body, String subject) throws IllegalStateException {
+		try {
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setFrom(sendFrom);
+			message.setTo(to);
+			message.setText(body);
+			message.setSubject(subject);
+			mailSender.send(message);
+			log.info("Email send to {}, subject: {}", to, subject);
+		} catch (Exception e) {
+			log.error("Failed sending email to {}", to, e);
+			throw new IllegalStateException("failed to send email");
+		}
 	}
 
 }
