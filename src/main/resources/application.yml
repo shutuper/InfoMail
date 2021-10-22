@@ -66,9 +66,11 @@ spring:
   #          writetimeout: 5000
 application:
   email:
-    sentFrom: infomail.infopulse@gmail.com
+    sentFrom: ${infomail.email}
     confirmation:
       tokenLink: http://localhost:8090/api/v1/registration/confirm?token=
       subject: InfoMail email confirmation
     rejection:
       tokenLink: http://localhost:8090/api/v1/registration/reject?token=
+  security:
+    secret: ${infomail.secret}

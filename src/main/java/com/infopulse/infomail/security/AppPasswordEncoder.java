@@ -1,4 +1,4 @@
-package com.infopulse.infomail.services.security;
+package com.infopulse.infomail.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

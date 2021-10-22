@@ -1,11 +1,15 @@
 package com.infopulse.infomail.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.infopulse.infomail.models.AppUser;
 import com.infopulse.infomail.models.requestBodies.RegistrationRequest;
-import com.infopulse.infomail.services.RegistrationService;
+import com.infopulse.infomail.services.registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +19,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -43,8 +46,8 @@ public class RegistrationController {
 	}
 
 	@GetMapping(path = "sayHi")
-	public String sayHi(HttpServletRequest request) {
-		return "hi " + request.getUserPrincipal();
+	public String sayHi(Authentication authentication) {
+		return "hi " + authentication.getPrincipal();
 	}
 
 	@GetMapping(path = "confirm")

@@ -1,9 +1,10 @@
-package com.infopulse.infomail.services;
+package com.infopulse.infomail.services.registration;
 
 import com.infopulse.infomail.models.AppUser;
 import com.infopulse.infomail.models.AppUserRole;
 import com.infopulse.infomail.models.ConfirmationToken;
 import com.infopulse.infomail.models.requestBodies.RegistrationRequest;
+import com.infopulse.infomail.services.AppUserService;
 import com.infopulse.infomail.services.mail.ConfirmationTokenSender;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

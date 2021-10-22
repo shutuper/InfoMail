@@ -1,4 +1,4 @@
-package com.infopulse.infomail.services;
+package com.infopulse.infomail.services.registration;
 
 import com.infopulse.infomail.models.ConfirmationToken;
 import com.infopulse.infomail.repositories.ConfirmationTokenRepository;

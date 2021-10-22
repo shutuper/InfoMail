@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Table(name = "confirmation_token")
 public class ConfirmationToken {
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long tokenId;
