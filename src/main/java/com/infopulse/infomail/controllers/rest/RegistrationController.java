@@ -1,18 +1,16 @@
 package com.infopulse.infomail.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.infopulse.infomail.models.AppUser;
+import com.infopulse.infomail.models.dto.SimpleMessageDto;
 import com.infopulse.infomail.models.requestBodies.RegistrationRequest;
 import com.infopulse.infomail.services.registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -30,33 +28,25 @@ public class RegistrationController {
 	private final RegistrationService registrationService;
 
 	@PostMapping
-	public String register(@Valid @RequestBody RegistrationRequest request, HttpServletResponse response) throws IOException {
-		try {
+	public SimpleMessageDto register(@Valid @RequestBody RegistrationRequest request) throws IOException {
 			return registrationService.register(request);
-		} catch (IllegalStateException e) {
-			log.error(e.getMessage(), e);
-			response.setHeader("registration_error", e.getMessage());
-			response.setStatus(HttpStatus.BAD_REQUEST.value());
-			Map<String, String> error = new HashMap<>();
-			error.put("error_message", e.getMessage());
-			response.setContentType(APPLICATION_JSON_VALUE);
-			new ObjectMapper().writeValue(response.getOutputStream(), error);
-		}
-		return null;
-	}
 
+	}
+	// security test controller
 	@GetMapping(path = "sayHi")
 	public String sayHi(Authentication authentication) {
+		if (authentication!=null)
 		return "hi " + authentication.getPrincipal();
+		else return "hi anonymous";
 	}
 
 	@GetMapping(path = "confirm")
-	public String confirm(@RequestParam("token") String token) {
+	public SimpleMessageDto confirm(@RequestParam("token") String token) {
 		return registrationService.confirmToken(token);
 	}
 
 	@GetMapping(path = "reject")
-	public String reject(@RequestParam("token") String token) {
+	public SimpleMessageDto reject(@RequestParam("token") String token) {
 		return registrationService.rejectToken(token);
 	}
 

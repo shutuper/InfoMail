@@ -5,6 +5,7 @@ import com.infopulse.infomail.models.ConfirmationToken;
 import com.infopulse.infomail.repositories.AppUserRepository;
 import com.infopulse.infomail.services.registration.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AppUserService {
@@ -24,14 +26,20 @@ public class AppUserService {
 
 	@Transactional
 	public String singUp(AppUser appUser) throws IllegalStateException {
-		Optional<AppUser> optOldUser = appUserRepository.findAppUserByEmail(appUser.getEmail()); // UUID.randomUUID().toString();
-		// One token per 10 minutes
-		Optional<String> token = getValidatedTokenOrNewOne(appUser, optOldUser);
-		return token.orElseThrow(() -> new IllegalStateException("User already has valid token"));
+		Optional<AppUser> optOldUser = appUserRepository
+				.findAppUserByEmail(appUser.getEmail());
+
+		// One token per 30 minutes
+		String token = getValidConfirmTokenOrNewOne(appUser, optOldUser) // UUID.randomUUID().toString();
+				.orElseThrow(() -> new IllegalStateException("User already has valid token"));
+
+		log.info("User {} signed up", appUser.getEmail());
+		return token;
 	}
 
 	public void enableAppUser(String email) {
 		appUserRepository.enableAppUserByEmail(email);
+		log.info("User {}'s is no enabled", email);
 	}
 
 	public void deleteUnConfirmedAppUser(Long appUserId) {
@@ -41,7 +49,7 @@ public class AppUserService {
 
 	//Next methods are utils -------------------------------------------------------------------------------------------------------
 
-	private Optional<String> getValidatedTokenOrNewOne(AppUser appUser, Optional<AppUser> optOldUser) throws IllegalStateException {
+	private Optional<String> getValidConfirmTokenOrNewOne(AppUser appUser, Optional<AppUser> optOldUser) throws IllegalStateException {
 		if (optOldUser.isPresent()) {
 			AppUser oldUser = optOldUser.get();
 
@@ -50,18 +58,28 @@ public class AppUserService {
 
 			Optional<ConfirmationToken> confirmationToken = confirmationTokenService
 					.getConfirmationTokenByAppUserId(oldUser.getUserId());
+
 			if (confirmationToken.isPresent()) {
 				if (tokenIsExpired(confirmationToken.get())) {
+
+					log.info("Deleting {}'s expired confirmation token", oldUser.getEmail());
+
 					confirmationTokenService.deleteConfirmationTokenById(confirmationToken.get().getTokenId());
 					confirmationTokenService.flushRepository();
 				} else return Optional.empty();
+
+				log.info("Generating new confirmation token for {}", oldUser.getEmail());
+
 				return getNewSavedToken(oldUser);
 			}
 		}
 
 		String encodedPassword = passwordEncoder.encode(appUser.getPassword()); // encoding user password
 		appUser.setPassword(encodedPassword);
+
+		log.info("Saving new user {} to database", appUser.getEmail());
 		AppUser newUser = appUserRepository.save(appUser); // saving new user and acquiring it with new ID
+
 		return getNewSavedToken(newUser);
 	}
 
@@ -79,9 +97,11 @@ public class AppUserService {
 		ConfirmationToken confirmationToken = new ConfirmationToken(
 				token,
 				LocalDateTime.now(),
-				LocalDateTime.now().plusMinutes(10),
+				LocalDateTime.now().plusMinutes(30),
 				appUser
 		);
+		log.info("Saving {}'s new confirmation token to database", appUser.getEmail());
+
 		confirmationTokenService.saveConfirmationToken(confirmationToken);
 	}
 }

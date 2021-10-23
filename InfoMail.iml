@@ -105,8 +105,7 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.springframework.boot:spring-boot-devtools:2.5.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.5.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.5.5" level="project" />
-    <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.2.23" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.checkerframework:checker-qual:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.2.24.jre7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-configuration-processor:2.5.5" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.20" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.5.5" level="project" />

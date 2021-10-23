@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.23</version>
+            <version>42.2.24.jre7</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -90,6 +90,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${parent.version}</version>
                 <configuration>
                     <excludes>
                         <exclude>

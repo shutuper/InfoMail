@@ -1,7 +1,9 @@
 package com.infopulse.infomail.security.config;
 
+import com.infopulse.infomail.models.AppUserRole;
 import com.infopulse.infomail.security.filters.AppAuthenticationFilter;
 import com.infopulse.infomail.security.filters.AppAuthorizationFilter;
+import com.infopulse.infomail.security.jwt.JwtUtil;
 import com.infopulse.infomail.services.security.AppUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,24 +20,30 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import static com.infopulse.infomail.models.AppUserRole.USER;
+
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final AppUserDetailsService appUserDetailsService;
+	private final JwtUtil jwtUtil;
 	private final PasswordEncoder passwordEncoder;
+	private final AppUserDetailsService userDetailsService;
+	private final AppAuthorizationFilter authorizationFilter;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		final AppAuthenticationFilter authenticationFilter = new AppAuthenticationFilter(jwtUtil, authenticationManagerBean());
 		http.cors().and().csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
-				.addFilter(new AppAuthenticationFilter(authenticationManagerBean()))
-				.addFilterAfter(new AppAuthorizationFilter(), AppAuthenticationFilter.class)
+				.addFilter(authenticationFilter)
+				.addFilterAfter(authorizationFilter, authenticationFilter.getClass())
 				.authorizeRequests()
-				.antMatchers("/api/v*/registration/sayHi").hasRole("USER")
-				.antMatchers("/**").permitAll()
+				.antMatchers("/api/v*/registration/sayHi").hasRole(USER.name())
+				.antMatchers("/", "/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate").permitAll()
+				.antMatchers("/**").hasRole(USER.name())
 				.anyRequest().authenticated();
 	}
 
@@ -48,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public DaoAuthenticationProvider daoAuthenticationProvider() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		provider.setPasswordEncoder(passwordEncoder);
-		provider.setUserDetailsService(appUserDetailsService);
+		provider.setUserDetailsService(userDetailsService);
 		return provider;
 	}
 
@@ -57,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		config.addAllowedOrigin("*");
+		config.addAllowedOrigin("http//localhost:4200");
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
 		source.registerCorsConfiguration("/**", config);
