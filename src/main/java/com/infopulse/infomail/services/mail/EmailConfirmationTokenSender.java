@@ -106,7 +106,7 @@ public class EmailConfirmationTokenSender implements ConfirmationTokenSender {
 				"            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + to.split("@")[0] + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account:" +
 				" </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
 				"<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + confirmationTokenLink + token + "\">Activate Now</a> </p></blockquote>\n" +
-				" <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + confirmationTokenLink + token + "\">If it wasn't you click here</a> </p></blockquote>\nLink will expire in 10 minutes. <p>See you soon</p>" +
+				" <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + rejectionTokenLink + token + "\">If it wasn't you click here</a> </p></blockquote>\nLink will expire in 10 minutes. <p>See you soon</p>" +
 				"        \n" +
 				"      </td>\n" +
 				"      <td width=\"10\" valign=\"middle\"><br></td>\n" +
