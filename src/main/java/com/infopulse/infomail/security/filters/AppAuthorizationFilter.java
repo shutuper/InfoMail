@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import static com.infopulse.infomail.security.SecurityConstants.*;
@@ -35,7 +36,6 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
 		String authorizationHeader = request.getHeader(AUTHORIZATION);
 
 		if (isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(TOKEN_PREFIX)) {
-
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -61,7 +61,6 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
 			log.info("User {} token verified", email);
 
 		} catch (Exception exception) {
-			// TODO: replace all !
 			log.error("Error during authorizing: {}", exception.getMessage());
 
 			response.setStatus(FORBIDDEN.value());
@@ -74,7 +73,7 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
 //			new ObjectMapper().writeValue(response.getOutputStream(), error);
 //			return;
 		}
-		// TODO: if user has no token and trying
+		// TODO: frontend should handle errors and redirect user to auth-page
 		filterChain.doFilter(request, response);
 	}
 

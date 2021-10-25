@@ -1,5 +1,6 @@
 # Ignoring security properties
 **/sec.yml
+
 # Ignoring logs
 logs/**
 
