@@ -1,4 +1,5 @@
 # InfoMail backend
+![InfoMail-logo](images\Infomail-logo.jpg)
 ###Description:
 InfoMail is a project that allows you to schedule messages, and also allows sending messages to many addresses
 ###Installation:
