@@ -13,9 +13,6 @@ logging:
 
 spring:
 
-  config:
-    import: sec.yml
-
   jpa:
     show-sql: true
     hibernate:
