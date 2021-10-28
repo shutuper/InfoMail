@@ -25,8 +25,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${infomail.email}
-    password: ${infomail.password}
+    username: ${EMAIL_ADDRESS}
+    password: ${EMAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -41,9 +41,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/infomail #5433
-    username: postgres #infomail
-    password: 2222 #infomail
+    url: ${DATASOURCE_URL} #jdbc:postgresql://localhost:5432/infomail
+    username: ${DATASOURCE_USER}
+    password: ${DATASOURCE_PASSWORD}
 
   #  mail:
   #    host: 'localhost'
@@ -63,11 +63,11 @@ spring:
   #          writetimeout: 5000
 application:
   email:
-    sentFrom: ${infomail.email}
+    sentFrom: ${EMAIL_ADDRESS}
     confirmation:
       tokenLink: http://localhost:8090/api/v1/registration/confirm?token=
       subject: InfoMail email confirmation
     rejection:
       tokenLink: http://localhost:8090/api/v1/registration/reject?token=
   security:
-    secret: ${infomail.secret}
+    secret: ${INFOMAIL_SECRET}
