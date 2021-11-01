@@ -1,5 +1,6 @@
-package com.infopulse.infomail.models;
+package com.infopulse.infomail.models.users;
 
+import com.infopulse.infomail.models.users.roles.AppUserRole;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 
@@ -23,7 +23,7 @@ public class AppUser implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long userId;
 
-	@Column(unique = true, nullable = false)
+	@Column(unique = true, nullable = false, updatable = false)
 	private String email;
 
 	@Column(nullable = false)

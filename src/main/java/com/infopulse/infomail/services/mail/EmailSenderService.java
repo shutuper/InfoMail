@@ -23,11 +23,14 @@ public class EmailSenderService {
 	@Async
 	public void sendSimpleEmail(String to, String body, String subject) throws IllegalStateException {
 		try {
+
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom(sendFrom);
-			message.setTo(to);
+
 			message.setText(body);
 			message.setSubject(subject);
+
+			message.setTo(to);
 			mailSender.send(message);
 			log.info("Email send to {}, subject: {}", to, subject);
 		} catch (Exception e) {

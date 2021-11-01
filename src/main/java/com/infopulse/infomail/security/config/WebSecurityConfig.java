@@ -1,6 +1,5 @@
 package com.infopulse.infomail.security.config;
 
-import com.infopulse.infomail.models.AppUserRole;
 import com.infopulse.infomail.security.filters.AppAuthenticationFilter;
 import com.infopulse.infomail.security.filters.AppAuthorizationFilter;
 import com.infopulse.infomail.security.jwt.JwtUtil;
@@ -19,8 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-
-import static com.infopulse.infomail.models.AppUserRole.USER;
 
 @Configuration
 @AllArgsConstructor
@@ -41,9 +38,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(authenticationFilter)
 				.addFilterAfter(authorizationFilter, authenticationFilter.getClass())
 				.authorizeRequests()
-				.antMatchers("/api/v*/registration/sayHi").hasRole(USER.name())
-				.antMatchers("/", "/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate").permitAll()
-				.antMatchers("/**").hasRole(USER.name())
+//				.antMatchers("/api/v*/registration/sayHi").hasRole(USER.name())
+//				.antMatchers("/", "/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate").permitAll()
+//				.antMatchers("/**").hasRole(USER.name())
+				.antMatchers("/*").permitAll()
 				.anyRequest().authenticated();
 	}
 

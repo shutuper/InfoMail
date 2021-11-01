@@ -1,5 +1,6 @@
-package com.infopulse.infomail.models;
+package com.infopulse.infomail.models.tokens;
 
+import com.infopulse.infomail.models.users.AppUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

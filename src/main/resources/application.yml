@@ -16,6 +16,14 @@ spring:
   config:
     import: sec.yml
 
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+      org.quartz.jobStore.useProperties: true
+
   jpa:
     show-sql: true
     hibernate:

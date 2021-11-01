@@ -1,7 +1,7 @@
 package com.infopulse.infomail.services;
 
-import com.infopulse.infomail.models.AppUser;
-import com.infopulse.infomail.models.ConfirmationToken;
+import com.infopulse.infomail.models.users.AppUser;
+import com.infopulse.infomail.models.tokens.ConfirmationToken;
 import com.infopulse.infomail.repositories.AppUserRepository;
 import com.infopulse.infomail.services.registration.ConfirmationTokenService;
 import lombok.AllArgsConstructor;

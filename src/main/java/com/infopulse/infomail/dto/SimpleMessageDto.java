@@ -1,4 +1,4 @@
-package com.infopulse.infomail.models.dto;
+package com.infopulse.infomail.dto;
 
 import lombok.*;
 
