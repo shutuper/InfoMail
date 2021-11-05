@@ -1,5 +1,6 @@
 package com.infopulse.infomail.security.config;
 
+import com.infopulse.infomail.models.users.roles.AppUserRole;
 import com.infopulse.infomail.security.filters.AppAuthenticationFilter;
 import com.infopulse.infomail.security.filters.AppAuthorizationFilter;
 import com.infopulse.infomail.security.jwt.JwtUtil;
@@ -18,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import static com.infopulse.infomail.models.users.roles.AppUserRole.*;
 
 @Configuration
 @AllArgsConstructor
@@ -38,10 +41,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(authenticationFilter)
 				.addFilterAfter(authorizationFilter, authenticationFilter.getClass())
 				.authorizeRequests()
-//				.antMatchers("/api/v*/registration/sayHi").hasRole(USER.name())
+//				.antMatchers("/api/v*/registration/sayHi","/api/v*/registration").hasRole(USER.name())
 //				.antMatchers("/", "/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate").permitAll()
 //				.antMatchers("/**").hasRole(USER.name())
-				.antMatchers("/*").permitAll()
+				.antMatchers("/**").permitAll()
 				.anyRequest().authenticated();
 	}
 
@@ -63,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		config.addAllowedOrigin("http//localhost:4200");
+		config.addAllowedOrigin("http://localhost:4200");
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
 		source.registerCorsConfiguration("/**", config);

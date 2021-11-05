@@ -21,14 +21,15 @@ public class RegistrationController {
 
 	@PostMapping
 	public SimpleMessageDto register(@Valid @RequestBody RegistrationRequest request) throws IOException {
-			return registrationService.register(request);
+		return registrationService.register(request);
 
 	}
+
 	// security test controller
 	@GetMapping(path = "sayHi")
 	public String sayHi(Authentication authentication) {
-		if (authentication!=null)
-		return "hi " + authentication.getPrincipal();
+		if (authentication != null)
+			return "hi " + authentication.getPrincipal();
 		else return "hi anonymous";
 	}
 
