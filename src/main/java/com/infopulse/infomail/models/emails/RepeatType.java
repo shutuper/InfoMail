@@ -6,4 +6,5 @@ public enum RepeatType {
     EVERY_WEEK,
     EVERY_MONTH,
     EVERY_YEAR,
+    OTHER
 }
