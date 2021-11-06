@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class EmailSchedule {
 
+    private boolean sendNow;
     private LocalDateTime sendDate;
     private RepeatType repeatAt;
     private LocalDate endDate;
