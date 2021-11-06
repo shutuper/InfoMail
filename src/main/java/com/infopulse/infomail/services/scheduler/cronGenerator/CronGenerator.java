@@ -1,6 +1,6 @@
 package com.infopulse.infomail.services.scheduler.cronGenerator;
 
-import com.infopulse.infomail.models.messages.MassageSchedule;
+import com.infopulse.infomail.models.emails.EmailSchedule;
 
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
@@ -25,82 +25,81 @@ public class CronGenerator {
         return String.format("%1$s %2$s %3$s %4$s %5$s %6$s %7$s", seconds, minutes, hours, dayOfMonth, month, dayOfWeek, year);
     }
 
-    public static String generate(MassageSchedule messageSchedule) {
+    public static String generate(EmailSchedule schedule) {
 
-        switch (messageSchedule.getRepeatAt()) {
-            case EVERY_DAY: return whenEveryDay(messageSchedule);
-            case EVERY_WEEK: return whenEveryWeek(messageSchedule);
-            case EVERY_MONTH: return whenEveryMonth(messageSchedule);
-            case EVERY_YEAR: return whenEveryYear(messageSchedule);
+        switch (schedule.getRepeatAt()) {
+            case EVERY_DAY: return whenEveryDay(schedule);
+            case EVERY_WEEK: return whenEveryWeek(schedule);
+            case EVERY_MONTH: return whenEveryMonth(schedule);
+            case EVERY_YEAR: return whenEveryYear(schedule);
 
             default: throw new IllegalArgumentException(
-                    "Not define methods for parse messageSchedule with RepeatType = "
-                            + messageSchedule.getRepeatAt());
+                    "Not define methods for parse schedule with RepeatType: " + schedule.getRepeatAt());
         }
     }
 
-    static String whenEveryDay(MassageSchedule messageSchedule) {
+    static String whenEveryDay(EmailSchedule schedule) {
         return CronExpression.builder()
-                .setHours(messageSchedule.getSendDate().getHour())
-                .setMinutes(messageSchedule.getSendDate().getMinute())
+                .setHours(schedule.getSendDate().getHour())
+                .setMinutes(schedule.getSendDate().getMinute())
                 .build()
                     .toString();
     }
 
-    static String whenEveryWeek(MassageSchedule messageSchedule) {
-        String daysOfWeek = parseDaysOfWeek(messageSchedule);
+    static String whenEveryWeek(EmailSchedule schedule) {
+        String daysOfWeek = parseDaysOfWeek(schedule);
 
         return CronExpression.builder()
-                .setHours(messageSchedule.getSendDate().getHour())
-                .setMinutes(messageSchedule.getSendDate().getMinute())
+                .setHours(schedule.getSendDate().getHour())
+                .setMinutes(schedule.getSendDate().getMinute())
                 .setDayOfWeek(daysOfWeek)
                 .build()
                 .toString();
     }
 
-    static String whenEveryMonth(MassageSchedule messageSchedule) {
+    static String whenEveryMonth(EmailSchedule schedule) {
         CronExpression.Builder builder = CronExpression.builder()
-                .setHours(messageSchedule.getSendDate().getHour())
-                .setMinutes(messageSchedule.getSendDate().getMinute());
+                .setHours(schedule.getSendDate().getHour())
+                .setMinutes(schedule.getSendDate().getMinute());
 
-        String dayOfWeek = parseDayOfWeekAndNumberOfWeek(messageSchedule);
+        String dayOfWeek = parseDayOfWeekAndNumberOfWeek(schedule);
         if(! dayOfWeek.equals("?")) {
             return builder
                     .setDayOfWeek(dayOfWeek)
                     .build().toString();
         }
 
-        String dayOfMonth = parseDayOfMonth(messageSchedule);
+        String dayOfMonth = parseDayOfMonth(schedule);
         return builder
                 .setDayOfMonth(dayOfMonth)
                 .build().toString();
     }
 
-    static String whenEveryYear(MassageSchedule messageSchedule) {
+    static String whenEveryYear(EmailSchedule schedule) {
         CronExpression.Builder builder = CronExpression.builder()
-                .setHours(messageSchedule.getSendDate().getHour())
-                .setMinutes(messageSchedule.getSendDate().getMinute());
+                .setHours(schedule.getSendDate().getHour())
+                .setMinutes(schedule.getSendDate().getMinute());
 
-        String month = parseMonth(messageSchedule);
+        String month = parseMonth(schedule);
         builder.setMonth(month);
 
-        String dayOfWeek = parseDayOfWeekAndNumberOfWeek(messageSchedule);
+        String dayOfWeek = parseDayOfWeekAndNumberOfWeek(schedule);
         if(! dayOfWeek.equals("?")) {
             return builder
                     .setDayOfWeek(dayOfWeek)
                     .build().toString();
         }
 
-        String dayOfMonth = parseDayOfMonth(messageSchedule);
+        String dayOfMonth = parseDayOfMonth(schedule);
         return builder
                 .setDayOfMonth(dayOfMonth)
                 .build().toString();
     }
 
-    static String parseDaysOfWeek(MassageSchedule messageSchedule) {
-        List<Integer> daysOfWeek = messageSchedule.getDaysOfWeek();
+    static String parseDaysOfWeek(EmailSchedule schedule) {
+        List<Integer> daysOfWeek = schedule.getDaysOfWeek();
         if(daysOfWeek == null || daysOfWeek.isEmpty()) {
-            int dayOfWeekValue = messageSchedule.getSendDate().getDayOfWeek().getValue();
+            int dayOfWeekValue = schedule.getSendDate().getDayOfWeek().getValue();
             dayOfWeekValue = dayOfWeekConvertor(dayOfWeekValue);
             return Integer.toString(dayOfWeekValue);
         }
@@ -114,18 +113,18 @@ public class CronGenerator {
         return builder.toString();
     }
 
-    static String parseDayOfMonth(MassageSchedule messageSchedule) {
-        int dayOfMonth = messageSchedule.getDayOfMonth();
+    static String parseDayOfMonth(EmailSchedule schedule) {
+        int dayOfMonth = schedule.getDayOfMonth();
         if(dayOfMonth != 0) {
             checkDayOfMonthValue(dayOfMonth);
             return String.valueOf(dayOfMonth);
         }
-        return String.valueOf(messageSchedule.getSendDate().getDayOfMonth());
+        return String.valueOf(schedule.getSendDate().getDayOfMonth());
     }
 
-    static String parseDayOfWeekAndNumberOfWeek(MassageSchedule messageSchedule) {
-        int dayOfWeekValue = messageSchedule.getDayOfWeek();
-        int numberOfWeek = messageSchedule.getNumberOfWeek();
+    static String parseDayOfWeekAndNumberOfWeek(EmailSchedule schedule) {
+        int dayOfWeekValue = schedule.getDayOfWeek();
+        int numberOfWeek = schedule.getNumberOfWeek();
         if (dayOfWeekValue != 0 && numberOfWeek != 0) {
             DayOfWeek.of(dayOfWeekValue);    //check in DayOfWeek
             checkNumberOfWeekValue(numberOfWeek);
@@ -137,14 +136,14 @@ public class CronGenerator {
         }
     }
 
-    static String parseMonth(MassageSchedule messageSchedule) {
-        int monthValue = messageSchedule.getMonth();
+    static String parseMonth(EmailSchedule schedule) {
+        int monthValue = schedule.getMonth();
         if(monthValue != 0) {
             Month.of(monthValue);   //check monthValue in Month
             return Integer.toString(monthValue);
         }
 
-        return String.valueOf(messageSchedule.getSendDate().getMonth().getValue());
+        return String.valueOf(schedule.getSendDate().getMonth().getValue());
     }
 
     private static void checkNumberOfWeekValue(int numberOfWeek) {
