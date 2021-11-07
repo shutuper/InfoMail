@@ -1,6 +1,7 @@
 package com.infopulse.infomail.models.quartz;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "qrtz_job_details", indexes = {
 		@Index(name = "idx_qrtz_j_req_recovery", columnList = "sched_name, requests_recovery"),
 		@Index(name = "idx_qrtz_j_grp", columnList = "sched_name, job_group")
@@ -38,4 +40,25 @@ public class QrtzJobDetail {
 	@Column(name = "job_data")
 	private byte[] jobData;
 
+	public QrtzJobDetail(QrtzJobDetailId id) {
+		this.id = id;
+	}
+
+	public QrtzJobDetail(QrtzJobDetailId id,
+	                     String description,
+	                     String jobClassName,
+	                     Boolean isDurable,
+	                     Boolean isNonconcurrent,
+	                     Boolean isUpdateData,
+	                     Boolean requestsRecovery,
+	                     byte[] jobData) {
+		this.id = id;
+		this.description = description;
+		this.jobClassName = jobClassName;
+		this.isDurable = isDurable;
+		this.isNonconcurrent = isNonconcurrent;
+		this.isUpdateData = isUpdateData;
+		this.requestsRecovery = requestsRecovery;
+		this.jobData = jobData;
+	}
 }

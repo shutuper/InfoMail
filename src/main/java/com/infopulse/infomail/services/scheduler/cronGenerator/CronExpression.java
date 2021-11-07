@@ -13,7 +13,6 @@ public class CronExpression {
     private boolean isTypeAlreadySet;   //param dayOfWeek or dayOfMonth was changed
     private boolean isADayOfWeekType;   //dayOfWeek "*"
 
-
     /**
      * Create a CRON expression
      *
@@ -25,7 +24,14 @@ public class CronExpression {
      * @param dayOfWeek  mandatory = yes. allowed values = {@code 0-6 or SUN-SAT * / , - ? L #}
      * @param year       mandatory = no. allowed values = {@code 1970–2099    * / , -}
      */
-    private CronExpression(String seconds, String minutes, String hours, String dayOfMonth, String month, String dayOfWeek, String year) {
+    private CronExpression(String seconds,
+                           String minutes,
+                           String hours,
+                           String dayOfMonth,
+                           String month,
+                           String dayOfWeek,
+                           String year) {
+
         this.seconds = seconds;
         this.minutes = minutes;
         this.hours = hours;
@@ -38,7 +44,8 @@ public class CronExpression {
     /** @return a CRON Formatted String*/
     @Override
     public String toString() {
-        return String.format("%1$s %2$s %3$s %4$s %5$s %6$s %7$s", seconds, minutes, hours, dayOfMonth, month, dayOfWeek, year);
+        return String.format("%1$s %2$s %3$s %4$s %5$s %6$s %7$s",
+                seconds, minutes, hours, dayOfMonth, month, dayOfWeek, year);
     }
 
     public static Builder builder() {
@@ -46,9 +53,10 @@ public class CronExpression {
     }
 
     public static class Builder {
-        private CronExpression cron;
+        private final CronExpression cron;
         private Builder(){
-            cron = new CronExpression("0", "*", "*", "?", "*", "*", "*");
+            cron = new CronExpression("0", "*", "*",
+                    "?", "*", "*", "*");
             cron.isADayOfWeekType = true;
             cron.isTypeAlreadySet = false;
         };

@@ -13,6 +13,7 @@ public final class SecurityConstants {
 	public static final String AUTHENTICATION_URL = "/api/v1/authenticate";
 	public static final String ACCESS_TOKEN_HEADER = "access_token";
 	public static final String ROLES_CLAIM = "roles";
+	public static final String USER_ID_CLAIM = "userId";
 	public static final int TOKEN_LIFETIME = 60 * 60 * 1000; // 60 minutes
 
 	public static String SECRET;

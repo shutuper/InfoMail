@@ -1,6 +1,6 @@
 package com.infopulse.infomail.repositories;
 
-import com.infopulse.infomail.models.tokens.ConfirmationToken;
+import com.infopulse.infomail.models.confirmation.ConfirmationToken;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

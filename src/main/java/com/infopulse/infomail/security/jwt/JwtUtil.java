@@ -29,8 +29,11 @@ public class JwtUtil {
 				.withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_LIFETIME))
 				.withIssuer(request.getServletPath())
 				.withClaim(
-						SecurityConstants.ROLES_CLAIM,
-						user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
+						ROLES_CLAIM, user.getAuthorities().stream()
+									.map(GrantedAuthority::getAuthority)
+									.collect(Collectors.toList())
+				).withClaim(
+						USER_ID_CLAIM, user.getUserId()
 				)
 				.sign(algorithm);
 	}

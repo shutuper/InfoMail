@@ -1,8 +1,6 @@
 package com.infopulse.infomail.models.quartz;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
@@ -15,6 +13,8 @@ import java.util.Objects;
 @Setter
 @Embeddable
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class QrtzJobDetailId implements Serializable {
 
 	private static final long serialVersionUID = -7077383962343514735L;

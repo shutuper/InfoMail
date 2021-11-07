@@ -1,4 +1,4 @@
-package com.infopulse.infomail.models.messages;
+package com.infopulse.infomail.models.mail.enums;
 
 public enum RepeatType {
     NOTHING,

@@ -1,7 +1,7 @@
 package com.infopulse.infomail.services.scheduler.cronGenerator;
 
-import com.infopulse.infomail.models.messages.MassageSchedule;
-import com.infopulse.infomail.models.messages.RepeatType;
+import com.infopulse.infomail.models.mail.EmailSchedule;
+import com.infopulse.infomail.models.mail.enums.RepeatType;
 import org.junit.jupiter.api.Test;
 
 import java.time.DateTimeException;
@@ -40,7 +40,7 @@ class CronGeneratorTest {
 
     @Test
     void generate_thenIllegalArgumentException() {
-        MassageSchedule schedule = new MassageSchedule();
+        EmailSchedule schedule = new EmailSchedule();
         schedule.setRepeatAt(RepeatType.OTHER);
 
         String actualMessage = assertThrows(IllegalArgumentException.class,
@@ -52,8 +52,8 @@ class CronGeneratorTest {
     @Test
     void whenEveryDay() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_DAY);
 
         String cron = CronGenerator.whenEveryDay(schedule);
@@ -69,8 +69,8 @@ class CronGeneratorTest {
     @Test
     void whenEveryWeek() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_WEEK);
 
         String exp = "0 0 12 ? * 6 *";
@@ -87,8 +87,8 @@ class CronGeneratorTest {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
         List<Integer> daysOfWeek = Arrays.asList(1,2,3,4);
 
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_WEEK);
         schedule.setDaysOfWeek(daysOfWeek);
 
@@ -103,8 +103,8 @@ class CronGeneratorTest {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
         List<Integer> daysOfWeek = Arrays.asList(1,12,3,4);
 
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_WEEK);
         schedule.setDaysOfWeek(daysOfWeek);
 
@@ -117,8 +117,8 @@ class CronGeneratorTest {
     @Test
     void whenEveryMonth() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_MONTH);
 
         String exp = "0 0 12 5 * ? *";
@@ -133,8 +133,8 @@ class CronGeneratorTest {
     @Test
     void whenEveryMonth_butGetDayOfMonthNotNull() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_MONTH);
         schedule.setDayOfMonth(15);
 
@@ -150,8 +150,8 @@ class CronGeneratorTest {
     @Test
     void whenEveryMonth_butDayOfWeekAndNumberOfWeekNotNUll() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_MONTH);
         schedule.setDayOfWeek(1);
         schedule.setNumberOfWeek(2);
@@ -168,8 +168,8 @@ class CronGeneratorTest {
     @Test
     void parseDayOfMonth_butGetDayOfMonthNotNull() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_MONTH);
         schedule.setDayOfMonth(15);
 
@@ -182,8 +182,8 @@ class CronGeneratorTest {
     @Test
     void parseDayOfMonth_butDayOfMonthIllegal_thenDateTimeException() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_MONTH);
         schedule.setDayOfMonth(-5);
 
@@ -196,8 +196,8 @@ class CronGeneratorTest {
     @Test
     void parseDayOfMonth_butDayOfWeekAndNumberOfWeekNotNull() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_MONTH);
         schedule.setDayOfWeek(6);
         schedule.setNumberOfWeek(3);
@@ -211,8 +211,8 @@ class CronGeneratorTest {
     @Test
     void parseDayOfMonth_butDayOfWeekIllegal_thenDateTimeException() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_MONTH);
         schedule.setDayOfWeek(66);
         schedule.setNumberOfWeek(3);
@@ -226,8 +226,8 @@ class CronGeneratorTest {
     @Test
     void parseDayOfMonth_butNumberOfWeekIllegal_thenDateTimeException() {
         LocalDateTime sendDate = LocalDateTime.of(2021, 11, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_MONTH);
         schedule.setDayOfWeek(6);
         schedule.setNumberOfWeek(33);
@@ -241,8 +241,8 @@ class CronGeneratorTest {
     @Test
     void whenEveryYear_butMonthNotNull() {
         LocalDateTime sendDate = LocalDateTime.of(2021, Month.FEBRUARY, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_YEAR);
         schedule.setMonth(12);
 
@@ -258,8 +258,8 @@ class CronGeneratorTest {
     @Test
     void whenEveryYear_butDayOfMonthNotNUll() {
         LocalDateTime sendDate = LocalDateTime.of(2021, Month.FEBRUARY, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_YEAR);
         schedule.setDayOfMonth(30);
 
@@ -275,8 +275,8 @@ class CronGeneratorTest {
     @Test
     void whenEveryYear_butDayOfWeekAndNumberOfWeekNotNUll() {
         LocalDateTime sendDate = LocalDateTime.of(2021, Month.FEBRUARY, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_YEAR);
         schedule.setDayOfWeek(1);
         schedule.setNumberOfWeek(2);
@@ -293,8 +293,8 @@ class CronGeneratorTest {
     @Test
     void parseMonth_butMonthValueIllegal_thenDateTimeException() {
         LocalDateTime sendDate = LocalDateTime.of(2021, Month.FEBRUARY, 5, 12, 0);
-        MassageSchedule schedule = new MassageSchedule();
-        schedule.setSendDate(sendDate);
+        EmailSchedule schedule = new EmailSchedule();
+        schedule.setSendDateTime(sendDate);
         schedule.setRepeatAt(RepeatType.EVERY_YEAR);
         schedule.setMonth(33);
 

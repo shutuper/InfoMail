@@ -1,7 +1,7 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.SimpleMessageDto;
-import com.infopulse.infomail.dto.RegistrationRequest;
+import com.infopulse.infomail.dto.MessageDTO;
+import com.infopulse.infomail.dto.requests.RegistrationRequest;
 import com.infopulse.infomail.services.registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class RegistrationController {
 	private final RegistrationService registrationService;
 
 	@PostMapping
-	public SimpleMessageDto register(@Valid @RequestBody RegistrationRequest request) throws IOException {
+	public MessageDTO register(@Valid @RequestBody RegistrationRequest request) throws IOException {
 		return registrationService.register(request);
 
 	}
@@ -34,12 +34,12 @@ public class RegistrationController {
 	}
 
 	@GetMapping(path = "confirm")
-	public SimpleMessageDto confirm(@RequestParam("token") String token) {
+	public MessageDTO confirm(@RequestParam("token") String token) {
 		return registrationService.confirmToken(token);
 	}
 
 	@GetMapping(path = "reject")
-	public SimpleMessageDto reject(@RequestParam("token") String token) {
+	public MessageDTO reject(@RequestParam("token") String token) {
 		return registrationService.rejectToken(token);
 	}
 

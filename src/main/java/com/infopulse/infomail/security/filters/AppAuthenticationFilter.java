@@ -1,7 +1,7 @@
 package com.infopulse.infomail.security.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.infopulse.infomail.dto.EmailPasswordRequest;
+import com.infopulse.infomail.dto.requests.AuthenticationRequest;
 import com.infopulse.infomail.security.jwt.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,8 +34,8 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		try {
-			EmailPasswordRequest authRequest = new ObjectMapper()
-					.readValue(request.getInputStream(), EmailPasswordRequest.class);
+			AuthenticationRequest authRequest = new ObjectMapper()
+					.readValue(request.getInputStream(), AuthenticationRequest.class);
 
 			log.info("Auth: email is: {}. Password is {}", authRequest.getEmail(), authRequest.getPassword());
 

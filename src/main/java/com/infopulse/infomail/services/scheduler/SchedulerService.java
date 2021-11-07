@@ -1,16 +1,17 @@
 package com.infopulse.infomail.services.scheduler;
 
+import com.infopulse.infomail.models.mail.EmailSchedule;
+import com.infopulse.infomail.models.mail.Schedule;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.ScheduleBuilder;
 import org.quartz.Trigger;
 
 import java.text.ParseException;
-import java.util.Date;
 
-public interface SchedulerService<T extends Trigger> {
+public interface SchedulerService<T extends Trigger, P extends Schedule> {
 
-	ScheduleBuilder<T> buildSchedule(String schedule) throws ParseException;
+	ScheduleBuilder<T> buildSchedule(EmailSchedule emailSchedule) throws ParseException;
 
 	ScheduleBuilder<T> buildSchedule(boolean alwaysRepeat,
 	                                 int repeatCount,
@@ -18,12 +19,14 @@ public interface SchedulerService<T extends Trigger> {
 
 	Trigger buildTrigger(JobDetail jobDetail,
 	                     ScheduleBuilder<T> scheduleBuilder,
-	                     Date startAt,
-	                     Date endAt);
+	                     P schedule);
 
 	JobDetail buildJobDetail(String userEmail,
 	                         long messageTemplateId,
 	                         String description,
 	                         Class<? extends Job> jobClass);
+
+
+
 
 }

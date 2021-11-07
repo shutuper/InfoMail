@@ -35,7 +35,7 @@ public class EmailConfirmationTokenSender implements ConfirmationTokenSender {
 		try {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-			helper.setText(getHtmlText(to,token), true);
+			helper.setText(getHtmlText(to, token), true);
 			helper.setTo(to);
 			helper.setSubject(subject);
 			helper.setFrom(sentFrom);

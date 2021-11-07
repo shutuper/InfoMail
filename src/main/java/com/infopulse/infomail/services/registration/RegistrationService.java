@@ -2,9 +2,9 @@ package com.infopulse.infomail.services.registration;
 
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.models.users.roles.AppUserRole;
-import com.infopulse.infomail.models.tokens.ConfirmationToken;
-import com.infopulse.infomail.dto.SimpleMessageDto;
-import com.infopulse.infomail.dto.RegistrationRequest;
+import com.infopulse.infomail.models.confirmation.ConfirmationToken;
+import com.infopulse.infomail.dto.MessageDTO;
+import com.infopulse.infomail.dto.requests.RegistrationRequest;
 import com.infopulse.infomail.services.AppUserService;
 import com.infopulse.infomail.services.mail.ConfirmationTokenSender;
 
@@ -24,7 +24,7 @@ public class RegistrationService {
 	private ConfirmationTokenService confirmationTokenService;
 	private final ConfirmationTokenSender confirmationTokenSender;
 
-	public SimpleMessageDto register(RegistrationRequest request) {
+	public MessageDTO register(RegistrationRequest request) {
 		try {
 			String token = appUserService.singUp(
 					new AppUser(
@@ -35,16 +35,16 @@ public class RegistrationService {
 
 			confirmationTokenSender.sendConfirmationToken(request.getEmail(), token);
 
-			return new SimpleMessageDto(token);
+			return new MessageDTO(token);
 		} catch (IllegalStateException ex) {
 			log.error(ex.getMessage());
 
-			return new SimpleMessageDto(ex.getMessage());
+			return new MessageDTO(ex.getMessage());
 		}
 	}
 
 	@Transactional
-	public SimpleMessageDto confirmToken(String token) {
+	public MessageDTO confirmToken(String token) {
 		String result, email;
 		ConfirmationToken confirmationToken;
 		try {
@@ -61,7 +61,7 @@ public class RegistrationService {
 			log.error(ex.getMessage());
 			result = ex.getMessage();
 		}
-		return new SimpleMessageDto(result);
+		return new MessageDTO(result);
 	}
 
 	private ConfirmationToken validateConfirmationToken(String token) throws IllegalStateException {
@@ -81,12 +81,12 @@ public class RegistrationService {
 	}
 
 	@Transactional
-	public SimpleMessageDto rejectToken(String token) {
+	public MessageDTO rejectToken(String token) {
 		ConfirmationToken confirmationToken = validateConfirmationToken(token);
 		AppUser currentUser = confirmationToken.getAppUser();
 		String userEmail = currentUser.getEmail();
 		confirmationTokenService.deleteConfirmationTokenById(confirmationToken.getTokenId());
 		appUserService.deleteUnConfirmedAppUser(currentUser.getUserId());
-		return new SimpleMessageDto(String.format("Unconfirmed account: %s is successfully deleted!", userEmail));
+		return new MessageDTO(String.format("Unconfirmed account: %s is successfully deleted!", userEmail));
 	}
 }

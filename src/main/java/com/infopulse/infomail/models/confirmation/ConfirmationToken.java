@@ -1,4 +1,4 @@
-package com.infopulse.infomail.models.tokens;
+package com.infopulse.infomail.models.confirmation;
 
 import com.infopulse.infomail.models.users.AppUser;
 import lombok.Getter;

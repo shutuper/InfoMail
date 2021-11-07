@@ -48,6 +48,7 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
 
 			String email = decodedJWT.getSubject();
 			String[] roles = decodedJWT.getClaim(ROLES_CLAIM).asArray(String.class);
+			Long userId = decodedJWT.getClaim(USER_ID_CLAIM).asLong();
 			Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
 			stream(roles).forEach(role ->
@@ -56,7 +57,7 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
 			UsernamePasswordAuthenticationToken authenticationToken =
 					new UsernamePasswordAuthenticationToken(
 							email,
-							null,
+							userId,
 							authorities
 					);
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);

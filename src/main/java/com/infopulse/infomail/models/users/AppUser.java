@@ -67,6 +67,10 @@ public class AppUser implements UserDetails {
 		return isEnabled;
 	}
 
+	public AppUser(Long userId) {
+		this.userId = userId;
+	}
+
 	public AppUser(String email,
 	               String password,
 	               AppUserRole role,

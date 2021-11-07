@@ -1,5 +1,7 @@
 package com.infopulse.infomail;
 
+import com.infopulse.infomail.dto.mail.RecipientDTO;
+import com.infopulse.infomail.models.mail.EmailSchedule;
 import com.infopulse.infomail.repositories.AppUserRepository;
 import com.infopulse.infomail.services.mail.EmailSenderService;
 import com.infopulse.infomail.services.scheduler.SchedulerService;
@@ -11,20 +13,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.ParseException;
 import java.time.Instant;
-import java.time.temporal.TemporalUnit;
 import java.util.Date;
-import java.util.List;
 
 @Slf4j
 @SpringBootTest()
 class InfoMailApplicationTests {
 	private final Scheduler scheduler;
-	private final SchedulerService<CronTrigger> schedulerService;
+	private final SchedulerService<CronTrigger, EmailSchedule> schedulerService;
 	private final EmailSenderService mailSender;
 	private final AppUserRepository appUserRepository;
 
 	@Autowired
-	InfoMailApplicationTests(Scheduler scheduler, SchedulerService<CronTrigger> schedulerService, EmailSenderService mailSender, AppUserRepository appUserRepository) {
+	InfoMailApplicationTests(Scheduler scheduler, SchedulerService<CronTrigger,EmailSchedule> schedulerService, EmailSenderService mailSender, AppUserRepository appUserRepository) {
 		this.scheduler = scheduler;
 		this.schedulerService = schedulerService;
 		this.mailSender = mailSender;
@@ -37,14 +37,14 @@ class InfoMailApplicationTests {
 //				true,true,true));
 //		System.out.println(id.getUserId());
 		appUserRepository.findAllEmails().forEach(System.out::println);
-		CronScheduleBuilder shed = (CronScheduleBuilder) schedulerService.buildSchedule("* * * ? * * *");
+//		CronScheduleBuilder shed = (CronScheduleBuilder) schedulerService.buildSchedule("* * * ? * * *");
 		JobDetail job = schedulerService.buildJobDetail("lolan", 243L,
 				"desc", Action.class);
 		Date from = Date.from(Instant.now());
-		CronTrigger cron = (CronTrigger) schedulerService.buildTrigger(job, shed, from, Date.from(Instant.now().plusMillis(2900)));
-		scheduler.scheduleJob(job, cron);
-
-		Thread.currentThread().sleep(7000);
+//		CronTrigger cron = (CronTrigger) schedulerService.buildTrigger(job, shed, from, Date.from(Instant.now().plusMillis(2900)), false);
+//		scheduler.scheduleJob(job, cron);
+//		mailSender.sendSimpleEmails();
+//		Thread.currentThread().sleep(7000);
 	}
 
 	@Slf4j

@@ -23,6 +23,7 @@ spring:
     properties:
       org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
       org.quartz.jobStore.useProperties: true
+      org.quartz.scheduler.instanceName: quartzScheduler
 
   jpa:
     show-sql: true

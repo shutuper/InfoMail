@@ -1,4 +1,4 @@
-package com.infopulse.infomail.models.messages;
+package com.infopulse.infomail.models.mail;
 
 import com.infopulse.infomail.models.users.AppUser;
 import lombok.*;
@@ -10,17 +10,16 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class MessageTemplate {
+public class EmailTemplate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long messageId;
+	private Long id;
 
 	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "owner_user_Id")
+	@JoinColumn(name = "owner_app_user_Id")
 	private AppUser owner;
 
 	@Column(nullable = false)
@@ -29,10 +28,13 @@ public class MessageTemplate {
 	@Column(columnDefinition = "text", nullable = false)
 	private String body;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String sharingLink;
 
-//	@Column(nullable = false)
-//	private LocalDateTime sentDate;
-
+	public EmailTemplate(AppUser owner, String subject, String body, String sharingLink) {
+		this.owner = owner;
+		this.subject = subject;
+		this.body = body;
+		this.sharingLink = sharingLink;
+	}
 }
