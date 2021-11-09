@@ -5,20 +5,17 @@ import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
-import com.infopulse.infomail.repositories.AppUserEmailsInfoRepository;
-import com.infopulse.infomail.repositories.QrtzJobDetailRepository;
 import com.infopulse.infomail.services.RecipientService;
 import com.infopulse.infomail.services.mail.AppUserEmailsInfoService;
 import com.infopulse.infomail.services.scheduler.cronGenerator.CronGenerator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.Instant;
@@ -110,16 +107,14 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	                                long messageTemplateId,
 	                                String description,
 	                                Class<? extends Job> jobClass) {
-
-		JobDataMap jobDataMap = new JobDataMap();
-		jobDataMap.put(messageTemplateIdProp, String.valueOf(messageTemplateId));
+//		JobDataMap jobDataMap = new JobDataMap();
+//		jobDataMap.put(messageTemplateIdProp, String.valueOf(messageTemplateId));
 
 		String uniqueJobName = UUID.randomUUID().toString(); // generating random job name
 
 		return JobBuilder.newJob(jobClass)
 				.withIdentity(uniqueJobName, userEmail) // grouping JobDetails by users' emails
-				.withDescription(description)
-				.usingJobData(jobDataMap)
+				.withDescription(description)   // .usingJobData(jobDataMap)
 				.storeDurably() // whether store jobDetails after all triggers executed
 				.build();
 	}

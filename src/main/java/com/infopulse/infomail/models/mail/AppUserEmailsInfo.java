@@ -19,11 +19,13 @@ public class AppUserEmailsInfo {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@Column(nullable = false, unique = true, updatable = false)
 	private String jobName;
 
+	@Column(nullable = false)
 	private String jobGroup;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	private EmailTemplate emailTemplate;
 
 	public AppUserEmailsInfo(String jobName, String jobGroup, EmailTemplate emailTemplate) {

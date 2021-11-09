@@ -19,7 +19,7 @@ public class AppUserEmailsInfoService {
 				jobKey.getGroup(),
 				emailTemplate);
 
-		return appUserEmailsInfoRepository.save(appUserEmailsInfo);
+		return appUserEmailsInfoRepository.saveAndFlush(appUserEmailsInfo);
 	}
 
 	public AppUserEmailsInfo getAppUserEmailsInfoByJobName(String jobName) {
