@@ -11,19 +11,19 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@Embeddable
+//@Embeddable
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class QrtzJobDetailId implements Serializable {
 
 	private static final long serialVersionUID = -7077383962343514735L;
 
-	@Column(name = "sched_name", nullable = false, length = 120)
-	private String schedName;
-	@Column(name = "job_name", nullable = false, length = 200)
-	private String jobName;
-	@Column(name = "job_group", nullable = false, length = 200)
-	private String jobGroup;
+//	@Column(name = "sched_name", nullable = false, length = 120)
+//	private String schedName;
+//	@Column(name = "job_name", nullable = false, length = 200)
+//	private String jobName;
+//	@Column(name = "job_group", nullable = false, length = 200)
+//	private String jobGroup;
 
 }

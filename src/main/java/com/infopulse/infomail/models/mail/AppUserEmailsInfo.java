@@ -1,6 +1,6 @@
 package com.infopulse.infomail.models.mail;
 
-import com.infopulse.infomail.models.mail.EmailTemplate;
+import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,21 +16,26 @@ import javax.persistence.*;
 public class AppUserEmailsInfo {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@Column(nullable = false, unique = true, updatable = false)
-	private String jobName;
+	@OneToOne(optional = false)
+	@JoinColumn(name = "qrtz_job_detail_id")
+	private QrtzJobDetail qrtzJobDetail;
 
-	@Column(nullable = false)
-	private String jobGroup;
+//	@Column(nullable = false, unique = true, updatable = false)
+//	private String jobName;
+//
+//	@Column(nullable = false)
+//	private String jobGroup;
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "email_template_id")
 	private EmailTemplate emailTemplate;
 
-	public AppUserEmailsInfo(String jobName, String jobGroup, EmailTemplate emailTemplate) {
-		this.jobName = jobName;
-		this.jobGroup = jobGroup;
+	public AppUserEmailsInfo(QrtzJobDetail qrtzJobDetail, EmailTemplate emailTemplate) {
+		this.qrtzJobDetail = qrtzJobDetail;
+
 		this.emailTemplate = emailTemplate;
 	}
 }

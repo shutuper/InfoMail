@@ -13,11 +13,27 @@ import javax.persistence.*;
 @Table(name = "qrtz_job_details", indexes = {
 		@Index(name = "idx_qrtz_j_req_recovery", columnList = "sched_name, requests_recovery"),
 		@Index(name = "idx_qrtz_j_grp", columnList = "sched_name, job_group")
-})
+},
+		uniqueConstraints = @UniqueConstraint(
+				columnNames = {"job_name", "sched_name", "job_group"}
+		))
 public class QrtzJobDetail {
 
-	@EmbeddedId
-	private QrtzJobDetailId id;
+	//	@EmbeddedId
+//	private QrtzJobDetailId id;
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+//	private Long id;
+
+	@Id
+	@Column(name = "job_name", nullable = false, length = 200)
+	private String jobName;
+
+	@Column(name = "sched_name", nullable = false, length = 120)
+	private String schedName;
+
+	@Column(name = "job_group", nullable = false, length = 200)
+	private String jobGroup;
 
 	@Column(name = "description", length = 250)
 	private String description;
@@ -40,11 +56,13 @@ public class QrtzJobDetail {
 	@Column(name = "job_data")
 	private byte[] jobData;
 
-	public QrtzJobDetail(QrtzJobDetailId id) {
-		this.id = id;
-	}
+//	public QrtzJobDetail(QrtzJobDetailId id) {
+//		this.id = id;
+//	}
 
-	public QrtzJobDetail(QrtzJobDetailId id,
+	public QrtzJobDetail(String jobName,
+	                     String jobGroup,
+	                     String schedName,
 	                     String description,
 	                     String jobClassName,
 	                     Boolean isDurable,
@@ -52,7 +70,10 @@ public class QrtzJobDetail {
 	                     Boolean isUpdateData,
 	                     Boolean requestsRecovery,
 	                     byte[] jobData) {
-		this.id = id;
+
+		this.jobName = jobName;
+		this.jobGroup = jobGroup;
+		this.schedName = schedName;
 		this.description = description;
 		this.jobClassName = jobClassName;
 		this.isDurable = isDurable;

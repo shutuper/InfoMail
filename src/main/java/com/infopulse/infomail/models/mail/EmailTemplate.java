@@ -19,8 +19,8 @@ public class EmailTemplate {
 
 	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "owner_app_user_Id")
-	private AppUser owner;
+	@JoinColumn(name = "app_user_id")
+	private AppUser appUser;
 
 	@Column(nullable = false)
 	private String subject;
@@ -31,8 +31,8 @@ public class EmailTemplate {
 	@Column(nullable = false, unique = true)
 	private String sharingLink;
 
-	public EmailTemplate(AppUser owner, String subject, String body, String sharingLink) {
-		this.owner = owner;
+	public EmailTemplate(AppUser appUser, String subject, String body, String sharingLink) {
+		this.appUser = appUser;
 		this.subject = subject;
 		this.body = body;
 		this.sharingLink = sharingLink;

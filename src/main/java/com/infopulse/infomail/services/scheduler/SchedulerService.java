@@ -1,6 +1,6 @@
 package com.infopulse.infomail.services.scheduler;
 
-import com.infopulse.infomail.models.mail.EmailSchedule;
+import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.Schedule;
 import org.quartz.Job;
 import org.quartz.JobDetail;

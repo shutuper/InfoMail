@@ -1,5 +1,6 @@
-package com.infopulse.infomail.models.mail;
+package com.infopulse.infomail.dto.mail;
 
+import com.infopulse.infomail.models.mail.Schedule;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class EmailSchedule implements Schedule{
+public class EmailSchedule implements Schedule {
 
 	private boolean sendNow;
 

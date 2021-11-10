@@ -2,9 +2,11 @@ package com.infopulse.infomail.services.scheduler;
 
 import com.infopulse.infomail.dto.mail.RecipientDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
-import com.infopulse.infomail.models.mail.EmailSchedule;
+import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
+import com.infopulse.infomail.models.quartz.QrtzJobDetail;
+import com.infopulse.infomail.services.QrtzJobDetailService;
 import com.infopulse.infomail.services.RecipientService;
 import com.infopulse.infomail.services.mail.AppUserEmailsInfoService;
 import com.infopulse.infomail.services.scheduler.cronGenerator.CronGenerator;
@@ -12,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -34,7 +37,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 
 	public final static String messageTemplateIdProp = "emailTemplateId";
 
-
+	private final QrtzJobDetailService qrtzJobDetailService;
 	private final AppUserEmailsInfoService appUserEmailsInfoService;
 	private final Scheduler scheduler;
 	private final RecipientService recipientService;
@@ -110,7 +113,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 //		JobDataMap jobDataMap = new JobDataMap();
 //		jobDataMap.put(messageTemplateIdProp, String.valueOf(messageTemplateId));
 
-		String uniqueJobName = UUID.randomUUID().toString(); // generating random job name
+		String uniqueJobName = UUID.randomUUID().toString(); // generating random unique job name
 
 		return JobBuilder.newJob(jobClass)
 				.withIdentity(uniqueJobName, userEmail) // grouping JobDetails by users' emails
@@ -120,17 +123,17 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	}
 
 
-	@Transactional
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void scheduleJob(JobDetail jobDetail,
 	                        Trigger trigger,
 	                        List<RecipientDTO> recipientsDTO,
 	                        EmailTemplate emailTemplate) throws SchedulerException {
 
 		JobKey jobKey = jobDetail.getKey();
-
+//		QrtzJobDetail qrtzJobDetail = qrtzJobDetailService.createNewQrtzJobDetail(jobDetail);
 		scheduler.scheduleJob(jobDetail, trigger);
-
-		AppUserEmailsInfo appUserEmailsInfo = appUserEmailsInfoService.saveAppUserEmailsInfo(jobKey, emailTemplate);
+		QrtzJobDetail qrtzJobDetail = qrtzJobDetailService.findQrtzJobDetailByJobKey(jobKey);
+		AppUserEmailsInfo appUserEmailsInfo = appUserEmailsInfoService.saveAppUserEmailsInfo(qrtzJobDetail, emailTemplate);
 		recipientService.saveAllRecipientsWithUserInfo(recipientsDTO, appUserEmailsInfo);
 
 		log.info("User's(email = {}) job(name = {}) scheduled: {}",

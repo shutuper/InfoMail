@@ -19,7 +19,7 @@ spring:
   quartz:
     job-store-type: jdbc
     jdbc:
-      initialize-schema: always
+      initialize-schema: never
     properties:
       org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
       org.quartz.jobStore.useProperties: true
@@ -33,6 +33,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
 
   mail:
     host: smtp.gmail.com
@@ -77,9 +80,9 @@ application:
   email:
     sentFrom: ${infomail.email}
     confirmation:
-      tokenLink: http://localhost:8090/api/v1/registration/confirm?token=
-      subject: InfoMail email confirmation
+      tokenLink: ${infomail.reg-link}confirm?token=
+      subject: InfoMail - email confirmation
     rejection:
-      tokenLink: http://localhost:8090/api/v1/registration/reject?token=
+      tokenLink: ${infomail.reg-link}reject?token=
   security:
     secret: ${infomail.secret}

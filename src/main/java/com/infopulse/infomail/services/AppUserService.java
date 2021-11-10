@@ -2,6 +2,7 @@ package com.infopulse.infomail.services;
 
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.models.confirmation.ConfirmationToken;
+import com.infopulse.infomail.models.users.roles.AppUserRole;
 import com.infopulse.infomail.repositories.AppUserRepository;
 import com.infopulse.infomail.services.registration.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +25,20 @@ public class AppUserService {
 	private final AppUserRepository appUserRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final ConfirmationTokenService confirmationTokenService;
+	public static Long ADMIN_ID = 0L;
+	public static final String ADMIN_EMAIL = "admin@infomail.com";
+
+	@PostConstruct
+	private void init() {
+		AppUser admin = appUserRepository.findAppUserByEmail(ADMIN_EMAIL).orElse(
+				new AppUser(ADMIN_EMAIL, "password", AppUserRole.USER,
+						true, true, true));
+		appUserRepository.save(admin);
+		ADMIN_ID=admin.getUserId();
+		log.info("\n==============================================\n" +
+				"Admin: " + admin +
+				"\n==============================================\n");
+	}
 
 	@Transactional
 	public String singUp(AppUser appUser) throws IllegalStateException {

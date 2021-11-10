@@ -26,7 +26,8 @@ public class AppRecipient implements Recipient {
 	@Enumerated(EnumType.STRING)
 	private RecipientType recipientType;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "user_info_id")
 	private AppUserEmailsInfo userInfo;
 
 	public AppRecipient(String email, RecipientType recipientType, AppUserEmailsInfo userInfo) {

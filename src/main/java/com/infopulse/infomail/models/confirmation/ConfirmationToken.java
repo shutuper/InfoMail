@@ -16,17 +16,22 @@ import java.time.LocalDateTime;
 public class ConfirmationToken {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long tokenId;
+
 	@Column(nullable = false)
 	private String token;
+
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
+
 	@Column(nullable = false)
 	private LocalDateTime expiredAt;
+
 	private LocalDateTime confirmedAt;
+
 	@ManyToOne
-	@JoinColumn(name = "app_user_id", nullable = false, unique = true)
+	@JoinColumn(nullable = false, unique = true, name = "app_user_id")
 	private AppUser appUser;
 
 	public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, AppUser appUser) {

@@ -2,6 +2,7 @@ package com.infopulse.infomail.services.mail;
 
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailTemplate;
+import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import com.infopulse.infomail.repositories.AppUserEmailsInfoRepository;
 import lombok.AllArgsConstructor;
 import org.quartz.JobKey;
@@ -13,17 +14,16 @@ public class AppUserEmailsInfoService {
 
 	private final AppUserEmailsInfoRepository appUserEmailsInfoRepository;
 
-	public AppUserEmailsInfo saveAppUserEmailsInfo(JobKey jobKey, EmailTemplate emailTemplate) {
+	public AppUserEmailsInfo saveAppUserEmailsInfo(QrtzJobDetail jobDetail, EmailTemplate emailTemplate) {
 		AppUserEmailsInfo appUserEmailsInfo = new AppUserEmailsInfo(
-				jobKey.getName(),
-				jobKey.getGroup(),
+				jobDetail,
 				emailTemplate);
 
-		return appUserEmailsInfoRepository.saveAndFlush(appUserEmailsInfo);
+		return appUserEmailsInfoRepository.save(appUserEmailsInfo);
 	}
 
 	public AppUserEmailsInfo getAppUserEmailsInfoByJobName(String jobName) {
-		return appUserEmailsInfoRepository.findByJobName(jobName).orElseThrow(
+		return appUserEmailsInfoRepository.findByQrtzJobDetail_JobName(jobName).orElseThrow(
 				() -> new IllegalStateException(
 						String.format("AppUserEmailsInfo with jobName %s does not exist", jobName)
 				)

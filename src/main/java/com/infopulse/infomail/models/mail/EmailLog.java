@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class EmailLog {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	private String message; // for causes of fails
@@ -29,6 +29,7 @@ public class EmailLog {
 	private EmailStatus emailStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_info_id")
 	private AppUserEmailsInfo userInfo;
 
 	public EmailLog(String message, LocalDateTime logDateTime, EmailStatus emailStatus, AppUserEmailsInfo userInfo) {

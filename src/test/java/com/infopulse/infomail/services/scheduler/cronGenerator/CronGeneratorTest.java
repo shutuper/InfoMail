@@ -1,6 +1,6 @@
 package com.infopulse.infomail.services.scheduler.cronGenerator;
 
-import com.infopulse.infomail.models.mail.EmailSchedule;
+import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
 import org.junit.jupiter.api.Test;
 

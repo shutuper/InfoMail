@@ -5,13 +5,13 @@ import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
 import com.infopulse.infomail.models.mail.enums.RecipientType;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.JobKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -26,6 +26,7 @@ public class EmailSenderService {
 
 	@Value("${application.email.sentFrom}")
 	private String sendFrom;
+
 	private final JavaMailSender mailSender;
 	private final EmailLogService emailLogService;
 
@@ -34,45 +35,24 @@ public class EmailSenderService {
 		this.emailLogService = emailLogService;
 	}
 
-	@Async
-	public void sendSimpleEmail(String to, String body, String subject) throws IllegalStateException {
-		try {
-
-			SimpleMailMessage message = new SimpleMailMessage();
-			message.setFrom(sendFrom);
-
-			message.setText(body);
-			message.setSubject(subject);
-
-			message.setTo(to);
-			mailSender.send(message);
-			log.info("Email send to {}, subject: {}", to, subject);
-		} catch (Exception e) {
-			log.error("Failed sending email to {}", to, e);
-			throw new IllegalStateException("failed to send email");
-		}
-	}
-
 	public void sendMimeEmail(EmailTemplate email,
 	                          Map<RecipientType, List<String>> groupedRecipients,
 	                          AppUserEmailsInfo appUserEmailsInfo) {
 
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+
 		try {
 
 			helper.setFrom(sendFrom);
 			helper.setText(email.getBody(), true);
-
 			helper.setSubject(email.getSubject());
-
-			setGroupedRecipientsToEmail(groupedRecipients, helper);
+			setGroupedRecipientsToEmail(groupedRecipients, helper); // set TO, CC, BCC recipients
 
 			mailSender.send(mimeMessage); // sending email template to all recipients
 
-			log.info("Job {} executed", appUserEmailsInfo.getJobName());
 			emailLogService.saveEmailLog(appUserEmailsInfo, null, EmailStatus.SENT);
-
+			log.info("Job with user's info id: {} executed", appUserEmailsInfo.getId());
 		} catch (MessagingException | IllegalStateException e) {
 			String expMessage = e.getMessage();
 			log.error(expMessage, e);
@@ -102,3 +82,22 @@ public class EmailSenderService {
 	}
 
 }
+
+//	@Async
+//	public void sendSimpleEmail(String to, String body, String subject) throws IllegalStateException {
+//		try {
+//
+//			SimpleMailMessage message = new SimpleMailMessage();
+//			message.setFrom(sendFrom);
+//
+//			message.setText(body);
+//			message.setSubject(subject);
+//
+//			message.setTo(to);
+//			mailSender.send(message);
+//			log.info("Email send to {}, subject: {}", to, subject);
+//		} catch (Exception e) {
+//			log.error("Failed sending email to {}", to, e);
+//			throw new IllegalStateException("failed to send email");
+//		}
+//	}
