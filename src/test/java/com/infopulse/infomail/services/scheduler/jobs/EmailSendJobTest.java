@@ -63,8 +63,8 @@ public class EmailSendJobTest {
 					.withIdentity(UUID.randomUUID().toString())
 					.forJob(jobDetail)
 					.startNow()
-					.withSchedule(CronScheduleBuilder
-							.cronSchedule("0/10 * * ? * * *"))
+//					.withSchedule(CronScheduleBuilder
+//							.cronSchedule("0/10 * * ? * * *"))
 					.endAt(Timestamp.valueOf(LocalDateTime.now().plusSeconds(30)))
 					.build();
 

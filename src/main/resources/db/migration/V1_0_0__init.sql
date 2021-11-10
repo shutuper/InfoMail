@@ -214,7 +214,7 @@ create table app_user
     is_account_non_locked      boolean      not null,
     is_credentials_non_expired boolean      not null,
     is_enabled                 boolean      not null,
-    password                   varchar(50)  not null,
+    password                   varchar(150)  not null,
     role                       varchar(25)  not null
 );
 

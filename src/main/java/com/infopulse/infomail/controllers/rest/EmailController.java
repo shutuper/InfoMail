@@ -43,7 +43,7 @@ public class EmailController {
 		EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
 		EmailSchedule emailSchedule = emailDTO.getEmailSchedule();
 		String userEmail = (String) authentication.getPrincipal();
-		Long userId = Long.parseLong((String) authentication.getCredentials());
+		Long userId = (Long) authentication.getCredentials();
 
 		try {
 			EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(emailTemplateDTO, userId);
