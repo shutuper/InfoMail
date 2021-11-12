@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.quartz.*;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,7 +27,6 @@ public class EmailSendJob extends QuartzJobBean {
 	private final AppUserEmailsInfoService appUserEmailsInfoService;
 
 	@Override
-	@Transactional
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 		JobDetail jobDetail = context.getJobDetail();
 		String jobName = jobDetail.getKey().getName();

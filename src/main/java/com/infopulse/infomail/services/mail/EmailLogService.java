@@ -4,7 +4,6 @@ import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailLog;
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
-import com.infopulse.infomail.models.quartz.QrtzJobDetailId;
 import com.infopulse.infomail.repositories.EmailLogRepository;
 import com.infopulse.infomail.repositories.QrtzJobDetailRepository;
 import lombok.AllArgsConstructor;

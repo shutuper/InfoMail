@@ -1,7 +1,7 @@
 package com.infopulse.infomail.security.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.infopulse.infomail.dto.requests.AuthenticationRequest;
+import com.infopulse.infomail.dto.securityRequests.AuthenticationRequest;
 import com.infopulse.infomail.security.jwt.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

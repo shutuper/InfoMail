@@ -46,7 +46,7 @@ public class CronGenerator {
 	}
 
 	static String whenEveryDay(EmailSchedule messageSchedule) {
-		return CronExpression.builder()
+		return CronExpressionBuilder.builder()
 				.setHours(messageSchedule
 						.getSendDateTime()
 						.getHour())
@@ -60,7 +60,7 @@ public class CronGenerator {
 	static String whenEveryWeek(EmailSchedule messageSchedule) {
 		String daysOfWeek = parseDaysOfWeek(messageSchedule);
 
-		return CronExpression.builder()
+		return CronExpressionBuilder.builder()
 				.setHours(messageSchedule
 						.getSendDateTime()
 						.getHour())
@@ -73,7 +73,7 @@ public class CronGenerator {
 	}
 
 	static String whenEveryMonth(EmailSchedule messageSchedule) {
-		CronExpression.Builder builder = CronExpression.builder()
+		CronExpressionBuilder.Builder builder = CronExpressionBuilder.builder()
 				.setHours(messageSchedule
 						.getSendDateTime()
 						.getHour())
@@ -97,7 +97,7 @@ public class CronGenerator {
 	}
 
 	static String whenEveryYear(EmailSchedule messageSchedule) {
-		CronExpression.Builder builder = CronExpression.builder()
+		CronExpressionBuilder.Builder builder = CronExpressionBuilder.builder()
 				.setHours(messageSchedule
 						.getSendDateTime()
 						.getHour())

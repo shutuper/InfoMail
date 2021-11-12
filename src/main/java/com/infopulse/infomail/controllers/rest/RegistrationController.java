@@ -1,7 +1,7 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.MessageDTO;
-import com.infopulse.infomail.dto.requests.RegistrationRequest;
+import com.infopulse.infomail.dto.exeptions.MessageDTO;
+import com.infopulse.infomail.dto.securityRequests.RegistrationRequest;
 import com.infopulse.infomail.services.registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

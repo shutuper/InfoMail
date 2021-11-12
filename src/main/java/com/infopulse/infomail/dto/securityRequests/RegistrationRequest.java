@@ -1,4 +1,4 @@
-package com.infopulse.infomail.dto.requests;
+package com.infopulse.infomail.dto.securityRequests;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

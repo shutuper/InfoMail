@@ -1,5 +1,6 @@
 package com.infopulse.infomail.controllers.rest;
 
+import com.infopulse.infomail.dto.app.CronExpWithDesc;
 import com.infopulse.infomail.dto.mail.EmailDTO;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
@@ -9,6 +10,7 @@ import com.infopulse.infomail.services.mail.EmailTemplateService;
 import com.infopulse.infomail.services.scheduler.CronSchedulerService;
 import com.infopulse.infomail.services.scheduler.jobs.EmailSendJob;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.ScheduleBuilder;
@@ -16,6 +18,7 @@ import org.quartz.Trigger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,29 +35,29 @@ public class EmailController {
 	private final CronSchedulerService cronSchedulerService;
 	private final EmailTemplateService emailTemplateService;
 
-	// TODO: create cron expression descriptor and add desc to jobDetails
-	private static final String description = "FUTURE DESC OF CRON EXPRESSION";
-
 
 	@PostMapping
 	public ResponseEntity<EmailDTO> addEmail(@Valid @RequestBody EmailDTO emailDTO, Authentication authentication) {
-
-		List<RecipientDTO> recipients = emailDTO.getRecipients();
-		EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
-		EmailSchedule emailSchedule = emailDTO.getEmailSchedule();
-		String userEmail = (String) authentication.getPrincipal();
-		Long userId = (Long) authentication.getCredentials();
-
 		try {
+			List<RecipientDTO> recipients = emailDTO.getRecipients();
+			EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
+			EmailSchedule emailSchedule = emailDTO.getEmailSchedule();
+			String userEmail = (String) authentication.getPrincipal();
+			Long userId = (Long) authentication.getCredentials();
+
 			EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(emailTemplateDTO, userId);
 
-			ScheduleBuilder<CronTrigger> scheduleBuilder = cronSchedulerService.buildSchedule(emailSchedule);
+			CronExpWithDesc cronExpWithDesc = cronSchedulerService
+					.generateCronExpressionWithDescription(emailSchedule);
+
+			ScheduleBuilder<CronTrigger> scheduleBuilder = cronSchedulerService
+					.buildSchedule(cronExpWithDesc.getCronExpression());
 
 			JobDetail jobDetail = cronSchedulerService.buildJobDetail(
 					userEmail,
 					emailTemplate.getId(),
 					// it should be replaced
-					description,
+					cronExpWithDesc.getCronDescription(),
 					EmailSendJob.class);
 
 			Trigger trigger = cronSchedulerService.buildTrigger(

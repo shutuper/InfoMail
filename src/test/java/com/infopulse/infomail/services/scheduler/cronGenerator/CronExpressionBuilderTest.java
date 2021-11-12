@@ -6,12 +6,12 @@ import java.time.DayOfWeek;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CronExpressionTest {
+class CronExpressionBuilderTest {
     @Test
     void whenBuilder_butDayOfWeekAlreadySet_thenRuntimeException() {
         int value = DayOfWeek.SATURDAY.getValue();
         String actualMessage = assertThrows(RuntimeException.class,
-                ()-> CronExpression.builder()
+                ()-> CronExpressionBuilder.builder()
                         .setDayOfWeek(Integer.toString(value))
                         .setDayOfMonth("1")
         ).getMessage();
@@ -24,7 +24,7 @@ class CronExpressionTest {
     void whenBuilder_butDayOfMonthAlreadySet_thenRuntimeException() {
         int value = DayOfWeek.SATURDAY.getValue();
         String actualMessage = assertThrows(RuntimeException.class,
-                ()-> CronExpression.builder()
+                ()-> CronExpressionBuilder.builder()
                         .setDayOfMonth("1")
                         .setDayOfWeek(Integer.toString(value))
         ).getMessage();

@@ -3,8 +3,8 @@ package com.infopulse.infomail.services.registration;
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.models.users.roles.AppUserRole;
 import com.infopulse.infomail.models.confirmation.ConfirmationToken;
-import com.infopulse.infomail.dto.MessageDTO;
-import com.infopulse.infomail.dto.requests.RegistrationRequest;
+import com.infopulse.infomail.dto.exeptions.MessageDTO;
+import com.infopulse.infomail.dto.securityRequests.RegistrationRequest;
 import com.infopulse.infomail.services.AppUserService;
 import com.infopulse.infomail.services.mail.ConfirmationTokenSender;
 

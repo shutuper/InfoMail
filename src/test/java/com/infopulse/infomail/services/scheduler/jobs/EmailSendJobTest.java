@@ -1,5 +1,6 @@
 package com.infopulse.infomail.services.scheduler.jobs;
 
+import com.infopulse.infomail.dto.app.CronExpWithDesc;
 import com.infopulse.infomail.dto.mail.EmailDTO;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
@@ -38,35 +39,37 @@ public class EmailSendJobTest {
 
 	@Test
 	public void testAddEmail() {
-		UsernamePasswordAuthenticationToken token =
-				new UsernamePasswordAuthenticationToken(AppUserService.ADMIN_EMAIL,
-						AppUserService.ADMIN_ID.toString());
-		Authentication authentication = token;
-
+		Authentication authentication =
+				new UsernamePasswordAuthenticationToken(
+						AppUserService.ADMIN_EMAIL,
+						AppUserService.ADMIN_ID);
 		EmailDTO emailDTO = getRandEmailDTO();
-		List<RecipientDTO> recipients = emailDTO.getRecipients();
-		EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
-		String userEmail = (String) authentication.getPrincipal();
-		Long userId = Long.parseLong((String) authentication.getCredentials());
 		try {
+			List<RecipientDTO> recipients = emailDTO.getRecipients();
+			EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
+			EmailSchedule emailSchedule = emailDTO.getEmailSchedule();
+			String userEmail = (String) authentication.getPrincipal();
+			Long userId = (Long) authentication.getCredentials();
+
 			EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(emailTemplateDTO, userId);
-			Long emailTemplateId = emailTemplate.getId();
+
+			CronExpWithDesc cronExpWithDesc = cronSchedulerService
+					.generateCronExpressionWithDescription(emailSchedule);
+
+			ScheduleBuilder<CronTrigger> scheduleBuilder = cronSchedulerService
+					.buildSchedule(cronExpWithDesc.getCronExpression());
 
 			JobDetail jobDetail = cronSchedulerService.buildJobDetail(
 					userEmail,
-					emailTemplateId,
+					emailTemplate.getId(),
 					// it should be replaced
-					description,
+					cronExpWithDesc.getCronDescription(),
 					EmailSendJob.class);
 
-			Trigger trigger = TriggerBuilder.newTrigger()
-					.withIdentity(UUID.randomUUID().toString())
-					.forJob(jobDetail)
-					.startNow()
-//					.withSchedule(CronScheduleBuilder
-//							.cronSchedule("0/10 * * ? * * *"))
-					.endAt(Timestamp.valueOf(LocalDateTime.now().plusSeconds(30)))
-					.build();
+			Trigger trigger = cronSchedulerService.buildTrigger(
+					jobDetail,
+					CronScheduleBuilder.cronSchedule("* * * * * ? *"),
+					emailSchedule);
 
 			cronSchedulerService.scheduleJob(jobDetail, trigger, recipients, emailTemplate);
 			for (int i = 0; i < 40; i++) {
@@ -84,20 +87,21 @@ public class EmailSendJobTest {
 		EmailSchedule emailSchedule = new EmailSchedule();
 		emailSchedule.setRepeatAt(RepeatType.NOTHING);
 		emailSchedule.setSendDateTime(LocalDateTime.now().plusSeconds(3));
-
+		emailSchedule.setSendNow(true);
 		emailDTO.setEmailSchedule(emailSchedule);
+		emailSchedule.setEndDate(LocalDate.now().plusDays(1));
 
 		List<RecipientDTO> recipients = new ArrayList<>(List.of(
-				new RecipientDTO("ttatta3adpot@gmail.com", RecipientType.CC),
-				new RecipientDTO("egor-xt@ukr.net", RecipientType.TO),
-				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO)
+//				new RecipientDTO("ludagnitiyy@gmail.com", RecipientType.CC),
+				new RecipientDTO("egor-xt@ukr.net", RecipientType.TO)
+//				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO)
 		));
 
 		emailDTO.setRecipients(recipients);
 
 		EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO();
-		emailTemplateDTO.setBody("Tempalte body");
-		emailTemplateDTO.setSubject("Subject - lol");
+		emailTemplateDTO.setBody("BODYBODYBODY");
+		emailTemplateDTO.setSubject("SUBJECTSUBJECTSUBJECT");
 
 		emailDTO.setEmailTemplate(emailTemplateDTO);
 		return emailDTO;

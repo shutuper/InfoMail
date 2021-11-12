@@ -1,6 +1,6 @@
 package com.infopulse.infomail.services.scheduler.cronGenerator;
 
-public class CronExpression {
+public class CronExpressionBuilder {
 
     private final String seconds;
     private String minutes;
@@ -24,13 +24,13 @@ public class CronExpression {
      * @param dayOfWeek  mandatory = yes. allowed values = {@code 0-6 or SUN-SAT * / , - ? L #}
      * @param year       mandatory = no. allowed values = {@code 1970–2099    * / , -}
      */
-    private CronExpression(String seconds,
-                           String minutes,
-                           String hours,
-                           String dayOfMonth,
-                           String month,
-                           String dayOfWeek,
-                           String year) {
+    private CronExpressionBuilder(String seconds,
+                                  String minutes,
+                                  String hours,
+                                  String dayOfMonth,
+                                  String month,
+                                  String dayOfWeek,
+                                  String year) {
 
         this.seconds = seconds;
         this.minutes = minutes;
@@ -53,15 +53,15 @@ public class CronExpression {
     }
 
     public static class Builder {
-        private final CronExpression cron;
+        private final CronExpressionBuilder cron;
         private Builder(){
-            cron = new CronExpression("0", "*", "*",
+            cron = new CronExpressionBuilder("0", "*", "*",
                     "?", "*", "*", "*");
             cron.isADayOfWeekType = true;
             cron.isTypeAlreadySet = false;
         };
 
-        public CronExpression build() {return cron;}
+        public CronExpressionBuilder build() {return cron;}
 
         public Builder setMinutes(String minutes) {
             cron.minutes = minutes;

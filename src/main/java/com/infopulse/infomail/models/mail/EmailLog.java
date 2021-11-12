@@ -20,6 +20,7 @@ public class EmailLog {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
+	@Column(columnDefinition = "text")
 	private String message; // for causes of fails
 
 	@Column(nullable = false)

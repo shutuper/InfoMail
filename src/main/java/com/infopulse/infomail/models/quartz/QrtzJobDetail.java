@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Getter
 @Setter
@@ -19,12 +20,6 @@ import javax.persistence.*;
 		))
 public class QrtzJobDetail {
 
-	//	@EmbeddedId
-//	private QrtzJobDetailId id;
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.AUTO)
-//	private Long id;
-
 	@Id
 	@Column(name = "job_name", nullable = false, length = 200)
 	private String jobName;
@@ -32,6 +27,7 @@ public class QrtzJobDetail {
 	@Column(name = "sched_name", nullable = false, length = 120)
 	private String schedName;
 
+	@Email
 	@Column(name = "job_group", nullable = false, length = 200)
 	private String jobGroup;
 

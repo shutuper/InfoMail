@@ -1,8 +1,9 @@
 package com.infopulse.infomail.services.scheduler;
 
+import com.infopulse.infomail.dto.app.CronExpWithDesc;
+import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
-import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
@@ -10,6 +11,7 @@ import com.infopulse.infomail.services.QrtzJobDetailService;
 import com.infopulse.infomail.services.RecipientService;
 import com.infopulse.infomail.services.mail.AppUserEmailsInfoService;
 import com.infopulse.infomail.services.scheduler.cronGenerator.CronGenerator;
+import com.infopulse.infomail.services.scheduler.сronDescriptor.CronDescriptorService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -35,12 +37,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CronSchedulerService implements SchedulerService<CronTrigger, EmailSchedule> {
 
-	public final static String messageTemplateIdProp = "emailTemplateId";
-
+	//	public final static String messageTemplateIdProp = "emailTemplateId";
 	private final QrtzJobDetailService qrtzJobDetailService;
 	private final AppUserEmailsInfoService appUserEmailsInfoService;
 	private final Scheduler scheduler;
 	private final RecipientService recipientService;
+	private final CronDescriptorService cronDescriptorService;
 
 	@PostConstruct
 	private void init() {
@@ -63,17 +65,30 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		}
 	}
 
-	@Override
-	public ScheduleBuilder<CronTrigger> buildSchedule(EmailSchedule emailSchedule) throws ParseException {
+	public CronExpWithDesc generateCronExpressionWithDescription(EmailSchedule
+			                                                             emailSchedule) throws ParseException {
 		RepeatType scheduleRepeat = emailSchedule.getRepeatAt();
-
-		if (Objects.isNull(scheduleRepeat) || scheduleRepeat.equals(RepeatType.NOTHING))
-			return null;
+		String cronDescription;
+		if (Objects.isNull(scheduleRepeat) || scheduleRepeat.equals(RepeatType.NOTHING)) {
+			cronDescription = "Start at " + (
+					emailSchedule.isSendNow() ? LocalDateTime.now() : emailSchedule.getSendDateTime()
+			);
+			return new CronExpWithDesc(null, cronDescription);
+		}
 
 		String cronExpression = CronGenerator.generate(emailSchedule);
 		CronExpression.validateExpression(cronExpression);
-		log.info("Valid cron expression: {}", cronExpression);
 
+		cronDescription = cronDescriptorService.getDescription(cronExpression);
+		log.info("Valid cron expression: {} with description {}", cronExpression, cronDescription);
+
+		return new CronExpWithDesc(new CronExpression(cronExpression), cronDescription);
+	}
+
+	@Override
+	public ScheduleBuilder<CronTrigger> buildSchedule(CronExpression cronExpression) {
+		if (Objects.isNull(cronExpression))
+			return null;
 		return CronScheduleBuilder.cronSchedule(cronExpression);
 	}
 
@@ -81,10 +96,13 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	public Trigger buildTrigger(JobDetail jobDetail,
 	                            ScheduleBuilder<CronTrigger> scheduleBuilder,
 	                            EmailSchedule emailSchedule) {
-
 		JobKey jobKey = jobDetail.getKey();
 		TriggerKey triggerKey = new TriggerKey(jobKey.getName(), jobKey.getGroup());
-		TriggerBuilder<Trigger> builder = TriggerBuilder.newTrigger().withIdentity(triggerKey).forJob(jobKey);
+
+		TriggerBuilder<Trigger> builder = TriggerBuilder.newTrigger()
+				.withIdentity(triggerKey)
+				.forJob(jobKey);
+
 		Date nowDate = Date.from(Instant.now());
 		boolean startNow = emailSchedule.isSendNow();
 
@@ -110,9 +128,6 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	                                long messageTemplateId,
 	                                String description,
 	                                Class<? extends Job> jobClass) {
-//		JobDataMap jobDataMap = new JobDataMap();
-//		jobDataMap.put(messageTemplateIdProp, String.valueOf(messageTemplateId));
-
 		String uniqueJobName = UUID.randomUUID().toString(); // generating random unique job name
 
 		return JobBuilder.newJob(jobClass)
@@ -122,7 +137,6 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 				.build();
 	}
 
-
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void scheduleJob(JobDetail jobDetail,
 	                        Trigger trigger,
@@ -130,7 +144,6 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	                        EmailTemplate emailTemplate) throws SchedulerException {
 
 		JobKey jobKey = jobDetail.getKey();
-//		QrtzJobDetail qrtzJobDetail = qrtzJobDetailService.createNewQrtzJobDetail(jobDetail);
 		scheduler.scheduleJob(jobDetail, trigger);
 		QrtzJobDetail qrtzJobDetail = qrtzJobDetailService.findQrtzJobDetailByJobKey(jobKey);
 		AppUserEmailsInfo appUserEmailsInfo = appUserEmailsInfoService.saveAppUserEmailsInfo(qrtzJobDetail, emailTemplate);
@@ -146,7 +159,9 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		return null;
 	}
 
-	private boolean validDateForScheduling(Date date, Date compared, boolean canBeNullable) {
+	private boolean validDateForScheduling(Date date,
+	                                       Date compared,
+	                                       boolean canBeNullable) {
 		if (canBeNullable && (date == null))
 			return false;
 		else if ((date != null) && date.after(compared))
@@ -159,7 +174,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		if (temporal == null)
 			return null;
 		else if (temporal instanceof LocalDate)
-			return Timestamp.valueOf(((LocalDate) temporal).atStartOfDay());
+			return Timestamp.valueOf(((LocalDate) temporal).atStartOfDay().plusDays(1L));
 		else if (temporal instanceof LocalDateTime)
 			return Timestamp.valueOf((LocalDateTime) temporal);
 		else throw new IllegalArgumentException("Date can't be parsed");

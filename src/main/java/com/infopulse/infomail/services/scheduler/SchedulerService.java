@@ -2,16 +2,13 @@ package com.infopulse.infomail.services.scheduler;
 
 import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.Schedule;
-import org.quartz.Job;
-import org.quartz.JobDetail;
-import org.quartz.ScheduleBuilder;
-import org.quartz.Trigger;
+import org.quartz.*;
 
 import java.text.ParseException;
 
 public interface SchedulerService<T extends Trigger, P extends Schedule> {
 
-	ScheduleBuilder<T> buildSchedule(EmailSchedule emailSchedule) throws ParseException;
+	ScheduleBuilder<T> buildSchedule(CronExpression cronExpression); // for cron expressions
 
 	ScheduleBuilder<T> buildSchedule(boolean alwaysRepeat,
 	                                 int repeatCount,

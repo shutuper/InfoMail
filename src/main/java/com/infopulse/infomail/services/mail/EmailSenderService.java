@@ -6,12 +6,13 @@ import com.infopulse.infomail.models.mail.enums.EmailStatus;
 import com.infopulse.infomail.models.mail.enums.RecipientType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -29,20 +30,25 @@ public class EmailSenderService {
 
 	private final JavaMailSender mailSender;
 	private final EmailLogService emailLogService;
+	private final PlatformTransactionManager transactionManager;
 
-	public EmailSenderService(JavaMailSender mailSender, EmailLogService emailLogService) {
+	public EmailSenderService(JavaMailSender mailSender, EmailLogService emailLogService,
+	                          PlatformTransactionManager transactionManager) {
 		this.mailSender = mailSender;
 		this.emailLogService = emailLogService;
+		this.transactionManager = transactionManager;
 	}
 
 	public void sendMimeEmail(EmailTemplate email,
 	                          Map<RecipientType, List<String>> groupedRecipients,
 	                          AppUserEmailsInfo appUserEmailsInfo) {
 
-		MimeMessage mimeMessage = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+		TransactionDefinition def = new DefaultTransactionDefinition();
+		TransactionStatus status = transactionManager.getTransaction(def);
 
 		try {
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
 
 			helper.setFrom(sendFrom);
 			helper.setText(email.getBody(), true);
@@ -52,10 +58,15 @@ public class EmailSenderService {
 			mailSender.send(mimeMessage); // sending email template to all recipients
 
 			emailLogService.saveEmailLog(appUserEmailsInfo, null, EmailStatus.SENT);
+
+			transactionManager.commit(status);
 			log.info("Job with user's info id: {} executed", appUserEmailsInfo.getId());
-		} catch (MessagingException | IllegalStateException e) {
-			String expMessage = e.getMessage();
-			log.error(expMessage, e);
+		} catch (Exception exception) {
+			String expMessage = exception.getMessage();
+
+			log.error(String.format("Job with user's info id: %s failed", appUserEmailsInfo.getId()),
+					exception);
+			transactionManager.rollback(status);
 			emailLogService.saveEmailLog(appUserEmailsInfo, expMessage, EmailStatus.FAILED);
 		}
 	}

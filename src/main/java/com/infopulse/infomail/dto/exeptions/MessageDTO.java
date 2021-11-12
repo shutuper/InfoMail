@@ -1,4 +1,4 @@
-package com.infopulse.infomail.dto;
+package com.infopulse.infomail.dto.exeptions;
 
 import lombok.*;
 

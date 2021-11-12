@@ -6,6 +6,7 @@ import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.repositories.EmailTemplateRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ public class EmailTemplateService {
 				));
 	}
 
+	@Transactional
 	public EmailTemplate saveEmailTemplate(EmailTemplateDTO emailTemplateDTO, Long userId) {
 		String shareLink = UUID.randomUUID().toString();
 
