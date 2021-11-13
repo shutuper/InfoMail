@@ -45,7 +45,7 @@ public class EmailSendJobTest {
 		try {
 			List<RecipientDTO> recipients = emailDTO.getRecipients();
 			EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
-			EmailSchedule emailSchedule = emailDTO.getEmailSchedule();
+			EmailSchedule emailSchedule = EmailSchedule.fromDTO(emailDTO.getEmailSchedule());
 			String userEmail = (String) authentication.getPrincipal();
 			Long userId = (Long) authentication.getCredentials();
 
@@ -86,7 +86,7 @@ public class EmailSendJobTest {
 		emailSchedule.setRepeatAt(RepeatType.NOTHING);
 		emailSchedule.setSendDateTime(LocalDateTime.now().plusSeconds(3));
 		emailSchedule.setSendNow(true);
-		emailDTO.setEmailSchedule(emailSchedule);
+		emailDTO.setEmailSchedule(emailSchedule.toDTO());
 		emailSchedule.setEndDate(LocalDate.now().plusDays(1));
 
 		List<RecipientDTO> recipients = new ArrayList<>(List.of(
