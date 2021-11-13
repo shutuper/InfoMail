@@ -70,9 +70,9 @@ public class EmailSendJobTest {
 					emailSchedule);
 
 			cronSchedulerService.scheduleJob(jobDetail, trigger, recipients, emailTemplate);
-			for (int i = 0; i < 40; i++) {
-				Thread.sleep(1000);
-			}
+//			for (int i = 0; i < 40; i++) {
+//				Thread.sleep(1000);
+//			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
