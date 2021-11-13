@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,8 +71,11 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		RepeatType scheduleRepeat = emailSchedule.getRepeatAt();
 		String cronDescription;
 		if (Objects.isNull(scheduleRepeat) || scheduleRepeat.equals(RepeatType.NOTHING)) {
+			SimpleDateFormat sdf = new SimpleDateFormat("MM:dd:yy HH:mm");
 			cronDescription = "Start at " + (
-					emailSchedule.isSendNow() ? LocalDateTime.now() : emailSchedule.getSendDateTime()
+					sdf.format(Timestamp.valueOf(
+							emailSchedule.isSendNow() ? LocalDateTime.now() : emailSchedule.getSendDateTime()
+					))
 			);
 			return new CronExpWithDesc(null, cronDescription);
 		}
