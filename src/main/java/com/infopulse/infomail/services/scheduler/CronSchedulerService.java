@@ -15,6 +15,7 @@ import com.infopulse.infomail.services.scheduler.сronDescriptor.CronDescriptorS
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.List;
@@ -71,11 +73,10 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		RepeatType scheduleRepeat = emailSchedule.getRepeatAt();
 		String cronDescription;
 		if (Objects.isNull(scheduleRepeat) || scheduleRepeat.equals(RepeatType.NOTHING)) {
-			SimpleDateFormat sdf = new SimpleDateFormat("MM:dd:yy HH:mm");
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM:dd:yy HH:mm");
 			cronDescription = "Start at " + (
-					sdf.format(Timestamp.valueOf(
-							emailSchedule.isSendNow() ? LocalDateTime.now() : emailSchedule.getSendDateTime()
-					))
+					emailSchedule.isSendNow() ?
+							LocalDateTime.now().format(dtf) : emailSchedule.getSendDateTime().format(dtf)
 			);
 			return new CronExpWithDesc(null, cronDescription);
 		}
