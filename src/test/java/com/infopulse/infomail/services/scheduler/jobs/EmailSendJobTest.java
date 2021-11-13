@@ -4,7 +4,7 @@ import com.infopulse.infomail.dto.app.CronExpWithDesc;
 import com.infopulse.infomail.dto.mail.EmailDTO;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
-import com.infopulse.infomail.dto.mail.EmailSchedule;
+import com.infopulse.infomail.models.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.RecipientType;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
@@ -19,12 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @SpringBootTest()

@@ -1,6 +1,6 @@
 package com.infopulse.infomail;
 
-import com.infopulse.infomail.dto.mail.EmailSchedule;
+import com.infopulse.infomail.models.mail.EmailSchedule;
 import com.infopulse.infomail.repositories.AppUserRepository;
 import com.infopulse.infomail.services.mail.EmailSenderService;
 import com.infopulse.infomail.services.scheduler.SchedulerService;

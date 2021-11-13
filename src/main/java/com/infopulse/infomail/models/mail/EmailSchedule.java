@@ -1,12 +1,9 @@
-package com.infopulse.infomail.dto.mail;
+package com.infopulse.infomail.models.mail;
 
-import com.infopulse.infomail.models.mail.Schedule;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;

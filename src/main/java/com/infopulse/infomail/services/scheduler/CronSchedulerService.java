@@ -1,9 +1,9 @@
 package com.infopulse.infomail.services.scheduler;
 
 import com.infopulse.infomail.dto.app.CronExpWithDesc;
-import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
+import com.infopulse.infomail.models.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
