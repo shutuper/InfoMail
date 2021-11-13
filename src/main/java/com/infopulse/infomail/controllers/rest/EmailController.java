@@ -1,9 +1,9 @@
 package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.mail.EmailDTO;
+import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
-import com.infopulse.infomail.dto.mail.EmailSchedule;
 import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.services.mail.EmailTemplateService;
 import com.infopulse.infomail.services.scheduler.CronSchedulerService;
@@ -41,7 +41,7 @@ public class EmailController {
 
 		List<RecipientDTO> recipients = emailDTO.getRecipients();
 		EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
-		EmailSchedule emailSchedule = emailDTO.getEmailSchedule();
+		EmailSchedule emailSchedule = EmailSchedule.fromDTO(emailDTO.getEmailSchedule());
 		String userEmail = (String) authentication.getPrincipal();
 		Long userId = (Long) authentication.getCredentials();
 

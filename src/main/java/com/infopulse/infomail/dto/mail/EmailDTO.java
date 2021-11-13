@@ -9,7 +9,7 @@ import java.util.List;
 public class EmailDTO  {
 	private List<RecipientDTO> recipients;
 	private EmailTemplateDTO emailTemplate;
-	private EmailSchedule emailSchedule;
+	private EmailScheduleDTO emailSchedule;
 
 	public EmailDTO() {
 	}
