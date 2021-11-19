@@ -31,7 +31,7 @@ public class AppUserService {
 	@PostConstruct
 	private void init() {
 		AppUser admin = appUserRepository.findAppUserByEmail(ADMIN_EMAIL).orElse(
-				new AppUser(ADMIN_EMAIL, "password", AppUserRole.USER,
+				new AppUser(ADMIN_EMAIL, passwordEncoder.encode("password"), AppUserRole.USER,
 						true, true, true));
 		appUserRepository.save(admin);
 		ADMIN_ID=admin.getUserId();
