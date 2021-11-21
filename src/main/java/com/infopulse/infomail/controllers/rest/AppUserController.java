@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -26,9 +27,9 @@ public class AppUserController {
 	}
 
 	@GetMapping// methode is available only for authed users
-	public ResponseEntity<?> isAuthed(Authentication authentication) {
-		log.info("User {} is authenticated", authentication.getPrincipal().toString());
-		return ResponseEntity.ok().build();
+	public Boolean isAuthed(Authentication authentication) {
+		log.info("User {} is checking for authentication", authentication);
+		return !Objects.isNull(authentication);
 	}
 
 }

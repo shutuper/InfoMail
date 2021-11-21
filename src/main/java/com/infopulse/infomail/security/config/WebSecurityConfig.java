@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(authenticationFilter)
 				.addFilterAfter(authorizationFilter, authenticationFilter.getClass())
 				.authorizeRequests()
-				.antMatchers("/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate").permitAll()
+				.antMatchers("/api/v1/users", "/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate").permitAll()
 				.antMatchers("/**").hasRole(USER.name())
 //				.antMatchers("/**").permitAll()
 				.anyRequest().authenticated()
