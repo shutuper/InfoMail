@@ -70,9 +70,9 @@ public class EmailSendJobTest {
 					emailSchedule);
 
 			cronSchedulerService.scheduleJob(jobDetail, trigger, recipients, emailTemplate);
-//			for (int i = 0; i < 40; i++) {
-//				Thread.sleep(1000);
-//			}
+			for (int i = 0; i < 20; i++) {
+				Thread.sleep(1000);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -90,7 +90,7 @@ public class EmailSendJobTest {
 		emailSchedule.setEndDate(LocalDate.now().plusDays(1));
 
 		List<RecipientDTO> recipients = new ArrayList<>(List.of(
-//				new RecipientDTO("ludagnitiyy@gmail.com", RecipientType.CC),
+				new RecipientDTO("ttatta3adpot@gmail.com", RecipientType.CC),
 				new RecipientDTO("egor-xt@ukr.net", RecipientType.TO)
 //				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO)
 		));

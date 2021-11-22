@@ -30,6 +30,7 @@ public class EmailSendJob extends QuartzJobBean {
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 		JobDetail jobDetail = context.getJobDetail();
 		String jobName = jobDetail.getKey().getName();
+		String senderEmail = jobDetail.getKey().getGroup();
 
 		AppUserEmailsInfo appUserEmailsInfo = appUserEmailsInfoService
 				.getAppUserEmailsInfoByJobName(jobName);
@@ -38,6 +39,6 @@ public class EmailSendJob extends QuartzJobBean {
 				.groupRecipients(recipientService.getAllByUserInfoId(appUserEmailsInfo.getId()));
 
 		EmailTemplate emailTemplate = appUserEmailsInfo.getEmailTemplate();
-		emailSenderService.sendMimeEmail(emailTemplate, groupedRecipients, appUserEmailsInfo);
+		emailSenderService.sendMimeEmail(emailTemplate, groupedRecipients, appUserEmailsInfo, senderEmail);
 	}
 }

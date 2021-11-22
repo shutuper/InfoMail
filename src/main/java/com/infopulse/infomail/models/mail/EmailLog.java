@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,11 +34,20 @@ public class EmailLog {
 	@JoinColumn(name = "user_info_id")
 	private AppUserEmailsInfo userInfo;
 
-	public EmailLog(String message, LocalDateTime logDateTime, EmailStatus emailStatus, AppUserEmailsInfo userInfo) {
+	@Email
+	@Column(nullable = false)
+	private String senderEmail;
+
+	public EmailLog(String message,
+	                LocalDateTime logDateTime,
+	                EmailStatus emailStatus,
+	                AppUserEmailsInfo userInfo,
+	                String senderEmail) {
 		this.message = message;
 		this.logDateTime = logDateTime;
 		this.emailStatus = emailStatus;
 		this.userInfo = userInfo;
+		this.senderEmail = senderEmail;
 	}
 
 }

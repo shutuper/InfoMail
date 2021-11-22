@@ -26,7 +26,7 @@ public class AppUserController {
 		}};
 	}
 
-	@GetMapping// methode is available only for authed users
+	@GetMapping// if user is not authed => authentication = null
 	public Boolean isAuthed(Authentication authentication) {
 		log.info("User {} is checking for authentication", authentication);
 		return !Objects.isNull(authentication);

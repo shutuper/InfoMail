@@ -41,7 +41,7 @@ public class EmailSenderService {
 
 	public void sendMimeEmail(EmailTemplate email,
 	                          Map<RecipientType, List<String>> groupedRecipients,
-	                          AppUserEmailsInfo appUserEmailsInfo) {
+	                          AppUserEmailsInfo appUserEmailsInfo, String senderEmail) {
 
 		TransactionDefinition def = new DefaultTransactionDefinition();
 		TransactionStatus status = transactionManager.getTransaction(def);
@@ -57,7 +57,7 @@ public class EmailSenderService {
 
 			mailSender.send(mimeMessage); // sending email template to all recipients
 
-			emailLogService.saveEmailLog(appUserEmailsInfo, null, EmailStatus.SENT);
+			emailLogService.saveEmailLog(appUserEmailsInfo, null, EmailStatus.SENT, senderEmail);
 
 			transactionManager.commit(status);
 			log.info("Job with user's info id: {} executed", appUserEmailsInfo.getId());
@@ -67,7 +67,9 @@ public class EmailSenderService {
 			log.error(String.format("Job with user's info id: %s failed", appUserEmailsInfo.getId()),
 					exception);
 			transactionManager.rollback(status);
-			emailLogService.saveEmailLog(appUserEmailsInfo, expMessage, EmailStatus.FAILED);
+			emailLogService.saveEmailLog(
+					appUserEmailsInfo, expMessage,
+					EmailStatus.FAILED, senderEmail);
 		}
 	}
 

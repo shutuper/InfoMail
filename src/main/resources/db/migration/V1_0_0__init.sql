@@ -11,7 +11,7 @@ CREATE TABLE qrtz_job_details
     requests_recovery BOOL         NOT NULL,
     job_data          BYTEA        NULL,
     PRIMARY KEY (job_name),
-    CONSTRAINT qrtz_job_details_uq UNIQUE (job_name,job_group,sched_name)
+    CONSTRAINT qrtz_job_details_uq UNIQUE (job_name, job_group, sched_name)
 );
 
 CREATE TABLE qrtz_triggers
@@ -214,7 +214,7 @@ create table app_user
     is_account_non_locked      boolean      not null,
     is_credentials_non_expired boolean      not null,
     is_enabled                 boolean      not null,
-    password                   varchar(150)  not null,
+    password                   varchar(150) not null,
     role                       varchar(25)  not null
 );
 
@@ -277,15 +277,15 @@ create table confirmation_token
 
 create table email_log
 (
-    id            bigint    not null
+    id            bigint       not null
         constraint email_log_pkey
             primary key,
     email_status  varchar(50),
-    log_date_time timestamp not null,
-    message       varchar(255),
-    user_info_id  bigint    not null
+    log_date_time timestamp    not null,
+    message       varchar(300),
+    user_info_id  bigint       not null
         constraint user_info_id_ref
-            references app_user_emails_info
+            references app_user_emails_info,
+    sender_email  varchar(100) not null
 );
-
 
