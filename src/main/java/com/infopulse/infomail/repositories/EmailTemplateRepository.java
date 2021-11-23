@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface EmailTemplateRepository extends JpaRepository<EmailTemplate, Long> {
 
 	Optional<EmailTemplate> findById(Long id);
-	List<EmailTemplate> findAllByAppUser_Email(String email);
+	List<EmailTemplate> findAllByAppUser_Email(String userEmail);
+	void deleteByAppUser_EmailAndAndId(String userEmail, Long id);
+	void deleteAllByAppUser_EmailAndIdIn(String userEmail, List<Long> ids);
 }
