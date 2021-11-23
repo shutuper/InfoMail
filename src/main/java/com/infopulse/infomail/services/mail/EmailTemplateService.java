@@ -33,6 +33,7 @@ public class EmailTemplateService {
 
 		EmailTemplate emailTemplate = new EmailTemplate(
 				new AppUser(userId),
+				emailTemplateDTO.getName(),
 				emailTemplateDTO.getSubject(),
 				emailTemplateDTO.getBody(),
 				shareLink);
@@ -48,6 +49,7 @@ public class EmailTemplateService {
 		return emailTemplates.stream()
 				.map(template -> new EmailTemplateDTO(
 						template.getId(),
+						template.getName(),
 						template.getSubject(),
 						template.getBody()
 				))

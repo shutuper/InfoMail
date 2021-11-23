@@ -224,6 +224,7 @@ create table email_template
     id           bigint       not null
         constraint email_template_pkey
             primary key,
+    name         varchar(255) not null,
     body         text         not null,
     sharing_link varchar(255) not null
         constraint sharing_link_unique

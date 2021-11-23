@@ -1,7 +1,10 @@
 package com.infopulse.infomail.models.mail;
 
 import com.infopulse.infomail.models.users.AppUser;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -23,6 +26,9 @@ public class EmailTemplate {
 	private AppUser appUser;
 
 	@Column(nullable = false)
+	private String name;
+
+	@Column(nullable = false)
 	private String subject;
 
 	@Column(columnDefinition = "text", nullable = false)
@@ -31,8 +37,9 @@ public class EmailTemplate {
 	@Column(nullable = false, unique = true)
 	private String sharingLink;
 
-	public EmailTemplate(AppUser appUser, String subject, String body, String sharingLink) {
+	public EmailTemplate(AppUser appUser, String name, String subject, String body, String sharingLink) {
 		this.appUser = appUser;
+		this.name = name;
 		this.subject = subject;
 		this.body = body;
 		this.sharingLink = sharingLink;
