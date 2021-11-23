@@ -23,12 +23,6 @@ public class AppUserEmailsInfo {
 	@JoinColumn(name = "qrtz_job_detail_id")
 	private QrtzJobDetail qrtzJobDetail;
 
-//	@Column(nullable = false, unique = true, updatable = false)
-//	private String jobName;
-//
-//	@Column(nullable = false)
-//	private String jobGroup;
-
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "email_template_id")
 	private EmailTemplate emailTemplate;

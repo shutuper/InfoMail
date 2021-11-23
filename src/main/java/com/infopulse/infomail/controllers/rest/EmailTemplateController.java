@@ -20,7 +20,7 @@ public class EmailTemplateController {
 	private final EmailTemplateService templateService;
 
 	@PostMapping
-	public ResponseEntity addTemplate(@Valid @RequestBody EmailTemplateDTO templateDTO, Authentication authentication) {
+	public ResponseEntity<?> addTemplate(@Valid @RequestBody EmailTemplateDTO templateDTO, Authentication authentication) {
 		try {
 			Long userId = (Long) authentication.getCredentials();
 			templateService.saveEmailTemplate(templateDTO, userId);

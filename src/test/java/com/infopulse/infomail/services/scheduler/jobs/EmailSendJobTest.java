@@ -66,8 +66,9 @@ public class EmailSendJobTest {
 
 			Trigger trigger = cronSchedulerService.buildTrigger(
 					jobDetail,
-					CronScheduleBuilder.cronSchedule("* * * * * ? *"),
+					CronScheduleBuilder.cronSchedule("*/30 * * * * ? *"),
 					emailSchedule);
+
 
 			cronSchedulerService.scheduleJob(jobDetail, trigger, recipients, emailTemplate);
 			for (int i = 0; i < 20; i++) {
@@ -100,6 +101,7 @@ public class EmailSendJobTest {
 		EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO();
 		emailTemplateDTO.setBody("BODYBODYBODY");
 		emailTemplateDTO.setSubject("SUBJECTSUBJECTSUBJECT");
+		emailTemplateDTO.setName("NAMENAMENAMENAMENAME");
 
 		emailDTO.setEmailTemplate(emailTemplateDTO);
 		return emailDTO;

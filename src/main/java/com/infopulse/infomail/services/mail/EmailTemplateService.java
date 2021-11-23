@@ -20,8 +20,8 @@ public class EmailTemplateService {
 
 	private final EmailTemplateRepository emailTemplateRepository;
 
-	public EmailTemplate getEmailTemplateById(Long id) {
-		return emailTemplateRepository.findById(id)
+	public EmailTemplate getEmailTemplateById(Long id, String userEmail) {
+		return emailTemplateRepository.findByIdAndAppUser_Email(id,userEmail)
 				.orElseThrow(() -> new IllegalStateException(
 						String.format("EmailTemplate with id %s does not exist", id)
 				));
