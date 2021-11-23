@@ -1,5 +1,6 @@
 package com.infopulse.infomail.controllers.rest;
 
+import com.infopulse.infomail.dto.api.EmailTemplatesIdsDTO;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.services.mail.EmailTemplateService;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,29 @@ public class EmailTemplateController {
 		try {
 			String userEmail = authentication.getName();
 			return ResponseEntity.ok(templateService.getEmailTemplates(userEmail));
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@DeleteMapping("{id}")
+	public ResponseEntity<?> deleteById(@PathVariable("id") Long id, Authentication authentication) {
+		try {
+			String userEmail = (String) authentication.getPrincipal();
+			templateService.deleteByIdAndUserEmail(id, userEmail);
+			return ResponseEntity.ok().build();
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@DeleteMapping
+	public ResponseEntity<?> deleteAllByIds(@RequestBody EmailTemplatesIdsDTO ids, Authentication authentication) {
+		try {
+			String userEmail = (String) authentication.getPrincipal();
+			templateService.deleteAllByIdsAndUserEmail(ids, userEmail);
+			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
