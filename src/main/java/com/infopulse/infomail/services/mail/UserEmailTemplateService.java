@@ -1,10 +1,9 @@
-package com.infopulse.infomail.services;
+package com.infopulse.infomail.services.mail;
 
+import com.infopulse.infomail.dto.api.EmailTemplatesIdsDTO;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
-import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.UserEmailTemplate;
 import com.infopulse.infomail.models.users.AppUser;
-import com.infopulse.infomail.repositories.EmailTemplateRepository;
 import com.infopulse.infomail.repositories.UserEmailTemplateRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,5 +55,20 @@ public class UserEmailTemplateService {
 						template.getBody()
 				))
 				.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void deleteByIdAndUserEmail(Long id, String userEmail) {
+		log.info(String.valueOf(getEmailTemplateById(id, userEmail)));
+		log.info("User {} delete emailTemplate by id: {}", userEmail, id);
+		userEmailTemplateRepository.deleteByIdAndAppUser_Email(id, userEmail);
+	}
+
+	@Transactional
+	public void deleteAllByIdsAndUserEmail(EmailTemplatesIdsDTO ids, String userEmail) {
+		List<UserEmailTemplate> emailTemplates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail);
+		emailTemplates.forEach((e) -> log.info(e.toString()));
+		log.info("User {} delete userEmailTemplates by ids: {}", userEmail, ids.getIds().toString());
+		userEmailTemplateRepository.deleteAllByAppUser_EmailAndIdIn(userEmail, ids.getIds());
 	}
 }

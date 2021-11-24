@@ -2,8 +2,7 @@ package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.api.EmailTemplatesIdsDTO;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
-import com.infopulse.infomail.services.UserEmailTemplateService;
-import com.infopulse.infomail.services.mail.EmailTemplateService;
+import com.infopulse.infomail.services.mail.UserEmailTemplateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/templates")
 @AllArgsConstructor
-public class EmailTemplateController {
+public class UserEmailTemplateController {
 
 	private final UserEmailTemplateService templateService;
 
