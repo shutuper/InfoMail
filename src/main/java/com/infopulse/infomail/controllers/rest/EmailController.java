@@ -43,7 +43,7 @@ public class EmailController {
 			String userEmail = (String) authentication.getPrincipal();
 			Long userId = (Long) authentication.getCredentials();
 
-			EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(emailTemplateDTO, userId);
+			EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(emailTemplateDTO, userId, userEmail);
 
 			CronExpWithDesc cronExpWithDesc = cronSchedulerService
 					.generateCronExpressionWithDescription(emailSchedule);

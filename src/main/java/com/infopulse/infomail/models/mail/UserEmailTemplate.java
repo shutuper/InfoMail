@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @ToString
 @NoArgsConstructor
-public class EmailTemplate {
+public class UserEmailTemplate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,22 +26,22 @@ public class EmailTemplate {
 	private AppUser appUser;
 
 	@Column(nullable = false)
+	private String name;
+
+	@Column(nullable = false)
 	private String subject;
 
 	@Column(columnDefinition = "text", nullable = false)
 	private String body;
 
+	@Column(nullable = false, unique = true)
+	private String sharingLink;
 
-	public EmailTemplate(AppUser appUser, String subject, String body) {
+	public UserEmailTemplate(AppUser appUser, String name, String subject, String body, String sharingLink) {
 		this.appUser = appUser;
+		this.name = name;
 		this.subject = subject;
 		this.body = body;
+		this.sharingLink = sharingLink;
 	}
-
-	public EmailTemplate(UserEmailTemplate userEmailTemplate) {
-		this.appUser = userEmailTemplate.getAppUser();
-		this.body = userEmailTemplate.getBody();
-		this.subject = userEmailTemplate.getSubject();
-	}
-
 }

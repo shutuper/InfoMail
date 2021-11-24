@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 public class EmailTemplateDTO {
 
 	private Long id;
+
 	@NotBlank
 	private String name;
 	@NotBlank

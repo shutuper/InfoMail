@@ -49,7 +49,7 @@ public class EmailSendJobTest {
 			String userEmail = (String) authentication.getPrincipal();
 			Long userId = (Long) authentication.getCredentials();
 
-			EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(emailTemplateDTO, userId);
+			EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(emailTemplateDTO, userId, userEmail);
 
 			CronExpWithDesc cronExpWithDesc = cronSchedulerService
 					.generateCronExpressionWithDescription(emailSchedule);
@@ -101,7 +101,6 @@ public class EmailSendJobTest {
 		EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO();
 		emailTemplateDTO.setBody("BODYBODYBODY");
 		emailTemplateDTO.setSubject("SUBJECTSUBJECTSUBJECT");
-		emailTemplateDTO.setName("NAMENAMENAMENAMENAME");
 
 		emailDTO.setEmailTemplate(emailTemplateDTO);
 		return emailDTO;

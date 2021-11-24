@@ -224,11 +224,7 @@ create table email_template
     id           bigint       not null
         constraint email_template_pkey
             primary key,
-    name         varchar(255) not null,
     body         text         not null,
-    sharing_link varchar(255) not null
-        constraint sharing_link_unique
-            unique,
     subject      varchar(255) not null,
     app_user_id  bigint       not null
         constraint app_user_id_ref
@@ -290,3 +286,17 @@ create table email_log
     sender_email  varchar(100) not null
 );
 
+create table user_email_template
+(
+    id           bigint       not null
+        primary key,
+    body         text         not null,
+    name         varchar(255) not null,
+    sharing_link varchar(255) not null
+        constraint sharing_link_unique
+            unique,
+    subject      varchar(255) not null,
+    app_user_id  bigint
+        constraint app_user_ref
+            references app_user
+);
