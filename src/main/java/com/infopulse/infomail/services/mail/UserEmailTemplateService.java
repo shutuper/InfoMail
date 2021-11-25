@@ -1,7 +1,7 @@
 package com.infopulse.infomail.services.mail;
 
 import com.infopulse.infomail.dto.api.EmailTemplatesIdsDTO;
-import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
+import com.infopulse.infomail.dto.mail.UserEmailTemplateDTO;
 import com.infopulse.infomail.models.mail.UserEmailTemplate;
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.repositories.UserEmailTemplateRepository;
@@ -29,7 +29,7 @@ public class UserEmailTemplateService {
 	}
 
 	@Transactional
-	public UserEmailTemplate saveEmailTemplate(EmailTemplateDTO emailTemplateDTO, Long userId) {
+	public UserEmailTemplate saveEmailTemplate(UserEmailTemplateDTO emailTemplateDTO, Long userId) {
 		String shareLink = UUID.randomUUID().toString();
 
 		UserEmailTemplate emailTemplate = new UserEmailTemplate(
@@ -42,17 +42,19 @@ public class UserEmailTemplateService {
 		return userEmailTemplateRepository.save(emailTemplate);
 	}
 
-	public List<EmailTemplateDTO> getEmailTemplates(String userEmail) {
+	public List<UserEmailTemplateDTO> getEmailTemplates(String userEmail) {
 		List<UserEmailTemplate> emailTemplates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail);
 		emailTemplates.forEach(System.out::println);
 		log.info("User {} requested emailTemplates",
 				userEmail);
 		return emailTemplates.stream()
-				.map(template -> new EmailTemplateDTO(
+				.map(template -> new UserEmailTemplateDTO(
 						template.getId(),
 						template.getName(),
 						template.getSubject(),
-						template.getBody()
+						template.getBody(),
+						userEmail,
+						template.getSharingLink()
 				))
 				.collect(Collectors.toList());
 	}

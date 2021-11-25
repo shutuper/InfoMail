@@ -1,7 +1,7 @@
 package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.api.EmailTemplatesIdsDTO;
-import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
+import com.infopulse.infomail.dto.mail.UserEmailTemplateDTO;
 import com.infopulse.infomail.services.mail.UserEmailTemplateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class UserEmailTemplateController {
 	private final UserEmailTemplateService templateService;
 
 	@PostMapping
-	public ResponseEntity<?> addTemplate(@Valid @RequestBody EmailTemplateDTO templateDTO, Authentication authentication) {
+	public ResponseEntity<?> addTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO, Authentication authentication) {
 		try {
 			Long userId = (Long) authentication.getCredentials();
 			templateService.saveEmailTemplate(templateDTO, userId);
@@ -32,7 +32,7 @@ public class UserEmailTemplateController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<EmailTemplateDTO>> getTemplates(Authentication authentication) {
+	public ResponseEntity<List<UserEmailTemplateDTO>> getTemplates(Authentication authentication) {
 		try {
 			String userEmail = authentication.getName();
 			return ResponseEntity.ok(templateService.getEmailTemplates(userEmail));
