@@ -7,10 +7,12 @@ import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.repositories.UserEmailTemplateRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,12 @@ public class UserEmailTemplateService {
 	}
 
 	@Transactional
-	public UserEmailTemplate saveEmailTemplate(UserEmailTemplateDTO emailTemplateDTO, Long userId) {
+	public UserEmailTemplate saveEmailTemplate(UserEmailTemplateDTO emailTemplateDTO, Authentication authentication) {
+		if(Objects.nonNull(emailTemplateDTO.getId())) {
+			return updateEmailTemplate(emailTemplateDTO, authentication);
+		}
+
+		Long userId = (Long) authentication.getCredentials();
 		String shareLink = UUID.randomUUID().toString();
 
 		UserEmailTemplate emailTemplate = new UserEmailTemplate(
@@ -40,6 +47,19 @@ public class UserEmailTemplateService {
 				shareLink);
 
 		return userEmailTemplateRepository.save(emailTemplate);
+	}
+
+	@Transactional
+	public UserEmailTemplate updateEmailTemplate(UserEmailTemplateDTO templateDTO, Authentication authentication) {
+		String userEmail = authentication.getName();
+
+		UserEmailTemplate templateFromDb = getEmailTemplateById(templateDTO.getId(), userEmail);
+
+		templateFromDb.setName(templateDTO.getName());
+		templateFromDb.setSubject(templateDTO.getSubject());
+		templateFromDb.setBody(templateDTO.getBody());
+
+		return userEmailTemplateRepository.save(templateFromDb);
 	}
 
 	public List<UserEmailTemplateDTO> getEmailTemplates(String userEmail) {
