@@ -50,6 +50,26 @@ public class UserEmailTemplateController {
 		}
 	}
 
+	@GetMapping("{id}")
+	public ResponseEntity<UserEmailTemplateDTO> getTemplateById(@PathVariable("id") Long id, Authentication authentication) {
+		try {
+			String userEmail = (String) authentication.getPrincipal();
+			UserEmailTemplate template = templateService.getEmailTemplateById(id, userEmail);
+			UserEmailTemplateDTO dto = new UserEmailTemplateDTO(
+					template.getId(),
+					template.getName(),
+					template.getSubject(),
+					template.getBody(),
+					userEmail,
+					template.getSharingLink()
+			);
+			return ResponseEntity.ok(dto);
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteById(@PathVariable("id") Long id, Authentication authentication) {
 		try {
