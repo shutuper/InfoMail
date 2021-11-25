@@ -14,8 +14,6 @@ public class EmailTemplateDTO {
 	private Long id;
 
 	@NotBlank
-	private String name;
-	@NotBlank
 	private String subject;
 	@NotBlank
 	private String body;
