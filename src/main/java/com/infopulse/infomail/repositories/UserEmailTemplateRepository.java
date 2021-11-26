@@ -1,7 +1,6 @@
 package com.infopulse.infomail.repositories;
 
 
-import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.UserEmailTemplate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,6 +12,8 @@ import java.util.Optional;
 public interface UserEmailTemplateRepository extends JpaRepository<UserEmailTemplate, Long> {
 
 	Optional<UserEmailTemplate> findByIdAndAppUser_Email(Long id, String userEmail);
+
+	Optional<UserEmailTemplate> findBySharingLink(String sharingLink);
 
 	List<UserEmailTemplate> findAllByAppUser_Email(String userEmail);
 
