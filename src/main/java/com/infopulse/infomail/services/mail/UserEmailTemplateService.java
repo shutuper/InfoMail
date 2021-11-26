@@ -24,9 +24,10 @@ public class UserEmailTemplateService {
 	private final UserEmailTemplateRepository userEmailTemplateRepository;
 
 	public UserEmailTemplate getEmailTemplateById(Long id, String userEmail) {
+		log.info("User {} requested UserEmailTemplate by id: {}", userEmail, id);
 		return userEmailTemplateRepository.findByIdAndAppUser_Email(id, userEmail)
 				.orElseThrow(() -> new IllegalStateException(
-						String.format("EmailTemplate with id %s does not exist", id)
+						String.format("UserEmailTemplate with id %s does not exist", id)
 				));
 	}
 
@@ -36,6 +37,7 @@ public class UserEmailTemplateService {
 			return updateEmailTemplate(emailTemplateDTO, authentication);
 		}
 
+		log.info("User {} save new UserEmailTemplate", authentication.getName());
 		Long userId = (Long) authentication.getCredentials();
 		String shareLink = UUID.randomUUID().toString();
 
@@ -52,8 +54,10 @@ public class UserEmailTemplateService {
 	@Transactional
 	public UserEmailTemplate updateEmailTemplate(UserEmailTemplateDTO templateDTO, Authentication authentication) {
 		String userEmail = authentication.getName();
+		long templateId = templateDTO.getId();
 
-		UserEmailTemplate templateFromDb = getEmailTemplateById(templateDTO.getId(), userEmail);
+		log.info("User {} update UserEmailTemplate by id: {}", userEmail, templateId);
+		UserEmailTemplate templateFromDb = getEmailTemplateById(templateId, userEmail);
 
 		templateFromDb.setName(templateDTO.getName());
 		templateFromDb.setSubject(templateDTO.getSubject());
@@ -65,7 +69,7 @@ public class UserEmailTemplateService {
 	public List<UserEmailTemplateDTO> getEmailTemplates(String userEmail) {
 		List<UserEmailTemplate> emailTemplates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail);
 		emailTemplates.forEach(System.out::println);
-		log.info("User {} requested emailTemplates",
+		log.info("User {} requested UserEmailTemplates",
 				userEmail);
 		return emailTemplates.stream()
 				.map(template -> new UserEmailTemplateDTO(
@@ -82,7 +86,7 @@ public class UserEmailTemplateService {
 	@Transactional
 	public void deleteByIdAndUserEmail(Long id, String userEmail) {
 		log.info(String.valueOf(getEmailTemplateById(id, userEmail)));
-		log.info("User {} delete emailTemplate by id: {}", userEmail, id);
+		log.info("User {} delete UserEmailTemplate by id: {}", userEmail, id);
 		userEmailTemplateRepository.deleteByIdAndAppUser_Email(id, userEmail);
 	}
 
@@ -90,7 +94,7 @@ public class UserEmailTemplateService {
 	public void deleteAllByIdsAndUserEmail(EmailTemplatesIdsDTO ids, String userEmail) {
 		List<UserEmailTemplate> emailTemplates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail);
 		emailTemplates.forEach((e) -> log.info(e.toString()));
-		log.info("User {} delete userEmailTemplates by ids: {}", userEmail, ids.getIds().toString());
+		log.info("User {} delete UserEmailTemplates by ids: {}", userEmail, ids.getIds().toString());
 		userEmailTemplateRepository.deleteAllByAppUser_EmailAndIdIn(userEmail, ids.getIds());
 	}
 }
