@@ -70,6 +70,26 @@ public class UserEmailTemplateController {
 		}
 	}
 
+	@GetMapping("/shared/{sharingId}")
+	public ResponseEntity<UserEmailTemplateDTO> getTemplateBySharingId(@PathVariable("sharingId") String sharingId, Authentication authentication) {
+		try {
+			String userEmail = (String) authentication.getPrincipal();
+			UserEmailTemplate template = templateService.getTemplateBySharingId(sharingId, userEmail);
+			UserEmailTemplateDTO dto = new UserEmailTemplateDTO(
+					template.getId(),
+					template.getName(),
+					template.getSubject(),
+					template.getBody(),
+					template.getAppUser().getEmail(),
+					template.getSharingLink()
+			);
+			return ResponseEntity.ok(dto);
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteById(@PathVariable("id") Long id, Authentication authentication) {
 		try {

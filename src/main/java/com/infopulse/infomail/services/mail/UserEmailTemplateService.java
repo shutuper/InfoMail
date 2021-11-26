@@ -31,6 +31,14 @@ public class UserEmailTemplateService {
 				));
 	}
 
+	public UserEmailTemplate getTemplateBySharingId(String sharingId, String userEmail) {
+		log.info("User {} requested UserEmailTemplate by sharingId: {}", userEmail, sharingId);
+		return userEmailTemplateRepository.findBySharingLink(sharingId)
+				.orElseThrow(() -> new IllegalStateException(
+						String.format("UserEmailTemplate with sharingId %s does not exist", sharingId)
+				));
+	}
+
 	@Transactional
 	public UserEmailTemplate saveEmailTemplate(UserEmailTemplateDTO emailTemplateDTO, Authentication authentication) {
 		if(Objects.nonNull(emailTemplateDTO.getId())) {
