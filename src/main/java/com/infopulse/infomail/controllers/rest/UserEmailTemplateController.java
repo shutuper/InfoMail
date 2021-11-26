@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/templates")
+@RequestMapping("/api/v1/usertemplates")
 @AllArgsConstructor
 public class UserEmailTemplateController {
 
