@@ -74,6 +74,22 @@ public class UserEmailTemplateService {
 		return userEmailTemplateRepository.save(templateFromDb);
 	}
 
+	@Transactional
+	public UserEmailTemplate saveSharedTemplate(UserEmailTemplateDTO emailTemplateDTO, Authentication authentication) {
+		log.info("User {} save shared template as new UserEmailTemplate", authentication.getName());
+		Long userId = (Long) authentication.getCredentials();
+		String shareLink = UUID.randomUUID().toString();
+
+		UserEmailTemplate emailTemplate = new UserEmailTemplate(
+				new AppUser(userId),
+				emailTemplateDTO.getName(),
+				emailTemplateDTO.getSubject(),
+				emailTemplateDTO.getBody(),
+				shareLink);
+
+		return userEmailTemplateRepository.save(emailTemplate);
+	}
+
 	public List<UserEmailTemplateDTO> getEmailTemplates(String userEmail) {
 		List<UserEmailTemplate> emailTemplates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail);
 		emailTemplates.forEach(System.out::println);

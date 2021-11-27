@@ -90,6 +90,16 @@ public class UserEmailTemplateController {
 		}
 	}
 
+	@PostMapping("/shared/")
+	public ResponseEntity<?> saveSharedTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO, Authentication authentication) {
+		try {
+			templateService.saveSharedTemplate(templateDTO, authentication);
+			return ResponseEntity.ok().build();
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteById(@PathVariable("id") Long id, Authentication authentication) {
 		try {
