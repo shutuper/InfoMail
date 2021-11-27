@@ -21,7 +21,8 @@ public class EmailTemplateController {
 	private final EmailTemplateService templateService;
 
 	@GetMapping("{id}")
-	public ResponseEntity<EmailTemplateDTO> getTemplateById(@PathVariable("id") Long id, Authentication authentication) {
+	public ResponseEntity<EmailTemplateDTO> getTemplateById(@PathVariable("id") Long id,
+	                                                        Authentication authentication) {
 		try {
 			String userEmail = (String) authentication.getPrincipal();
 			EmailTemplate template = templateService.getEmailTemplateById(id, userEmail);

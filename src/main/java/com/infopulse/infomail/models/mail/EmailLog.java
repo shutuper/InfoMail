@@ -1,10 +1,7 @@
 package com.infopulse.infomail.models.mail;
 
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor
 public class EmailLog {
 
@@ -30,7 +28,7 @@ public class EmailLog {
 	@Enumerated(EnumType.STRING)
 	private EmailStatus emailStatus;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_info_id")
 	private AppUserEmailsInfo userInfo;
 

@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,7 +54,6 @@ public class EmailSendJobTest {
 
 			CronExpWithDesc cronExpWithDesc = cronSchedulerService
 					.generateCronExpressionWithDescription(emailSchedule);
-
 			ScheduleBuilder<CronTrigger> scheduleBuilder = cronSchedulerService
 					.buildSchedule(cronExpWithDesc.getCronExpression());
 
@@ -87,12 +87,10 @@ public class EmailSendJobTest {
 		emailSchedule.setRepeatAt(RepeatType.NOTHING);
 		emailSchedule.setSendDateTime(LocalDateTime.now().plusSeconds(3));
 		emailSchedule.setSendNow(true);
-		emailDTO.setEmailSchedule(emailSchedule.toDTO());
 		emailSchedule.setEndDate(LocalDate.now().plusDays(1));
+		emailDTO.setEmailSchedule(emailSchedule.toDTO());
 
 		List<RecipientDTO> recipients = new ArrayList<>(List.of(
-				new RecipientDTO("ttatta3adpot@gmail.com", RecipientType.CC),
-				new RecipientDTO("egor-xt@ukr.net", RecipientType.TO)
 //				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO)
 		));
 

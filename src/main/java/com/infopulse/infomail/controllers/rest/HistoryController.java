@@ -47,8 +47,20 @@ public class HistoryController {
 
 	}
 
+	@PutMapping("{id}")
+	public ResponseEntity<HistoryDTO> retryFailedEmail(@PathVariable("id") Long id,
+	                                                   Authentication authentication) {
+		try {
+			String userEmail = (String) authentication.getPrincipal();
+			HistoryDTO historyDTO = emailLogService.retryFailedEmail(id, userEmail);
+			return ResponseEntity.ok(historyDTO);
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> deleteById(@PathVariable("id") Long id, Authentication authentication) {
+	public ResponseEntity<?> deleteEmailById(@PathVariable("id") Long id, Authentication authentication) {
 		try {
 			String userEmail = (String) authentication.getPrincipal();
 			emailLogService.deleteByIdAndUserEmail(id, userEmail);
@@ -60,7 +72,7 @@ public class HistoryController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> deleteAllByIds(@RequestBody EmailsIdsDTO ids, Authentication authentication) {
+	public ResponseEntity<?> deleteAllEmailsByIds(@RequestBody EmailsIdsDTO ids, Authentication authentication) {
 		try {
 			String userEmail = (String) authentication.getPrincipal();
 			emailLogService.deleteAllByIdsAndUserEmail(ids, userEmail);
@@ -69,5 +81,4 @@ public class HistoryController {
 			return ResponseEntity.badRequest().build();
 		}
 	}
-
 }

@@ -1,6 +1,7 @@
 package com.infopulse.infomail.services.mail;
 
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
+import com.infopulse.infomail.models.mail.EmailLog;
 import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
 import com.infopulse.infomail.models.mail.enums.RecipientType;
@@ -39,25 +40,17 @@ public class EmailSenderService {
 		this.transactionManager = transactionManager;
 	}
 
-	public void sendMimeEmail(EmailTemplate email,
-	                          Map<RecipientType, List<String>> groupedRecipients,
-	                          AppUserEmailsInfo appUserEmailsInfo, String senderEmail) {
+	public void sendScheduledMimeEmail(EmailTemplate email,
+	                                   Map<RecipientType, List<String>> groupedRecipients,
+	                                   AppUserEmailsInfo appUserEmailsInfo, String senderEmail) {
 
 		TransactionDefinition def = new DefaultTransactionDefinition();
 		TransactionStatus status = transactionManager.getTransaction(def);
 
 		try {
-			MimeMessage mimeMessage = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
 
-			helper.setFrom(sendFrom);
-			helper.setText(email.getBody(), true);
-			helper.setSubject(email.getSubject());
-			setGroupedRecipientsToEmail(groupedRecipients, helper); // set TO, CC, BCC recipients
-
-			mailSender.send(mimeMessage); // sending email template to all recipients
-
-			emailLogService.saveEmailLog(appUserEmailsInfo, null, EmailStatus.SENT, senderEmail);
+			execute(email, groupedRecipients);
+			emailLogService.saveNewEmailLog(appUserEmailsInfo, null, EmailStatus.SENT, senderEmail);
 
 			transactionManager.commit(status);
 			log.info("Job with user's info id: {} executed", appUserEmailsInfo.getId());
@@ -67,10 +60,44 @@ public class EmailSenderService {
 			log.error(String.format("Job with user's info id: %s failed", appUserEmailsInfo.getId()),
 					exception);
 			transactionManager.rollback(status);
-			emailLogService.saveEmailLog(
+			emailLogService.saveNewEmailLog(
 					appUserEmailsInfo, expMessage,
 					EmailStatus.FAILED, senderEmail);
 		}
+	}
+
+	public EmailLog resendFailedMimeEmail(EmailTemplate email,
+	                                  Map<RecipientType, List<String>> groupedRecipients, EmailLog emailLog) {
+		TransactionDefinition def = new DefaultTransactionDefinition();
+		TransactionStatus status = transactionManager.getTransaction(def);
+		EmailLog result;
+		try {
+			execute(email, groupedRecipients);
+			result = emailLogService.saveSentEmailLog(emailLog);
+
+			transactionManager.commit(status);
+			log.info("Email with id {} is successfully resent", emailLog.getId());
+		} catch (Exception exception) {
+			String expMessage = exception.getMessage();
+
+			log.error(String.format("Sending email with id %s is failed again", emailLog.getId()),
+					exception);
+			transactionManager.rollback(status);
+			result = emailLogService.saveFailedEmailLog(emailLog, expMessage);
+		}
+		return result;
+	}
+
+	private void execute(EmailTemplate email, Map<RecipientType, List<String>> groupedRecipients) throws MessagingException {
+		MimeMessage mimeMessage = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+
+		helper.setFrom(sendFrom);
+		helper.setText(email.getBody(), true);
+		helper.setSubject(email.getSubject());
+		setGroupedRecipientsToEmail(groupedRecipients, helper); // set TO, CC, BCC recipients
+
+		mailSender.send(mimeMessage); // sending email template to all recipients
 	}
 
 	private void setGroupedRecipientsToEmail(

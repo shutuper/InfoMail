@@ -34,9 +34,9 @@ public class EmailSchedule implements Schedule {
 		EmailScheduleDTO dto = new EmailScheduleDTO();
 		dto.setSendNow(this.sendNow);
 
-		if(this.sendDateTime !=null) dto.setSendDateTime(Timestamp.valueOf(this.sendDateTime));
+		if (this.sendDateTime != null) dto.setSendDateTime(Timestamp.valueOf(this.sendDateTime));
 		dto.setRepeatAt(this.repeatAt);
-		if(this.endDate !=null) dto.setEndDate(Timestamp.valueOf(LocalDateTime.of(this.endDate, LocalTime.now())));
+		if (this.endDate != null) dto.setEndDate(Timestamp.valueOf(LocalDateTime.of(this.endDate, LocalTime.now())));
 
 		dto.setDaysOfWeek(this.daysOfWeek);
 		dto.setDayOfMonth(this.dayOfMonth);
@@ -51,11 +51,11 @@ public class EmailSchedule implements Schedule {
 		EmailSchedule schedule = new EmailSchedule();
 		schedule.setSendNow(dto.isSendNow());
 
-		if(dto.getSendDateTime() !=null) schedule.setSendDateTime(dto.getSendDateTime().toLocalDateTime());
+		if (dto.getSendDateTime() != null) schedule.setSendDateTime(dto.getSendDateTime().toLocalDateTime());
 		schedule.setRepeatAt(dto.getRepeatAt());
-		if(dto.getEndDate() !=null) schedule.setEndDate(dto.getEndDate().toLocalDateTime().toLocalDate());
+		if (dto.getEndDate() != null) schedule.setEndDate(dto.getEndDate().toLocalDateTime().toLocalDate());
 
-		if(dto.getDaysOfWeek() !=null) schedule.setDaysOfWeek(dto.getDaysOfWeek());
+		if (dto.getDaysOfWeek() != null) schedule.setDaysOfWeek(dto.getDaysOfWeek());
 		schedule.setDayOfMonth(dto.getDayOfMonth());
 		schedule.setDayOfWeek(dto.getDayOfWeek());
 		schedule.setNumberOfWeek(dto.getNumberOfWeek());

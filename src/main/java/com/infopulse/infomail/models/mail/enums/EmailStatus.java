@@ -6,5 +6,7 @@ public enum EmailStatus {
 
 	WAIT, // waiting for trigger
 
-	FAILED // failed because of server problems
+	FAILED; // failed because of server problems
+
+	public boolean isSent() {return this.equals(SENT);}
 }

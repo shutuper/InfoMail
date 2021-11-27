@@ -15,17 +15,14 @@ import com.infopulse.infomail.services.scheduler.сronDescriptor.CronDescriptorS
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.persistence.CascadeType;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -124,8 +121,9 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 
 		if (scheduleBuilder != null)
 			builder.withSchedule(scheduleBuilder);
-
-		return builder.build();
+		Trigger tg = builder.build();
+		log.info("Trigger end date (2) is: " + tg.getEndTime());
+		return tg;
 	}
 
 
@@ -179,11 +177,11 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	private Date parseDateFromLocal(Temporal temporal) {
 		if (temporal == null)
 			return null;
-		else if (temporal instanceof LocalDate)
-			return Timestamp.valueOf(((LocalDate) temporal).atStartOfDay().plusDays(1L));
 		else if (temporal instanceof LocalDateTime)
 			return Timestamp.valueOf((LocalDateTime) temporal);
-		else throw new IllegalArgumentException("Date can't be parsed");
+		else if (temporal instanceof LocalDate)
+			return Timestamp.valueOf(((LocalDate) temporal).atStartOfDay().plusDays(1L));
+		else throw new IllegalArgumentException("Can't parse date: " + temporal.toString());
 	}
 
 }
