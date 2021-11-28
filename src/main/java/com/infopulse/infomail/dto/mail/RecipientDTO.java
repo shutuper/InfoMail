@@ -4,13 +4,14 @@ import com.infopulse.infomail.models.mail.Recipient;
 import com.infopulse.infomail.models.mail.enums.RecipientType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.lang.Nullable;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class RecipientDTO implements Recipient {
 
@@ -19,7 +20,4 @@ public class RecipientDTO implements Recipient {
 
 	@NotBlank
 	private RecipientType recipientType;
-
-	public RecipientDTO() {
-	}
 }

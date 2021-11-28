@@ -2,8 +2,7 @@ package com.infopulse.infomail.dto.exeptions;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageDTO {

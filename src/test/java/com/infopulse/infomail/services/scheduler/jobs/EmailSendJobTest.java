@@ -66,7 +66,7 @@ public class EmailSendJobTest {
 
 			Trigger trigger = cronSchedulerService.buildTrigger(
 					jobDetail,
-					CronScheduleBuilder.cronSchedule("*/30 * * * * ? *"),
+					CronScheduleBuilder.cronSchedule("* * * * * ? *"),
 					emailSchedule);
 
 
@@ -91,7 +91,32 @@ public class EmailSendJobTest {
 		emailDTO.setEmailSchedule(emailSchedule.toDTO());
 
 		List<RecipientDTO> recipients = new ArrayList<>(List.of(
-//				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO)
+				new RecipientDTO("fsdf412sdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdf12sdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs423df@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdf14sdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsd23fsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs5df@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("f4sdfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs3df@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("f1sdfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs2df@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs2sdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs21ddf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs2faddf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs2adfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfs2afdsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdf34sdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdf2sdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdf3sdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fsdfsdf@ukr.net", RecipientType.TO),
+				new RecipientDTO("fasasf@ukr.net", RecipientType.BCC),
+				new RecipientDTO("fsdfasfsdf@ukr.net", RecipientType.CC)
 		));
 
 		emailDTO.setRecipients(recipients);

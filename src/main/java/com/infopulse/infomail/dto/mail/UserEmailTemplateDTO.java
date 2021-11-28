@@ -1,13 +1,11 @@
 package com.infopulse.infomail.dto.mail;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserEmailTemplateDTO {
 
@@ -21,11 +19,8 @@ public class UserEmailTemplateDTO {
 
 	@NotBlank
 	private String body;
-
+	
 	private String userEmail;
-
 	private String sharingLink;
 
-	public UserEmailTemplateDTO() {
-	}
 }

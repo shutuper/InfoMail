@@ -1,14 +1,13 @@
 package com.infopulse.infomail.dto.mail;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import com.infopulse.infomail.models.mail.EmailTemplate;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class EmailTemplateDTO {
 
 	private Long id;
@@ -18,6 +17,8 @@ public class EmailTemplateDTO {
 	@NotBlank
 	private String body;
 
-	public EmailTemplateDTO() {
+	public EmailTemplateDTO(EmailTemplate template) {
+		this.subject = template.getSubject();
+		this.body = template.getBody();
 	}
 }

@@ -1,7 +1,10 @@
 package com.infopulse.infomail.services.mail;
 
+import com.infopulse.infomail.dto.api.EmailWithTemplateDTO;
 import com.infopulse.infomail.dto.api.EmailsIdsDTO;
-import com.infopulse.infomail.dto.api.HistoryDTO;
+import com.infopulse.infomail.dto.api.ExecutedEmailDTO;
+import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
+import com.infopulse.infomail.dto.mail.RecipientDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailLog;
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
@@ -33,6 +36,7 @@ public class EmailLogService {
 	private final RecipientService recipientService;
 
 	public EmailLogService(EmailLogRepository emailLogRepository,
+	                       // @Lazy because of cycle dependency
 	                       @Lazy EmailSenderService emailSenderService,
 	                       RecipientService recipientService) {
 		this.emailLogRepository = emailLogRepository;
@@ -40,13 +44,28 @@ public class EmailLogService {
 		this.recipientService = recipientService;
 	}
 
-	private static HistoryDTO convertToDto(EmailLog emailLog) {
-		return new HistoryDTO(
+	private static ExecutedEmailDTO convertToDto(EmailLog emailLog) {
+		return new ExecutedEmailDTO(
 				emailLog.getId(),
 				emailLog.getLogDateTime(),
 				emailLog.getEmailStatus().equals(EmailStatus.SENT),
 				emailLog.getUserInfo().getEmailTemplate().getSubject()
 		);
+	}
+
+
+	public EmailWithTemplateDTO getEmailWithTemplateDTO(Long emailId, String senderEmail) {
+		EmailLog emailLog = getEmailLogByIdAndSenderEmail(emailId, senderEmail);
+		AppUserEmailsInfo userInfo = emailLog.getUserInfo();
+
+		ExecutedEmailDTO email = EmailLogService.convertToDto(emailLog);
+		EmailTemplateDTO template = new EmailTemplateDTO(userInfo.getEmailTemplate());
+		List<RecipientDTO> recipients = recipientService.getAllAsDTOByUserInfoId(userInfo.getId());
+
+		EmailWithTemplateDTO emailWithTemplateDTO = new EmailWithTemplateDTO(email, template, recipients);
+
+		log.info("User {} requested: {}", senderEmail, emailWithTemplateDTO);
+		return emailWithTemplateDTO;
 	}
 
 	public void saveNewEmailLog(AppUserEmailsInfo appUserEmailsInfo,
@@ -60,6 +79,7 @@ public class EmailLogService {
 				appUserEmailsInfo,
 				senderEmail);
 
+		log.info("User {} saved new emailLog: {}", senderEmail, emailLog);
 		emailLogRepository.save(emailLog);
 	}
 
@@ -67,6 +87,8 @@ public class EmailLogService {
 		emailLog.setMessage(null);
 		emailLog.setEmailStatus(EmailStatus.SENT);
 		emailLog.setLogDateTime(LocalDateTime.now());
+
+		log.info("Successfully resent email: {}", emailLog);
 		return emailLogRepository.save(emailLog);
 	}
 
@@ -74,11 +96,13 @@ public class EmailLogService {
 		emailLog.setMessage(message);
 		emailLog.setEmailStatus(EmailStatus.FAILED);
 		emailLog.setLogDateTime(LocalDateTime.now());
+
+		log.error("Retrying of sending email: {} failed", emailLog);
 		return emailLogRepository.save(emailLog);
 	}
 
 	@Transactional
-	public HistoryDTO retryFailedEmail(Long emailId, String senderEmail) {
+	public ExecutedEmailDTO retryFailedEmail(Long emailId, String senderEmail) {
 		EmailLog emailLog = getEmailLogByIdAndSenderEmail(emailId, senderEmail);
 
 		if (emailLog.getEmailStatus().isSent())
@@ -90,12 +114,17 @@ public class EmailLogService {
 		Map<RecipientType, List<String>> groupedRecipients = recipientService
 				.groupRecipients(recipientService.getAllByUserInfoId(userInfo.getId()));
 
-		emailLog = emailSenderService.resendFailedMimeEmail(userInfo.getEmailTemplate(), groupedRecipients, emailLog);
+		emailLog = emailSenderService.resendFailedMimeEmail(
+				userInfo.getEmailTemplate(),
+				groupedRecipients,
+				emailLog);
+
 		return EmailLogService.convertToDto(emailLog);
 	}
 
 
 	public Integer getTotalNumberOfUserEmails(String userEmail) {
+		log.info("User {} requasted total number of hsi templates", userEmail);
 		return emailLogRepository.countBySenderEmail(userEmail);
 	}
 
@@ -109,19 +138,21 @@ public class EmailLogService {
 	@Transactional
 	public void deleteByIdAndUserEmail(Long id, String userEmail) {
 		emailLogRepository.deleteByIdAndSenderEmail(id, userEmail);
+		log.info("User {} deleted email with id: {}", userEmail, id);
 	}
 
 	@Transactional
 	public void deleteAllByIdsAndUserEmail(EmailsIdsDTO ids, String userEmail) {
 		emailLogRepository.deleteAllBySenderEmailAndIdIn(userEmail, ids.getIds());
+		log.info("User {} deleted all emails which are in: {}", userEmail, ids);
 	}
 
 	@Transactional
-	public List<HistoryDTO> getPaginatedEmailsHistory(Integer page,
-	                                                  Integer rows,
-	                                                  Integer sortOrder,
-	                                                  String sortField,
-	                                                  String senderEmail) {
+	public List<ExecutedEmailDTO> getPaginatedEmailsHistory(Integer page,
+	                                                        Integer rows,
+	                                                        Integer sortOrder,
+	                                                        String sortField,
+	                                                        String senderEmail) {
 
 		Sort sort = Sort.by(sortField);
 		sort = sortOrder > 0 ? sort.ascending() : sort.descending();
@@ -135,10 +166,10 @@ public class EmailLogService {
 		log.info("User {} requested emails history, page {}, rows {}, sort order {}, sort field {}",
 				senderEmail, page, rows, sortOrder, sortField);
 
-		return emailLogsToHistory(emailLogs);
+		return emailLogsToExecutedEmails(emailLogs);
 	}
 
-	private List<HistoryDTO> emailLogsToHistory(List<EmailLog> emailLogs) {
+	private List<ExecutedEmailDTO> emailLogsToExecutedEmails(List<EmailLog> emailLogs) {
 		return emailLogs.stream()
 				.map(EmailLogService::convertToDto)
 				.collect(Collectors.toList());

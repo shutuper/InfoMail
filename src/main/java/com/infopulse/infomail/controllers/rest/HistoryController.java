@@ -1,7 +1,8 @@
 package com.infopulse.infomail.controllers.rest;
 
+import com.infopulse.infomail.dto.api.EmailWithTemplateDTO;
 import com.infopulse.infomail.dto.api.EmailsIdsDTO;
-import com.infopulse.infomail.dto.api.HistoryDTO;
+import com.infopulse.infomail.dto.api.ExecutedEmailDTO;
 import com.infopulse.infomail.services.mail.EmailLogService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,16 +21,27 @@ public class HistoryController {
 	private final EmailLogService emailLogService;
 
 	@GetMapping
-	public ResponseEntity<List<HistoryDTO>> getPaginatedEmailsHistory(@RequestParam("page") Integer page,
-	                                                                  @RequestParam("rows") Integer rows,
-	                                                                  @RequestParam("sortOrder") Integer sortOrder,
-	                                                                  @RequestParam("sortField") String sortField,
-	                                                                  Authentication authentication) {
+	public ResponseEntity<List<ExecutedEmailDTO>> getPaginatedEmailsHistory(@RequestParam("page") Integer page,
+	                                                                        @RequestParam("rows") Integer rows,
+	                                                                        @RequestParam("sortOrder") Integer sortOrder,
+	                                                                        @RequestParam("sortField") String sortField,
+	                                                                        Authentication authentication) {
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
 			return ResponseEntity.ok(emailLogService
 					.getPaginatedEmailsHistory(page, rows, sortOrder, sortField, senderEmail));
 
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@GetMapping("{id}")
+	public ResponseEntity<EmailWithTemplateDTO> getEmailWithTemplateById(@PathVariable("id") Long id, Authentication authentication) {
+		try {
+			String senderEmail = (String) authentication.getPrincipal();
+
+			return ResponseEntity.ok(emailLogService.getEmailWithTemplateDTO(id, senderEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -48,12 +60,12 @@ public class HistoryController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<HistoryDTO> retryFailedEmail(@PathVariable("id") Long id,
-	                                                   Authentication authentication) {
+	public ResponseEntity<ExecutedEmailDTO> retryFailedEmail(@PathVariable("id") Long id,
+	                                                         Authentication authentication) {
 		try {
-			String userEmail = (String) authentication.getPrincipal();
-			HistoryDTO historyDTO = emailLogService.retryFailedEmail(id, userEmail);
-			return ResponseEntity.ok(historyDTO);
+			String senderEmail = (String) authentication.getPrincipal();
+			ExecutedEmailDTO executedEmailDTO = emailLogService.retryFailedEmail(id, senderEmail);
+			return ResponseEntity.ok(executedEmailDTO);
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -62,8 +74,8 @@ public class HistoryController {
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteEmailById(@PathVariable("id") Long id, Authentication authentication) {
 		try {
-			String userEmail = (String) authentication.getPrincipal();
-			emailLogService.deleteByIdAndUserEmail(id, userEmail);
+			String senderEmail = (String) authentication.getPrincipal();
+			emailLogService.deleteByIdAndUserEmail(id, senderEmail);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
@@ -74,8 +86,8 @@ public class HistoryController {
 	@DeleteMapping
 	public ResponseEntity<?> deleteAllEmailsByIds(@RequestBody EmailsIdsDTO ids, Authentication authentication) {
 		try {
-			String userEmail = (String) authentication.getPrincipal();
-			emailLogService.deleteAllByIdsAndUserEmail(ids, userEmail);
+			String senderEmail = (String) authentication.getPrincipal();
+			emailLogService.deleteAllByIdsAndUserEmail(ids, senderEmail);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();

@@ -1,14 +1,11 @@
 package com.infopulse.infomail.dto.app;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.quartz.CronExpression;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class CronExpWithDesc {
 

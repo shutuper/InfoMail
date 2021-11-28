@@ -20,14 +20,21 @@ public class RecipientService {
 
 	private final AppRecipientRepository recipientRepository;
 
+
 	public List<AppRecipient> getAllByUserInfoId(Long userInfoId) {
 		List<AppRecipient> recipients = recipientRepository.findAllByUserInfo_Id(userInfoId);
-
 		if (recipients.isEmpty())
 			throw new IllegalStateException(String.format("There are no recipients with userInfoId: %s", userInfoId));
 
 		return recipients;
 	}
+
+
+	public List<RecipientDTO> getAllAsDTOByUserInfoId(Long userInfo) {
+		return getAllByUserInfoId(userInfo).stream()
+				.map(x -> new RecipientDTO(x.getEmail(), x.getRecipientType())).toList();
+	}
+
 
 	public Map<RecipientType, List<String>> groupRecipients(List<AppRecipient> recipients) {
 		return recipients.stream()
@@ -37,6 +44,7 @@ public class RecipientService {
 								mapping(AppRecipient::getEmail, toList())
 						));
 	}
+
 
 	public void saveAllRecipientsWithUserInfo(List<RecipientDTO> recipientsDTO,
 	                                          AppUserEmailsInfo appUserEmailsInfo) {

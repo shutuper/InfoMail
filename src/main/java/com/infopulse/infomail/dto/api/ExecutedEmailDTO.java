@@ -1,21 +1,16 @@
 package com.infopulse.infomail.dto.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoryDTO {
+public class ExecutedEmailDTO {
 
 	private Long id;
 	private LocalDateTime dateTime;
 	private Boolean status;
 	private String subject;
-
 }
