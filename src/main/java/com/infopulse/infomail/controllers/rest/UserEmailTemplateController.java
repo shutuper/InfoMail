@@ -41,10 +41,27 @@ public class UserEmailTemplateController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<UserEmailTemplateDTO>> getTemplates(Authentication authentication) {
+	public ResponseEntity<List<UserEmailTemplateDTO>> getPaginatedTemplates(@RequestParam("page") Integer page,
+																			@RequestParam("rows") Integer rows,
+																			@RequestParam("sortOrder") Integer sortOrder,
+																			@RequestParam("sortField") String sortField,
+																			Authentication authentication) {
 		try {
 			String userEmail = authentication.getName();
-			return ResponseEntity.ok(templateService.getEmailTemplates(userEmail));
+			return ResponseEntity.ok(templateService
+					.getPaginatedTemplates(page, rows, sortOrder, sortField, userEmail));
+
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@GetMapping("total")
+	public ResponseEntity<Integer> getTotalNumberOfTemplates(Authentication authentication) {
+
+		try {
+			String userEmail = authentication.getName();
+			return ResponseEntity.ok(templateService.getTotalNumberOfTemplates(userEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}

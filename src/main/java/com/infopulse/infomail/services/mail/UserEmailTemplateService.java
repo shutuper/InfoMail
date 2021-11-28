@@ -7,6 +7,9 @@ import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.repositories.UserEmailTemplateRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,39 @@ import java.util.stream.Collectors;
 public class UserEmailTemplateService {
 
 	private final UserEmailTemplateRepository userEmailTemplateRepository;
+
+	public List<UserEmailTemplateDTO> getPaginatedTemplates(Integer page,
+															Integer rows,
+															Integer sortOrder,
+															String sortField,
+															String userEmail) {
+
+		Sort sort = Sort.by(sortField);
+		sort = sortOrder > 0 ? sort.ascending() : sort.descending();
+		Pageable pageable = PageRequest.of(
+				page,
+				rows,
+				sort);
+
+		List<UserEmailTemplate> emailTemplates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail, pageable);
+		emailTemplates.forEach(System.out::println);
+		log.info("User {} requested UserEmailTemplates, page {}, rows {}, sort order {}, sort field {}", userEmail, page, rows, sortOrder, sortField);
+		return emailTemplates.stream()
+				.map(template -> new UserEmailTemplateDTO(
+						template.getId(),
+						template.getName(),
+						template.getSubject(),
+						template.getBody(),
+						userEmail,
+						template.getSharingLink()
+				))
+				.collect(Collectors.toList());
+	}
+
+	public Integer getTotalNumberOfTemplates(String userEmail) {
+		log.info("User {} requested total number of his templates", userEmail);
+		return userEmailTemplateRepository.countByAppUser_Email(userEmail);
+	}
 
 	public UserEmailTemplate getEmailTemplateById(Long id, String userEmail) {
 		log.info("User {} requested UserEmailTemplate by id: {}", userEmail, id);
@@ -90,23 +126,6 @@ public class UserEmailTemplateService {
 		return userEmailTemplateRepository.save(emailTemplate);
 	}
 
-	public List<UserEmailTemplateDTO> getEmailTemplates(String userEmail) {
-		List<UserEmailTemplate> emailTemplates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail);
-		emailTemplates.forEach(System.out::println);
-		log.info("User {} requested UserEmailTemplates",
-				userEmail);
-		return emailTemplates.stream()
-				.map(template -> new UserEmailTemplateDTO(
-						template.getId(),
-						template.getName(),
-						template.getSubject(),
-						template.getBody(),
-						userEmail,
-						template.getSharingLink()
-				))
-				.collect(Collectors.toList());
-	}
-
 	@Transactional
 	public void deleteByIdAndUserEmail(Long id, String userEmail) {
 		log.info(String.valueOf(getEmailTemplateById(id, userEmail)));
@@ -116,8 +135,6 @@ public class UserEmailTemplateService {
 
 	@Transactional
 	public void deleteAllByIdsAndUserEmail(EmailTemplatesIdsDTO ids, String userEmail) {
-		List<UserEmailTemplate> emailTemplates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail);
-		emailTemplates.forEach((e) -> log.info(e.toString()));
 		log.info("User {} delete UserEmailTemplates by ids: {}", userEmail, ids.getIds().toString());
 		userEmailTemplateRepository.deleteAllByAppUser_EmailAndIdIn(userEmail, ids.getIds());
 	}
