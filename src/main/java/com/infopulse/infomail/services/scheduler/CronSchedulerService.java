@@ -71,7 +71,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		RepeatType scheduleRepeat = emailSchedule.getRepeatAt();
 		String cronDescription;
 		if (Objects.isNull(scheduleRepeat) || scheduleRepeat.equals(RepeatType.NOTHING)) {
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM:dd:yy HH:mm");
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy:MM:dd HH:mm");
 			cronDescription = "Start at " + (
 					emailSchedule.isSendNow() ?
 							LocalDateTime.now().format(dtf) : emailSchedule.getSendDateTime().format(dtf)
@@ -121,9 +121,8 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 
 		if (scheduleBuilder != null)
 			builder.withSchedule(scheduleBuilder);
-		Trigger tg = builder.build();
-		log.info("Trigger end date (2) is: " + tg.getEndTime());
-		return tg;
+
+		return builder.build();
 	}
 
 
