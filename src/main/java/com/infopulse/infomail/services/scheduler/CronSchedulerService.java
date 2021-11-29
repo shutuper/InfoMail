@@ -1,6 +1,7 @@
 package com.infopulse.infomail.services.scheduler;
 
 import com.infopulse.infomail.dto.app.CronExpWithDesc;
+import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailSchedule;
@@ -10,7 +11,9 @@ import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import com.infopulse.infomail.services.QrtzJobDetailService;
 import com.infopulse.infomail.services.RecipientService;
 import com.infopulse.infomail.services.mail.AppUserEmailsInfoService;
+import com.infopulse.infomail.services.mail.EmailTemplateService;
 import com.infopulse.infomail.services.scheduler.cronGenerator.CronGenerator;
+import com.infopulse.infomail.services.scheduler.jobs.EmailSendJob;
 import com.infopulse.infomail.services.scheduler.сronDescriptor.CronDescriptorService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +47,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	private final Scheduler scheduler;
 	private final RecipientService recipientService;
 	private final CronDescriptorService cronDescriptorService;
+	private final EmailTemplateService emailTemplateService;
 
 	@PostConstruct
 	private void init() {
@@ -64,6 +68,36 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		} catch (SchedulerException e) {
 			log.error(e.getMessage(), e);
 		}
+	}
+
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void createTask(List<RecipientDTO> recipients,
+	                        EmailTemplateDTO emailTemplateDTO,
+	                        EmailSchedule emailSchedule,
+	                        String userEmail,
+	                        Long userId) throws ParseException, SchedulerException {
+
+		EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(
+				emailTemplateDTO,
+				userId,
+				userEmail);
+
+		CronExpWithDesc cronExpWithDesc = generateCronExpressionWithDescription(emailSchedule);
+
+		ScheduleBuilder<CronTrigger> scheduleBuilder = buildSchedule(cronExpWithDesc.getCronExpression());
+
+		JobDetail jobDetail = buildJobDetail(
+				userEmail,
+				emailTemplate.getId(),
+				cronExpWithDesc.getCronDescription(),
+				EmailSendJob.class);
+
+		Trigger trigger = buildTrigger(
+				jobDetail,
+				scheduleBuilder,
+				emailSchedule);
+
+		scheduleJob(jobDetail, trigger, recipients, emailTemplate);
 	}
 
 	public CronExpWithDesc generateCronExpressionWithDescription(EmailSchedule
@@ -109,7 +143,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		Date nowDate = Date.from(Instant.now());
 		boolean startNow = emailSchedule.isSendNow();
 
-		Date startAt = parseDateFromLocal(emailSchedule.getSendDateTime());
+		Date startAt = parseDateFromLocal(emailSchedule.getSendDateTime().minusMinutes(1));
 		Date endAt = parseDateFromLocal(emailSchedule.getEndDate());
 
 		if (startNow) builder.startNow();
@@ -140,7 +174,6 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 				.build();
 	}
 
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void scheduleJob(JobDetail jobDetail,
 	                        Trigger trigger,
 	                        List<RecipientDTO> recipientsDTO,

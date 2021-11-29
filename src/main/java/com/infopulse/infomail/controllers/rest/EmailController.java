@@ -1,19 +1,12 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.app.CronExpWithDesc;
 import com.infopulse.infomail.dto.mail.EmailDTO;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
 import com.infopulse.infomail.models.mail.EmailSchedule;
-import com.infopulse.infomail.models.mail.EmailTemplate;
 import com.infopulse.infomail.services.mail.EmailTemplateService;
 import com.infopulse.infomail.services.scheduler.CronSchedulerService;
-import com.infopulse.infomail.services.scheduler.jobs.EmailSendJob;
 import lombok.AllArgsConstructor;
-import org.quartz.CronTrigger;
-import org.quartz.JobDetail;
-import org.quartz.ScheduleBuilder;
-import org.quartz.Trigger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -43,27 +36,7 @@ public class EmailController {
 			String userEmail = (String) authentication.getPrincipal();
 			Long userId = (Long) authentication.getCredentials();
 
-			EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(emailTemplateDTO, userId, userEmail);
-
-			CronExpWithDesc cronExpWithDesc = cronSchedulerService
-					.generateCronExpressionWithDescription(emailSchedule);
-
-			ScheduleBuilder<CronTrigger> scheduleBuilder = cronSchedulerService
-					.buildSchedule(cronExpWithDesc.getCronExpression());
-
-			JobDetail jobDetail = cronSchedulerService.buildJobDetail(
-					userEmail,
-					emailTemplate.getId(),
-					// it should be replaced
-					cronExpWithDesc.getCronDescription(),
-					EmailSendJob.class);
-
-			Trigger trigger = cronSchedulerService.buildTrigger(
-					jobDetail,
-					scheduleBuilder,
-					emailSchedule);
-
-			cronSchedulerService.scheduleJob(jobDetail, trigger, recipients, emailTemplate);
+			cronSchedulerService.createTask(recipients, emailTemplateDTO, emailSchedule, userEmail, userId);
 		} catch (Exception e) {
 			return new ResponseEntity<>(emailDTO, HttpStatus.BAD_REQUEST);
 		}
