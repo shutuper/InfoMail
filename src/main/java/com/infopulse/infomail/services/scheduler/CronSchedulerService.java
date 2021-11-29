@@ -143,7 +143,12 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		Date nowDate = Date.from(Instant.now());
 		boolean startNow = emailSchedule.isSendNow();
 
-		Date startAt = parseDateFromLocal(emailSchedule.getSendDateTime().minusMinutes(1));
+		LocalDateTime sendDateTime = emailSchedule.getSendDateTime();
+		if(sendDateTime != null) {
+			sendDateTime = sendDateTime.minusMinutes(1);
+		}
+
+		Date startAt = parseDateFromLocal(sendDateTime);
 		Date endAt = parseDateFromLocal(emailSchedule.getEndDate());
 
 		if (startNow) builder.startNow();
