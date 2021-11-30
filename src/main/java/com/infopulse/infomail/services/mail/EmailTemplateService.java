@@ -26,9 +26,10 @@ public class EmailTemplateService {
 		if (Objects.nonNull(emailTemplateDTO.getId())) {
 			UserEmailTemplate userEmailTemplate = userEmailTemplateService
 					.getEmailTemplateById(emailTemplateDTO.getId(), userEmail);
-
+			log.info("Template with id: {} saved from existed one", userEmailTemplate.getId());
 			emailTemplate = new EmailTemplate(userEmailTemplate);
 		} else {
+			validate(emailTemplateDTO);
 			emailTemplate = new EmailTemplate(
 					new AppUser(userId),
 					emailTemplateDTO.getSubject(),
@@ -43,5 +44,10 @@ public class EmailTemplateService {
 				.orElseThrow(() -> new IllegalStateException(
 						String.format("EmailTemplate with id %s does not exist", id)
 				));
+	}
+
+	private void validate(EmailTemplateDTO emailTemplateDTO) {
+		if (Objects.isNull(emailTemplateDTO.getBody()) || Objects.isNull(emailTemplateDTO.getSubject()))
+			throw new IllegalStateException("EmailTemplateDTO body and subject should not be blank!");
 	}
 }

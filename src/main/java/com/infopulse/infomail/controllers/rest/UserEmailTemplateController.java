@@ -1,6 +1,8 @@
 package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.api.EmailTemplatesIdsDTO;
+import com.infopulse.infomail.dto.api.UserTemplatesOptionsDTO;
+import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.UserEmailTemplateDTO;
 import com.infopulse.infomail.models.mail.UserEmailTemplate;
 import com.infopulse.infomail.services.mail.UserEmailTemplateService;
@@ -24,17 +26,28 @@ public class UserEmailTemplateController {
 	@PostMapping
 	public ResponseEntity<UserEmailTemplateDTO> addTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO, Authentication authentication) {
 		try {
-			UserEmailTemplate template = templateService.saveEmailTemplate(templateDTO, authentication);
-			String userEmail = authentication.getName();
-			UserEmailTemplateDTO dto = new UserEmailTemplateDTO(
-					template.getId(),
-					template.getName(),
-					template.getSubject(),
-					template.getBody(),
-					userEmail,
-					template.getSharingLink()
-			);
+			UserEmailTemplateDTO dto = templateService.saveEmailTemplate(templateDTO, authentication);
 			return ResponseEntity.ok(dto);
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@GetMapping("options")
+	public ResponseEntity<List<UserTemplatesOptionsDTO>> getAllAsOptions(Authentication authentication) {
+		try {
+			String userEmail = authentication.getName();
+			return ResponseEntity.ok(templateService.getAllTemplatesAsOptions(userEmail));
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@GetMapping("{id}/dto")
+	public ResponseEntity<EmailTemplateDTO> getEmailTemplateDTO(@PathVariable("id") Long id, Authentication authentication) {
+		try {
+			String userEmail = authentication.getName();
+			return ResponseEntity.ok(templateService.getEmailTemplateDTO(id, userEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -42,10 +55,10 @@ public class UserEmailTemplateController {
 
 	@GetMapping
 	public ResponseEntity<List<UserEmailTemplateDTO>> getPaginatedTemplates(@RequestParam("page") Integer page,
-																			@RequestParam("rows") Integer rows,
-																			@RequestParam("sortOrder") Integer sortOrder,
-																			@RequestParam("sortField") String sortField,
-																			Authentication authentication) {
+	                                                                        @RequestParam("rows") Integer rows,
+	                                                                        @RequestParam("sortOrder") Integer sortOrder,
+	                                                                        @RequestParam("sortField") String sortField,
+	                                                                        Authentication authentication) {
 		try {
 			String userEmail = authentication.getName();
 			return ResponseEntity.ok(templateService

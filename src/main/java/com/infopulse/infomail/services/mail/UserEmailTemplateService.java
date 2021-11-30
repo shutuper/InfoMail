@@ -1,6 +1,8 @@
 package com.infopulse.infomail.services.mail;
 
 import com.infopulse.infomail.dto.api.EmailTemplatesIdsDTO;
+import com.infopulse.infomail.dto.api.UserTemplatesOptionsDTO;
+import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.UserEmailTemplateDTO;
 import com.infopulse.infomail.models.mail.UserEmailTemplate;
 import com.infopulse.infomail.models.users.AppUser;
@@ -27,10 +29,10 @@ public class UserEmailTemplateService {
 	private final UserEmailTemplateRepository userEmailTemplateRepository;
 
 	public List<UserEmailTemplateDTO> getPaginatedTemplates(Integer page,
-															Integer rows,
-															Integer sortOrder,
-															String sortField,
-															String userEmail) {
+	                                                        Integer rows,
+	                                                        Integer sortOrder,
+	                                                        String sortField,
+	                                                        String userEmail) {
 
 		Sort sort = Sort.by(sortField);
 		sort = sortOrder > 0 ? sort.ascending() : sort.descending();
@@ -52,6 +54,18 @@ public class UserEmailTemplateService {
 						template.getSharingLink()
 				))
 				.collect(Collectors.toList());
+	}
+
+
+	public EmailTemplateDTO getEmailTemplateDTO(Long templateId, String userName) {
+		UserEmailTemplate template = getEmailTemplateById(templateId, userName);
+		return new EmailTemplateDTO(template);
+	}
+
+	public List<UserTemplatesOptionsDTO> getAllTemplatesAsOptions(String userEmail) {
+		List<UserEmailTemplate> templates = userEmailTemplateRepository.findAllByAppUser_Email(userEmail);
+		return templates.stream()
+				.map(UserTemplatesOptionsDTO::new).toList();
 	}
 
 	public Integer getTotalNumberOfTemplates(String userEmail) {
@@ -76,8 +90,9 @@ public class UserEmailTemplateService {
 	}
 
 	@Transactional
-	public UserEmailTemplate saveEmailTemplate(UserEmailTemplateDTO emailTemplateDTO, Authentication authentication) {
-		if(Objects.nonNull(emailTemplateDTO.getId())) {
+	public UserEmailTemplateDTO saveEmailTemplate(UserEmailTemplateDTO emailTemplateDTO, Authentication authentication) {
+		String userEmail = authentication.getName();
+		if (Objects.nonNull(emailTemplateDTO.getId())) {
 			return updateEmailTemplate(emailTemplateDTO, authentication);
 		}
 
@@ -85,18 +100,26 @@ public class UserEmailTemplateService {
 		Long userId = (Long) authentication.getCredentials();
 		String shareLink = UUID.randomUUID().toString();
 
-		UserEmailTemplate emailTemplate = new UserEmailTemplate(
+		UserEmailTemplate template = new UserEmailTemplate(
 				new AppUser(userId),
 				emailTemplateDTO.getName(),
 				emailTemplateDTO.getSubject(),
 				emailTemplateDTO.getBody(),
 				shareLink);
 
-		return userEmailTemplateRepository.save(emailTemplate);
+		template = userEmailTemplateRepository.save(template);
+		return new UserEmailTemplateDTO(
+				template.getId(),
+				template.getName(),
+				template.getSubject(),
+				template.getBody(),
+				userEmail,
+				template.getSharingLink()
+		);
 	}
 
 	@Transactional
-	public UserEmailTemplate updateEmailTemplate(UserEmailTemplateDTO templateDTO, Authentication authentication) {
+	public UserEmailTemplateDTO updateEmailTemplate(UserEmailTemplateDTO templateDTO, Authentication authentication) {
 		String userEmail = authentication.getName();
 		long templateId = templateDTO.getId();
 
@@ -107,7 +130,15 @@ public class UserEmailTemplateService {
 		templateFromDb.setSubject(templateDTO.getSubject());
 		templateFromDb.setBody(templateDTO.getBody());
 
-		return userEmailTemplateRepository.save(templateFromDb);
+		templateFromDb = userEmailTemplateRepository.save(templateFromDb);
+		return new UserEmailTemplateDTO(
+				templateFromDb.getId(),
+				templateFromDb.getName(),
+				templateFromDb.getSubject(),
+				templateFromDb.getBody(),
+				userEmail,
+				templateFromDb.getSharingLink()
+		);
 	}
 
 	@Transactional

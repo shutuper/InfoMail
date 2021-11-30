@@ -23,4 +23,6 @@ public interface UserEmailTemplateRepository extends JpaRepository<UserEmailTemp
 	void deleteAllByAppUser_EmailAndIdIn(String userEmail, List<Long> ids);
 
 	Integer countByAppUser_Email(String userEmail);
+
+	List<UserEmailTemplate> findAllByAppUser_Email(String userEmail);
 }

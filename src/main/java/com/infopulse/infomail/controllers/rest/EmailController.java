@@ -4,7 +4,6 @@ import com.infopulse.infomail.dto.mail.EmailDTO;
 import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
 import com.infopulse.infomail.dto.mail.RecipientDTO;
 import com.infopulse.infomail.models.mail.EmailSchedule;
-import com.infopulse.infomail.services.mail.EmailTemplateService;
 import com.infopulse.infomail.services.scheduler.CronSchedulerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,6 @@ import java.util.List;
 public class EmailController {
 
 	private final CronSchedulerService cronSchedulerService;
-	private final EmailTemplateService emailTemplateService;
 
 
 	@PostMapping

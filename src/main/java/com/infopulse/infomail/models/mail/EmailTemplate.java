@@ -1,5 +1,6 @@
 package com.infopulse.infomail.models.mail;
 
+import com.infopulse.infomail.models.Template;
 import com.infopulse.infomail.models.users.AppUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Setter
 @ToString
 @NoArgsConstructor
-public class EmailTemplate {
+public class EmailTemplate implements Template {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
