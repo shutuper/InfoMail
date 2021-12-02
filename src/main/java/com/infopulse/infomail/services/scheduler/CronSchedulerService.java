@@ -165,6 +165,22 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		return builder.build();
 	}
 
+	boolean validDateForScheduling(Date date,
+										   Date compared,
+										   boolean canBeNullable) {
+		if (canBeNullable && (date == null)) return false;
+		if ((date != null) && date.after(compared)) return true;
+		throw new IllegalArgumentException("Date is not valid for scheduling");
+	}
+
+	Date parseDateFromLocal(Temporal temporal) {
+		if (temporal == null) return null;
+		if (temporal instanceof LocalDateTime) return Timestamp.valueOf((LocalDateTime) temporal);
+		if (temporal instanceof LocalDate) return Timestamp.valueOf(((LocalDate) temporal).atStartOfDay().plusDays(1L));
+
+		throw new IllegalArgumentException("Can't parse date: " + temporal.toString());
+	}
+
 
 	@Override
 	public JobDetail buildJobDetail(String userEmail,
@@ -199,27 +215,6 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	@Override
 	public ScheduleBuilder<CronTrigger> buildSchedule(boolean alwaysRepeat, int repeatCount, long interval) {
 		return null;
-	}
-
-	private boolean validDateForScheduling(Date date,
-	                                       Date compared,
-	                                       boolean canBeNullable) {
-		if (canBeNullable && (date == null))
-			return false;
-		else if ((date != null) && date.after(compared))
-			return true;
-		else
-			throw new IllegalArgumentException("Date is not valid for scheduling");
-	}
-
-	private Date parseDateFromLocal(Temporal temporal) {
-		if (temporal == null)
-			return null;
-		else if (temporal instanceof LocalDateTime)
-			return Timestamp.valueOf((LocalDateTime) temporal);
-		else if (temporal instanceof LocalDate)
-			return Timestamp.valueOf(((LocalDate) temporal).atStartOfDay().plusDays(1L));
-		else throw new IllegalArgumentException("Can't parse date: " + temporal.toString());
 	}
 
 }
