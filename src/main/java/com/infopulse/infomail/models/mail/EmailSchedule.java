@@ -4,6 +4,7 @@ import com.infopulse.infomail.dto.mail.EmailScheduleDTO;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class EmailSchedule implements Schedule {
 
 	private boolean sendNow;

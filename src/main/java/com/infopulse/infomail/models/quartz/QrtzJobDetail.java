@@ -20,6 +20,10 @@ import javax.validation.constraints.Email;
 		))
 public class QrtzJobDetail {
 
+
+	@Column(name = "order_id", nullable = false, unique = true)
+	private Long orderId;
+
 	@Id
 	@Column(name = "job_name", nullable = false, length = 200)
 	private String jobName;

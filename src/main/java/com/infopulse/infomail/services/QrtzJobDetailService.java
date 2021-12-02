@@ -1,13 +1,19 @@
 package com.infopulse.infomail.services;
 
+import com.infopulse.infomail.dto.api.PaginatedScheduledTasksDTO;
+import com.infopulse.infomail.dto.api.ScheduledTaskDTO;
+import com.infopulse.infomail.dto.app.ScheduledTaskRaw;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import com.infopulse.infomail.repositories.QrtzJobDetailRepository;
-import com.infopulse.infomail.services.scheduler.jobs.EmailSendJob;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,17 +31,27 @@ public class QrtzJobDetailService {
 		);
 	}
 
-	public QrtzJobDetail createNewQrtzJobDetail(JobDetail jobDetail) {
-		JobKey jobKey = jobDetail.getKey();
-		QrtzJobDetail qrtzJobDetail = new QrtzJobDetail(
-				jobKey.getName(),
-				jobKey.getGroup(),
-				"quartzScheduler",
-				jobDetail.getDescription(),
-				jobDetail.getJobClass().getName(),
-				jobDetail.isDurable(),
-				false, false, false, null);
-		return qrtzJobDetailRepository.saveAndFlush(qrtzJobDetail);
+	public PaginatedScheduledTasksDTO getAllScheduledTaskDTObyGroup(String jobGroup, Pageable sortByAndPage) {
+		Page<ScheduledTaskRaw> tasksRaw = qrtzJobDetailRepository
+				.getAllDTObyGroup(jobGroup, sortByAndPage);
+
+		List<ScheduledTaskDTO> scheduledTaskDTOS = tasksRaw.get().map(ScheduledTaskDTO::new).toList();
+
+		return new PaginatedScheduledTasksDTO(scheduledTaskDTOS, tasksRaw.getTotalElements());
 	}
+
+//	public QrtzJobDetail createNewQrtzJobDetail(JobDetail jobDetail) {
+//		JobKey jobKey = jobDetail.getKey();
+//		QrtzJobDetail qrtzJobDetail = new QrtzJobDetail(
+//				jobKey.getName(),
+//				jobKey.getGroup(),
+//				"quartzScheduler",
+//				jobDetail.getDescription(),
+//				jobDetail.getJobClass().getName(),
+//				jobDetail.isDurable(),
+//				false, false, false, null);
+//
+//		return qrtzJobDetailRepository.saveAndFlush(qrtzJobDetail);
+//	}
 
 }

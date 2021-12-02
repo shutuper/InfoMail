@@ -1,17 +1,20 @@
-CREATE TABLE qrtz_job_details
+-- DIALECT IS POSTGRESQL
+create table qrtz_job_details
 (
-    sched_name        VARCHAR(120) NOT NULL,
-    job_name          VARCHAR(200) NOT NULL,
-    job_group         VARCHAR(200) NOT NULL,
-    description       VARCHAR(250) NULL,
-    job_class_name    VARCHAR(250) NOT NULL,
-    is_durable        BOOL         NOT NULL,
-    is_nonconcurrent  BOOL         NOT NULL,
-    is_update_data    BOOL         NOT NULL,
-    requests_recovery BOOL         NOT NULL,
-    job_data          BYTEA        NULL,
-    PRIMARY KEY (job_name),
-    CONSTRAINT qrtz_job_details_uq UNIQUE (job_name, job_group, sched_name)
+    sched_name        varchar(120)  not null,
+    job_name          varchar(200)  not null
+        primary key,
+    job_group         varchar(200)  not null,
+    description       varchar(250),
+    job_class_name    varchar(250)  not null,
+    is_durable        boolean       not null,
+    is_nonconcurrent  boolean       not null,
+    is_update_data    boolean       not null,
+    requests_recovery boolean       not null,
+    job_data          bytea,
+    order_id          serial unique not null,
+    constraint qrtz_job_details_uq
+        unique (job_name, sched_name, job_group)
 );
 
 CREATE TABLE qrtz_triggers
@@ -152,6 +155,9 @@ CREATE INDEX idx_qrtz_j_grp
 CREATE INDEX idx_qrtz_t_j
     ON qrtz_triggers (sched_name, job_name, job_group);
 
+create index idx_qrtz_j_order
+    on qrtz_job_details (order_id);
+
 CREATE INDEX idx_qrtz_t_jg
     ON qrtz_triggers (sched_name, job_group);
 
@@ -221,12 +227,12 @@ create table app_user
 
 create table email_template
 (
-    id           bigint       not null
+    id          bigint       not null
         constraint email_template_pkey
             primary key,
-    body         text         not null,
-    subject      varchar(255) not null,
-    app_user_id  bigint       not null
+    body        text         not null,
+    subject     varchar(255) not null,
+    app_user_id bigint       not null
         constraint app_user_id_ref
             references app_user
 );

@@ -72,10 +72,10 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void createTask(List<RecipientDTO> recipients,
-	                        EmailTemplateDTO emailTemplateDTO,
-	                        EmailSchedule emailSchedule,
-	                        String userEmail,
-	                        Long userId) throws ParseException, SchedulerException {
+	                       EmailTemplateDTO emailTemplateDTO,
+	                       EmailSchedule emailSchedule,
+	                       String userEmail,
+	                       Long userId) throws ParseException, SchedulerException {
 
 		EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(
 				emailTemplateDTO,
@@ -104,13 +104,14 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 			                                                             emailSchedule) throws ParseException {
 		RepeatType scheduleRepeat = emailSchedule.getRepeatAt();
 		String cronDescription;
+		log.info(emailSchedule.toString());
 		if (Objects.isNull(scheduleRepeat) || scheduleRepeat.equals(RepeatType.NOTHING)) {
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy:MM:dd HH:mm");
-			cronDescription = "Start at " + (
-					emailSchedule.isSendNow() ?
-							LocalDateTime.now().format(dtf) : emailSchedule.getSendDateTime().format(dtf)
-			);
-			return new CronExpWithDesc(null, cronDescription);
+//			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy:MM:dd HH:mm");
+//			cronDescription = "Start at " + (
+//					emailSchedule.isSendNow() ?
+//							LocalDateTime.now().format(dtf) : emailSchedule.getSendDateTime().format(dtf)
+//			);
+			return new CronExpWithDesc();
 		}
 
 		String cronExpression = CronGenerator.generate(emailSchedule);
@@ -144,7 +145,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		boolean startNow = emailSchedule.isSendNow();
 
 		LocalDateTime sendDateTime = emailSchedule.getSendDateTime();
-		if(sendDateTime != null) {
+		if (sendDateTime != null) {
 			sendDateTime = sendDateTime.minusMinutes(1);
 		}
 
@@ -175,7 +176,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		return JobBuilder.newJob(jobClass)
 				.withIdentity(uniqueJobName, userEmail) // grouping JobDetails by users' emails
 				.withDescription(description)   // .usingJobData(jobDataMap)
-				.storeDurably() // whether store jobDetails after all triggers executed
+//				.storeDurably() // whether store jobDetails after all triggers executed
 				.build();
 	}
 

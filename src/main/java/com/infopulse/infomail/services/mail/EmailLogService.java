@@ -162,7 +162,7 @@ public class EmailLogService {
 				sort);
 
 		List<EmailLog> emailLogs = emailLogRepository.findAllBySenderEmail(senderEmail, pageable);
-		emailLogs.forEach(System.out::println);
+
 		log.info("User {} requested emails history, page {}, rows {}, sort order {}, sort field {}",
 				senderEmail, page, rows, sortOrder, sortField);
 
