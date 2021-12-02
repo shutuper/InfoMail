@@ -2,6 +2,8 @@ package com.infopulse.infomail.models.mail;
 
 import com.infopulse.infomail.dto.mail.EmailScheduleDTO;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,11 +12,15 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Builder
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 public class EmailSchedule implements Schedule {
 
 	private boolean sendNow;
@@ -23,7 +29,8 @@ public class EmailSchedule implements Schedule {
 	private RepeatType repeatAt;
 	private LocalDate endDate;
 
-	private List<Integer> daysOfWeek;
+	@Builder.Default
+	private List<Integer> daysOfWeek = new ArrayList<>();
 	private int dayOfMonth;        //1-31
 	private int dayOfWeek;        //1-7
 	private int numberOfWeek;    //1-4
@@ -50,19 +57,49 @@ public class EmailSchedule implements Schedule {
 	}
 
 	public static EmailSchedule fromDTO(EmailScheduleDTO dto) {
-		EmailSchedule schedule = new EmailSchedule();
-		schedule.setSendNow(dto.isSendNow());
+		EmailScheduleBuilder builder =
+				EmailSchedule
+						.builder()
+						.sendNow(dto.isSendNow())
 
-		if (dto.getSendDateTime() != null) schedule.setSendDateTime(dto.getSendDateTime().toLocalDateTime());
-		schedule.setRepeatAt(dto.getRepeatAt());
-		if (dto.getEndDate() != null) schedule.setEndDate(dto.getEndDate().toLocalDateTime().toLocalDate());
+						.daysOfWeek(dto.getDaysOfWeek())
+						.dayOfMonth(dto.getDayOfMonth())
+						.dayOfWeek(dto.getDayOfWeek())
+						.numberOfWeek(dto.getNumberOfWeek())
+						.month(dto.getMonth());
 
-		if (dto.getDaysOfWeek() != null) schedule.setDaysOfWeek(dto.getDaysOfWeek());
-		schedule.setDayOfMonth(dto.getDayOfMonth());
-		schedule.setDayOfWeek(dto.getDayOfWeek());
-		schedule.setNumberOfWeek(dto.getNumberOfWeek());
-		schedule.setMonth(dto.getMonth());
+		RepeatType repeatAt = dto.getRepeatAt();
+		if(Objects.isNull(repeatAt))
+			return builder
+					.repeatAt(RepeatType.NOTHING)
+					.endDate(LocalDate.now())
+					.build();
 
-		return schedule;
+		Timestamp sendDateTime = dto.getSendDateTime();
+		Timestamp endDate = dto.getEndDate();
+
+		if(repeatAt.equals(RepeatType.NOTHING)) {
+			checkSendDateTime(sendDateTime, builder);
+			builder
+				.repeatAt(repeatAt)
+				.endDate(LocalDate.now());
+		} else {
+			builder.repeatAt(repeatAt);
+			checkSendDateTime(sendDateTime, builder);
+			checkEndDate(endDate, builder);
+		}
+		return builder.build();
+	}
+
+	private static void checkEndDate(Timestamp endDate, EmailScheduleBuilder builder) {
+		if (Objects.nonNull(endDate)) {
+			builder.endDate(endDate.toLocalDateTime().toLocalDate());
+		} else throw new NullPointerException("End date is missing");
+	}
+
+	private static void checkSendDateTime(Timestamp sendDateTime, EmailScheduleBuilder builder) {
+		if(Objects.nonNull(sendDateTime)) {
+			builder.sendDateTime(sendDateTime.toLocalDateTime());
+		} else throw new NullPointerException("Send date time is missing");
 	}
 }
