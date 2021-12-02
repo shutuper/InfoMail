@@ -1,8 +1,11 @@
 package com.infopulse.infomail.dto.mail;
 
 import com.infopulse.infomail.models.mail.enums.RepeatType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -10,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailScheduleDTO {
-
+	@NotNull
 	private boolean sendNow;
 
 	private Timestamp sendDateTime;
