@@ -166,19 +166,28 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	}
 
 	boolean validDateForScheduling(Date date,
-										   Date compared,
-										   boolean canBeNullable) {
-		if (canBeNullable && (date == null)) return false;
-		if ((date != null) && date.after(compared)) return true;
+	                               Date compared,
+	                               boolean canBeNullable) {
+		if (canBeNullable && (date == null))
+			return false;
+
+		if ((date != null) && date.after(compared))
+			return true;
+
 		throw new IllegalArgumentException("Date is not valid for scheduling");
 	}
 
 	Date parseDateFromLocal(Temporal temporal) {
-		if (temporal == null) return null;
-		if (temporal instanceof LocalDateTime) return Timestamp.valueOf((LocalDateTime) temporal);
-		if (temporal instanceof LocalDate) return Timestamp.valueOf(((LocalDate) temporal).atStartOfDay().plusDays(1L));
+		if (temporal == null)
+			return null;
 
-		throw new IllegalArgumentException("Can't parse date: " + temporal.toString());
+		if (temporal instanceof LocalDateTime)
+			return Timestamp.valueOf((LocalDateTime) temporal);
+
+		if (temporal instanceof LocalDate)
+			return Timestamp.valueOf(((LocalDate) temporal).atStartOfDay().plusDays(1L));
+
+		throw new IllegalArgumentException("Can't parse date: " + temporal);
 	}
 
 
@@ -203,8 +212,10 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 
 		JobKey jobKey = jobDetail.getKey();
 		scheduler.scheduleJob(jobDetail, trigger);
+
 		QrtzJobDetail qrtzJobDetail = qrtzJobDetailService.findQrtzJobDetailByJobKey(jobKey);
 		AppUserEmailsInfo appUserEmailsInfo = appUserEmailsInfoService.saveAppUserEmailsInfo(qrtzJobDetail, emailTemplate);
+
 		recipientService.saveAllRecipientsWithUserInfo(recipientsDTO, appUserEmailsInfo);
 
 		log.info("User's(email = {}) job(name = {}) scheduled: {}",

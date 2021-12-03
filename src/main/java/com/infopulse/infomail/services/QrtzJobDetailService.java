@@ -40,18 +40,4 @@ public class QrtzJobDetailService {
 		return new PaginatedScheduledTasksDTO(scheduledTaskDTOS, tasksRaw.getTotalElements());
 	}
 
-//	public QrtzJobDetail createNewQrtzJobDetail(JobDetail jobDetail) {
-//		JobKey jobKey = jobDetail.getKey();
-//		QrtzJobDetail qrtzJobDetail = new QrtzJobDetail(
-//				jobKey.getName(),
-//				jobKey.getGroup(),
-//				"quartzScheduler",
-//				jobDetail.getDescription(),
-//				jobDetail.getJobClass().getName(),
-//				jobDetail.isDurable(),
-//				false, false, false, null);
-//
-//		return qrtzJobDetailRepository.saveAndFlush(qrtzJobDetail);
-//	}
-
 }

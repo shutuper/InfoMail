@@ -61,7 +61,6 @@ public class EmailSchedule implements Schedule {
 				EmailSchedule
 						.builder()
 						.sendNow(dto.isSendNow())
-
 						.daysOfWeek(dto.getDaysOfWeek())
 						.dayOfMonth(dto.getDayOfMonth())
 						.dayOfWeek(dto.getDayOfWeek())
@@ -72,7 +71,7 @@ public class EmailSchedule implements Schedule {
 		if(Objects.isNull(repeatAt))
 			return builder
 					.repeatAt(RepeatType.NOTHING)
-					.endDate(LocalDate.now())
+//					.endDate(LocalDate.now())
 					.build();
 
 		Timestamp sendDateTime = dto.getSendDateTime();
@@ -81,8 +80,8 @@ public class EmailSchedule implements Schedule {
 		if(repeatAt.equals(RepeatType.NOTHING)) {
 			checkSendDateTime(sendDateTime, builder);
 			builder
-				.repeatAt(repeatAt)
-				.endDate(LocalDate.now());
+				.repeatAt(repeatAt);
+//				.endDate(LocalDate.now());
 		} else {
 			builder.repeatAt(repeatAt);
 			checkSendDateTime(sendDateTime, builder);
