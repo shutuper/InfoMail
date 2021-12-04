@@ -19,7 +19,7 @@ public class AppUserEmailsInfo {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@OneToOne(optional = false)
+	@OneToOne()
 	@JoinColumn(name = "qrtz_job_detail_id")
 	private QrtzJobDetail qrtzJobDetail;
 

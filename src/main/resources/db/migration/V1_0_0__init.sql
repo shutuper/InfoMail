@@ -245,9 +245,9 @@ create table app_user_emails_info
     email_template_id  bigint       not null
         constraint email_template_id_ref
             references email_template,
-    qrtz_job_detail_id varchar(200) not null
+    qrtz_job_detail_id varchar(200) null
         constraint qrtz_job_name_ref
-            references qrtz_job_details
+            references qrtz_job_details ON DELETE SET NULL
 );
 
 create table app_recipient

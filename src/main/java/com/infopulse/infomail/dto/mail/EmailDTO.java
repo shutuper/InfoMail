@@ -15,9 +15,11 @@ import java.util.List;
 public class EmailDTO {
 
 	private List<RecipientDTO> recipients;
+
 	@Valid
 	@NotNull
 	private EmailTemplateDTO emailTemplate;
+
 	@Valid
 	@NotNull
 	private EmailScheduleDTO emailSchedule;
