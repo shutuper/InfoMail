@@ -24,6 +24,7 @@ spring:
       org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
       org.quartz.jobStore.useProperties: true
       org.quartz.scheduler.instanceName: quartzScheduler
+      org.quartz.scheduler.idleWaitTime: 5000
 
   jpa:
     show-sql: true

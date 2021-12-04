@@ -36,8 +36,8 @@ CREATE TABLE qrtz_triggers
     misfire_instr  SMALLINT     NULL,
     job_data       BYTEA        NULL,
     PRIMARY KEY (sched_name, trigger_name, trigger_group),
-    FOREIGN KEY (sched_name, job_name, job_group) REFERENCES qrtz_job_details (
-                                                                               sched_name, job_name, job_group)
+    FOREIGN KEY (sched_name, job_name, job_group)
+        REFERENCES qrtz_job_details (sched_name, job_name, job_group) ON DELETE CASCADE
 );
 
 CREATE TABLE qrtz_simple_triggers
@@ -50,7 +50,7 @@ CREATE TABLE qrtz_simple_triggers
     times_triggered BIGINT       NOT NULL,
     PRIMARY KEY (sched_name, trigger_name, trigger_group),
     FOREIGN KEY (sched_name, trigger_name, trigger_group) REFERENCES
-        qrtz_triggers (sched_name, trigger_name, trigger_group)
+        qrtz_triggers (sched_name, trigger_name, trigger_group)  ON DELETE CASCADE
 );
 
 CREATE TABLE qrtz_cron_triggers
@@ -62,7 +62,7 @@ CREATE TABLE qrtz_cron_triggers
     time_zone_id    VARCHAR(80),
     PRIMARY KEY (sched_name, trigger_name, trigger_group),
     FOREIGN KEY (sched_name, trigger_name, trigger_group) REFERENCES
-        qrtz_triggers (sched_name, trigger_name, trigger_group)
+        qrtz_triggers (sched_name, trigger_name, trigger_group)  ON DELETE CASCADE
 );
 
 CREATE TABLE qrtz_simprop_triggers
@@ -83,7 +83,7 @@ CREATE TABLE qrtz_simprop_triggers
     bool_prop_2   BOOL           NULL,
     PRIMARY KEY (sched_name, trigger_name, trigger_group),
     FOREIGN KEY (sched_name, trigger_name, trigger_group) REFERENCES
-        qrtz_triggers (sched_name, trigger_name, trigger_group)
+        qrtz_triggers (sched_name, trigger_name, trigger_group)  ON DELETE CASCADE
 );
 
 CREATE TABLE qrtz_blob_triggers
@@ -94,7 +94,7 @@ CREATE TABLE qrtz_blob_triggers
     blob_data     BYTEA        NULL,
     PRIMARY KEY (sched_name, trigger_name, trigger_group),
     FOREIGN KEY (sched_name, trigger_name, trigger_group) REFERENCES
-        qrtz_triggers (sched_name, trigger_name, trigger_group)
+        qrtz_triggers (sched_name, trigger_name, trigger_group)  ON DELETE CASCADE
 );
 
 CREATE TABLE qrtz_calendars

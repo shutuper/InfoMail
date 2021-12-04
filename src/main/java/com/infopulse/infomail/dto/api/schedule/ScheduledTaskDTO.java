@@ -37,14 +37,16 @@ public class ScheduledTaskDTO {
 		System.out.println("\nStart at: " + scheduledTaskRaw.getStartAt() + ", end at" + scheduledTaskRaw.getEndAt());
 
 		if (triggerIsExpired)
-			this.state = "FINISHED";
+			this.state = "COMPLETED";
 		else {
 			Long startAtTemp = scheduledTaskRaw.getStartAt();
 			Long endAtTemp = scheduledTaskRaw.getEndAt();
+
 			this.state = stateTemp;
 
 			this.startAt = Objects.isNull(startAtTemp) ?
 					null : Timestamp.from(Instant.ofEpochMilli(startAtTemp));
+
 			this.endAt = Objects.isNull(endAtTemp) ?
 					null : Timestamp.from(Instant.ofEpochMilli(endAtTemp));
 		}
