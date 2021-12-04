@@ -54,9 +54,9 @@ public interface QrtzJobDetailRepository extends JpaRepository<QrtzJobDetail, St
 			     inner join app_user_emails_info info on jobs.job_name = info.qrtz_job_detail_id
 			     inner join email_template temp on info.email_template_id = temp.id)
 			where
-			    jobs.job_name = ?1
+			    jobs.job_name = ?1 and jobs.job_group = ?2
 			""",
 			nativeQuery = true)
-	Optional<ScheduledTaskFullRaw> getDTOByJobName(String jobName);
+	Optional<ScheduledTaskFullRaw> getDTOByJobName(String jobName, String jobGroup);
 
 }

@@ -20,12 +20,13 @@ class QrtzJobDetailRepositoryTest {
 
     private final String DISABLE_REASON = "Disabled because jobName was obtained from an existing database, " +
             "if you specify the actual 'jobName' value, then you can remove the annotation";
-    private final String jobName = "d77641db-913d-4e74-bf48-6f82ab660ae5";
+    private final String jobName = "10414bad-49cb-4679-b1e0-193dee6c29e7";
+    private final String jobGroup = "admin@infomail.com";
 
     @Disabled(DISABLE_REASON)
     @Test
     void getDTOByJobName_thenIsPresent() {
-        Optional<ScheduledTaskFullRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName(jobName);
+        Optional<ScheduledTaskFullRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName(jobName, jobGroup);
 
         assertTrue(dtoByJobName.isPresent());
         ScheduledTaskFullDTO scheduledTaskFullDTO = new ScheduledTaskFullDTO(dtoByJobName.get(), null);
@@ -35,12 +36,12 @@ class QrtzJobDetailRepositoryTest {
 
     @Test
     void getDTOByJobName_thenNotPresent() {
-        Optional<ScheduledTaskFullRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName("not found name");
+        Optional<ScheduledTaskFullRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName("not found job name", "not found job group");
 
         assertFalse(dtoByJobName.isPresent());
     }
 
-    @Disabled(DISABLE_REASON)
+//    @Disabled(DISABLE_REASON)
     @Test
     void findByJobName() {
         Optional<QrtzJobDetail> jobDetail = qrtzJobDetailRepository.findByJobName(jobName);
