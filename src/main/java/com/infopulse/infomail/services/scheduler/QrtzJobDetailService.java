@@ -2,6 +2,7 @@ package com.infopulse.infomail.services.scheduler;
 
 import com.infopulse.infomail.dto.api.schedule.PaginatedScheduledTasksDTO;
 import com.infopulse.infomail.dto.api.schedule.ScheduledTaskDTO;
+import com.infopulse.infomail.dto.app.ScheduledTaskFullRaw;
 import com.infopulse.infomail.dto.app.ScheduledTaskRaw;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import com.infopulse.infomail.repositories.QrtzJobDetailRepository;
@@ -39,4 +40,9 @@ public class QrtzJobDetailService {
 		return new PaginatedScheduledTasksDTO(scheduledTaskDTOS, tasksRaw.getTotalElements());
 	}
 
+	public ScheduledTaskFullRaw getScheduledTaskFullRawByJobName(String jobName, String jobGroup) {
+		return qrtzJobDetailRepository.getDTOByJobName(jobName, jobGroup).orElseThrow(
+				() -> new IllegalStateException(String.format("Job %1$s and group %2$s does not exist", jobName, jobGroup))
+		);
+	}
 }
