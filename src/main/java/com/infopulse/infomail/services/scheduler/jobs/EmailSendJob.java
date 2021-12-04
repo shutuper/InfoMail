@@ -1,10 +1,10 @@
 package com.infopulse.infomail.services.scheduler.jobs;
 
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
-import com.infopulse.infomail.models.mail.EmailTemplate;
+import com.infopulse.infomail.models.templates.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.RecipientType;
 import com.infopulse.infomail.services.mail.AppUserEmailsInfoService;
-import com.infopulse.infomail.services.RecipientService;
+import com.infopulse.infomail.services.mail.RecipientService;
 import com.infopulse.infomail.services.mail.EmailSenderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

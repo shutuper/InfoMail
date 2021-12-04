@@ -1,6 +1,6 @@
 package com.infopulse.infomail.services.scheduler;
 
-import com.infopulse.infomail.models.mail.Schedule;
+import com.infopulse.infomail.models.schedule.Schedule;
 import org.quartz.*;
 
 import java.text.ParseException;

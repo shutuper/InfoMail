@@ -1,6 +1,7 @@
 package com.infopulse.infomail.models.mail;
 
-import com.infopulse.infomail.dto.mail.EmailScheduleDTO;
+import com.infopulse.infomail.dto.api.schedule.EmailScheduleDTO;
+import com.infopulse.infomail.models.schedule.EmailSchedule;
 import org.junit.jupiter.api.Test;
 
 class EmailScheduleTest {

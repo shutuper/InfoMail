@@ -1,15 +1,14 @@
 package com.infopulse.infomail.services.scheduler;
 
 import com.infopulse.infomail.dto.app.CronExpWithDesc;
-import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
-import com.infopulse.infomail.dto.mail.RecipientDTO;
+import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.dto.api.emails.RecipientDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
-import com.infopulse.infomail.models.mail.EmailSchedule;
-import com.infopulse.infomail.models.mail.EmailTemplate;
+import com.infopulse.infomail.models.schedule.EmailSchedule;
+import com.infopulse.infomail.models.templates.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
-import com.infopulse.infomail.services.QrtzJobDetailService;
-import com.infopulse.infomail.services.RecipientService;
+import com.infopulse.infomail.services.mail.RecipientService;
 import com.infopulse.infomail.services.mail.AppUserEmailsInfoService;
 import com.infopulse.infomail.services.mail.EmailTemplateService;
 import com.infopulse.infomail.services.scheduler.cronGenerator.CronGenerator;
@@ -29,7 +28,6 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.List;

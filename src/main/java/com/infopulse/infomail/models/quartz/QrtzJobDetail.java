@@ -56,9 +56,6 @@ public class QrtzJobDetail {
 	@Column(name = "job_data")
 	private byte[] jobData;
 
-//	public QrtzJobDetail(QrtzJobDetailId id) {
-//		this.id = id;
-//	}
 
 	public QrtzJobDetail(String jobName,
 	                     String jobGroup,

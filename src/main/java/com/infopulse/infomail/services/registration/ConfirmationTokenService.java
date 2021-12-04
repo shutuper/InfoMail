@@ -1,7 +1,7 @@
 package com.infopulse.infomail.services.registration;
 
 import com.infopulse.infomail.models.confirmation.ConfirmationToken;
-import com.infopulse.infomail.repositories.ConfirmationTokenRepository;
+import com.infopulse.infomail.repositories.security.ConfirmationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

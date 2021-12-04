@@ -1,16 +1,15 @@
 package com.infopulse.infomail.services.mail;
 
-import com.infopulse.infomail.dto.api.EmailWithTemplateDTO;
-import com.infopulse.infomail.dto.api.EmailsIdsDTO;
-import com.infopulse.infomail.dto.api.ExecutedEmailDTO;
-import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
-import com.infopulse.infomail.dto.mail.RecipientDTO;
+import com.infopulse.infomail.dto.api.templates.EmailWithTemplateDTO;
+import com.infopulse.infomail.dto.api.emails.EmailsIdsDTO;
+import com.infopulse.infomail.dto.api.emails.ExecutedEmailDTO;
+import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.dto.api.emails.RecipientDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailLog;
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
 import com.infopulse.infomail.models.mail.enums.RecipientType;
 import com.infopulse.infomail.repositories.EmailLogRepository;
-import com.infopulse.infomail.services.RecipientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;

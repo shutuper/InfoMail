@@ -1,10 +1,7 @@
 package com.infopulse.infomail.services.scheduler.tasks;
 
-import com.infopulse.infomail.dto.api.ExecutedEmailDTO;
-import com.infopulse.infomail.dto.api.PaginatedScheduledTasksDTO;
-import com.infopulse.infomail.dto.api.ScheduledTaskDTO;
-import com.infopulse.infomail.models.mail.EmailLog;
-import com.infopulse.infomail.services.QrtzJobDetailService;
+import com.infopulse.infomail.dto.api.schedule.PaginatedScheduledTasksDTO;
+import com.infopulse.infomail.services.scheduler.QrtzJobDetailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -12,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service

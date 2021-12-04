@@ -1,11 +1,10 @@
 package com.infopulse.infomail.services.mail;
 
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
-import com.infopulse.infomail.models.mail.EmailTemplate;
+import com.infopulse.infomail.models.templates.EmailTemplate;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import com.infopulse.infomail.repositories.AppUserEmailsInfoRepository;
 import lombok.AllArgsConstructor;
-import org.quartz.JobKey;
 import org.springframework.stereotype.Service;
 
 @Service

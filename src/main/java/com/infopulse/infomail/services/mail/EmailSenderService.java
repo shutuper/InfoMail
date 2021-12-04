@@ -2,7 +2,7 @@ package com.infopulse.infomail.services.mail;
 
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailLog;
-import com.infopulse.infomail.models.mail.EmailTemplate;
+import com.infopulse.infomail.models.templates.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
 import com.infopulse.infomail.models.mail.enums.RecipientType;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.api.EmailWithTemplateDTO;
-import com.infopulse.infomail.dto.api.EmailsIdsDTO;
-import com.infopulse.infomail.dto.api.ExecutedEmailDTO;
+import com.infopulse.infomail.dto.api.templates.EmailWithTemplateDTO;
+import com.infopulse.infomail.dto.api.emails.EmailsIdsDTO;
+import com.infopulse.infomail.dto.api.emails.ExecutedEmailDTO;
 import com.infopulse.infomail.services.mail.EmailLogService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

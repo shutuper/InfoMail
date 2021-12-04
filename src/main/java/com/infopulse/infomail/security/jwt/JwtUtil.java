@@ -6,7 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.infopulse.infomail.models.users.AppUser;
-import com.infopulse.infomail.security.SecurityConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import static com.infopulse.infomail.security.SecurityConstants.*;
+import static com.infopulse.infomail.security.config.SecurityConstants.*;
 
 @Component
 public class JwtUtil {

@@ -1,12 +1,12 @@
 package com.infopulse.infomail.services.mail;
 
-import com.infopulse.infomail.dto.api.EmailTemplatesIdsDTO;
-import com.infopulse.infomail.dto.api.UserTemplatesOptionsDTO;
-import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
-import com.infopulse.infomail.dto.mail.UserEmailTemplateDTO;
-import com.infopulse.infomail.models.mail.UserEmailTemplate;
+import com.infopulse.infomail.dto.api.templates.EmailTemplatesIdsDTO;
+import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
+import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
+import com.infopulse.infomail.models.templates.UserEmailTemplate;
 import com.infopulse.infomail.models.users.AppUser;
-import com.infopulse.infomail.repositories.UserEmailTemplateRepository;
+import com.infopulse.infomail.repositories.templates.UserEmailTemplateRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;

@@ -1,7 +1,7 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
-import com.infopulse.infomail.models.mail.EmailTemplate;
+import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.models.templates.EmailTemplate;
 import com.infopulse.infomail.services.mail.EmailTemplateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

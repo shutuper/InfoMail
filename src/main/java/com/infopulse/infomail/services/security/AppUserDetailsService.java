@@ -1,6 +1,6 @@
 package com.infopulse.infomail.services.security;
 
-import com.infopulse.infomail.repositories.AppUserRepository;
+import com.infopulse.infomail.repositories.security.AppUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

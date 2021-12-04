@@ -1,6 +1,7 @@
 package com.infopulse.infomail.models.mail;
 
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
+import com.infopulse.infomail.models.templates.EmailTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

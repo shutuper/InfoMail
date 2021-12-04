@@ -1,6 +1,6 @@
 package com.infopulse.infomail.repositories;
 
-import com.infopulse.infomail.models.mail.AppRecipient;
+import com.infopulse.infomail.models.recipients.AppRecipient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

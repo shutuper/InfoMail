@@ -1,6 +1,6 @@
 package com.infopulse.infomail.repositories;
 
-import com.infopulse.infomail.dto.api.ScheduledTaskFullDTO;
+import com.infopulse.infomail.dto.api.schedule.ScheduledTaskFullDTO;
 import com.infopulse.infomail.dto.app.ScheduledTaskFullRaw;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import org.junit.jupiter.api.Disabled;

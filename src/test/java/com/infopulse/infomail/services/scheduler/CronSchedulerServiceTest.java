@@ -1,7 +1,6 @@
 package com.infopulse.infomail.services.scheduler;
 
-import com.infopulse.infomail.services.QrtzJobDetailService;
-import com.infopulse.infomail.services.RecipientService;
+import com.infopulse.infomail.services.mail.RecipientService;
 import com.infopulse.infomail.services.mail.AppUserEmailsInfoService;
 import com.infopulse.infomail.services.mail.EmailTemplateService;
 import com.infopulse.infomail.services.scheduler.сronDescriptor.CronDescriptorService;

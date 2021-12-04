@@ -1,6 +1,6 @@
 package com.infopulse.infomail.services.scheduler.cronGenerator;
 
-import com.infopulse.infomail.models.mail.EmailSchedule;
+import com.infopulse.infomail.models.schedule.EmailSchedule;
 
 import java.time.DateTimeException;
 import java.time.DayOfWeek;

@@ -1,9 +1,9 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.mail.EmailDTO;
-import com.infopulse.infomail.dto.mail.EmailTemplateDTO;
-import com.infopulse.infomail.dto.mail.RecipientDTO;
-import com.infopulse.infomail.models.mail.EmailSchedule;
+import com.infopulse.infomail.dto.api.emails.EmailDTO;
+import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.dto.api.emails.RecipientDTO;
+import com.infopulse.infomail.models.schedule.EmailSchedule;
 import com.infopulse.infomail.services.scheduler.CronSchedulerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
