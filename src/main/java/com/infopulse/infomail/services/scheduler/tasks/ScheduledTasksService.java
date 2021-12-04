@@ -39,7 +39,7 @@ public class ScheduledTasksService {
 
 		PaginatedScheduledTasksDTO paginatedScheduledTasksDTO = jobDetailService.getAllScheduledTaskDTObyGroup(jobGroup, pageable);
 
-		log.info("User {} requested emails history, page {}, rows {}, sort order {}, sort field {}",
+		log.info("User {} requested scheduled tasks, page {}, rows {}, sort order {}, sort field {}",
 				jobGroup, page, rows, sortOrder, sortField);
 
 		return paginatedScheduledTasksDTO;
@@ -47,6 +47,8 @@ public class ScheduledTasksService {
 
 	@Transactional
 	public ScheduledTaskFullDTO getTaskDtoByJobName(String jobName, String jobGroup) {
+		log.info("User {} requested scheduled task with jobName: {}", jobGroup, jobName);
+
 		final ScheduledTaskFullRaw scheduledTask = jobDetailService
 				.getScheduledTaskFullRawByJobName(jobName, jobGroup);
 		final List<RecipientDTO> recipients = recipientService
