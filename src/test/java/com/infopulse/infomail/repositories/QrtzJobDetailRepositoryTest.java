@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -23,13 +24,20 @@ class QrtzJobDetailRepositoryTest {
 
     @Disabled(DISABLE_REASON)
     @Test
-    void getDTOByJobName() {
+    void getDTOByJobName_thenIsPresent() {
         Optional<ScheduledTaskFullRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName(jobName);
 
         assertTrue(dtoByJobName.isPresent());
         ScheduledTaskFullDTO scheduledTaskFullDTO = new ScheduledTaskFullDTO(dtoByJobName.get(), null);
         System.out.println("scheduledTaskFullDTO = " + scheduledTaskFullDTO);
 
+    }
+
+    @Test
+    void getDTOByJobName_thenNotPresent() {
+        Optional<ScheduledTaskFullRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName("not found name");
+
+        assertFalse(dtoByJobName.isPresent());
     }
 
     @Disabled(DISABLE_REASON)
