@@ -1,7 +1,6 @@
 package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
-import com.infopulse.infomail.models.templates.EmailTemplate;
 import com.infopulse.infomail.services.mail.EmailTemplateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +24,9 @@ public class EmailTemplateController {
 	                                                        Authentication authentication) {
 		try {
 			String userEmail = (String) authentication.getPrincipal();
-			EmailTemplate template = templateService.getEmailTemplateById(id, userEmail);
-			EmailTemplateDTO dto = new EmailTemplateDTO(
-					template.getId(),
-					template.getSubject(),
-					template.getBody()
-			);
-			return ResponseEntity.ok(dto);
+
+			return ResponseEntity.ok(templateService
+					.getEmailTemplateAsDtoById(id, userEmail));
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			return ResponseEntity.badRequest().build();

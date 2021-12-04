@@ -1,10 +1,9 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.api.templates.EmailTemplatesIdsDTO;
-import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
 import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.dto.api.templates.EmailTemplatesIdsDTO;
 import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
-import com.infopulse.infomail.models.templates.UserEmailTemplate;
+import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
 import com.infopulse.infomail.services.mail.UserEmailTemplateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,17 +82,10 @@ public class UserEmailTemplateController {
 	@GetMapping("{id}")
 	public ResponseEntity<UserEmailTemplateDTO> getTemplateById(@PathVariable("id") Long id, Authentication authentication) {
 		try {
-			String userEmail = (String) authentication.getPrincipal();
-			UserEmailTemplate template = templateService.getEmailTemplateById(id, userEmail);
-			UserEmailTemplateDTO dto = new UserEmailTemplateDTO(
-					template.getId(),
-					template.getName(),
-					template.getSubject(),
-					template.getBody(),
-					userEmail,
-					template.getSharingLink()
-			);
-			return ResponseEntity.ok(dto);
+			String userEmail = authentication.getName();
+
+			return ResponseEntity.ok(templateService
+					.getEmailTemplateAsDtoById(id, userEmail));
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			return ResponseEntity.badRequest().build();
@@ -103,17 +95,10 @@ public class UserEmailTemplateController {
 	@GetMapping("/shared/{sharingId}")
 	public ResponseEntity<UserEmailTemplateDTO> getTemplateBySharingId(@PathVariable("sharingId") String sharingId, Authentication authentication) {
 		try {
-			String userEmail = (String) authentication.getPrincipal();
-			UserEmailTemplate template = templateService.getTemplateBySharingId(sharingId, userEmail);
-			UserEmailTemplateDTO dto = new UserEmailTemplateDTO(
-					template.getId(),
-					template.getName(),
-					template.getSubject(),
-					template.getBody(),
-					template.getAppUser().getEmail(),
-					template.getSharingLink()
-			);
-			return ResponseEntity.ok(dto);
+			String userEmail = authentication.getName();
+
+			return ResponseEntity.ok(templateService
+					.getTemplateAsDtoBySharingId(sharingId, userEmail));
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			return ResponseEntity.badRequest().build();

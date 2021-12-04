@@ -46,6 +46,11 @@ public class EmailTemplateService {
 				));
 	}
 
+	public EmailTemplateDTO getEmailTemplateAsDtoById(Long id, String userEmail) {
+		return getEmailTemplateById(id, userEmail).toDto();
+	}
+
+
 	private void validate(EmailTemplateDTO emailTemplateDTO) {
 		if (Objects.isNull(emailTemplateDTO.getBody()) || Objects.isNull(emailTemplateDTO.getSubject()))
 			throw new IllegalStateException("EmailTemplateDTO body and subject should not be blank!");

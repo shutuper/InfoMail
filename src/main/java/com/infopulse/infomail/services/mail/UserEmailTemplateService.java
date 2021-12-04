@@ -1,9 +1,9 @@
 package com.infopulse.infomail.services.mail;
 
-import com.infopulse.infomail.dto.api.templates.EmailTemplatesIdsDTO;
-import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
 import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.dto.api.templates.EmailTemplatesIdsDTO;
 import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
+import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
 import com.infopulse.infomail.models.templates.UserEmailTemplate;
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.repositories.templates.UserEmailTemplateRepository;
@@ -81,12 +81,22 @@ public class UserEmailTemplateService {
 				));
 	}
 
+	public UserEmailTemplateDTO getEmailTemplateAsDtoById(Long id, String userEmail) {
+		return getEmailTemplateById(id, userEmail)
+				.toDto();
+	}
+
 	public UserEmailTemplate getTemplateBySharingId(String sharingId, String userEmail) {
 		log.info("User {} requested UserEmailTemplate by sharingId: {}", userEmail, sharingId);
 		return userEmailTemplateRepository.findBySharingLink(sharingId)
 				.orElseThrow(() -> new IllegalStateException(
 						String.format("UserEmailTemplate with sharingId %s does not exist", sharingId)
 				));
+	}
+
+	public UserEmailTemplateDTO getTemplateAsDtoBySharingId(String sharingId, String userEmail) {
+		return getTemplateBySharingId(sharingId, userEmail)
+				.toDto();
 	}
 
 	@Transactional

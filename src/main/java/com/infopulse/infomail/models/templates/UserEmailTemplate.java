@@ -1,5 +1,6 @@
 package com.infopulse.infomail.models.templates;
 
+import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
 import com.infopulse.infomail.models.users.AppUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,5 +44,16 @@ public class UserEmailTemplate implements Template {
 		this.subject = subject;
 		this.body = body;
 		this.sharingLink = sharingLink;
+	}
+
+	public UserEmailTemplateDTO toDto() {
+		return new UserEmailTemplateDTO(
+				this.getId(),
+				this.getName(),
+				this.getSubject(),
+				this.getBody(),
+				this.getAppUser().getEmail(),
+				this.getSharingLink()
+		);
 	}
 }
