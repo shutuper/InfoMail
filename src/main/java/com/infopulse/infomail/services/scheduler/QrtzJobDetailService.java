@@ -40,4 +40,18 @@ public class QrtzJobDetailService {
 		return new PaginatedScheduledTasksDTO(scheduledTaskDTOS, tasksRaw.getTotalElements());
 	}
 
+	public ScheduledTaskFullRaw getScheduledTaskFullRawByJobName(String jobName, String jobGroup) {
+		return qrtzJobDetailRepository.getDTOByJobName(jobName, jobGroup).orElseThrow(
+				() -> new IllegalStateException(String.format("Job %1$s and group %2$s does not exist", jobName, jobGroup))
+		);
+	}
+
+	public void deleteAllByNamesAndGroup(List<String> jobNames, String jobGroup) {
+		qrtzJobDetailRepository.deleteAllByJobNameInAndJobGroup(jobNames, jobGroup);
+	}
+
+	public void deleteByJobNameAndGroup(String jobName, String jobGroup) {
+		qrtzJobDetailRepository.deleteByJobNameAndJobGroup(jobName, jobGroup);
+	}
+
 }

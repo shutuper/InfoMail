@@ -32,22 +32,14 @@ public class ScheduledTasksService {
 	private final RecipientService recipientService;
 
 	@Transactional
-	public PaginatedScheduledTasksDTO getUserPaginatedTasks(Integer page,
-	                                                        Integer rows,
-	                                                        Integer sortOrder,
-	                                                        String sortField,
-	                                                        String jobGroup) {
+	public PaginatedScheduledTasksDTO getUserPaginatedTasks(Integer page, Integer rows, Integer sortOrder, String sortField, String jobGroup) {
 		Sort sort = Sort.by(sortField);
 		sort = sortOrder > 0 ? sort.ascending() : sort.descending();
-		Pageable pageable = PageRequest.of(
-				page,
-				rows,
-				sort);
+		Pageable pageable = PageRequest.of(page, rows, sort);
 
 		PaginatedScheduledTasksDTO paginatedScheduledTasksDTO = jobDetailService.getAllScheduledTaskDTObyGroup(jobGroup, pageable);
 
-		log.info("User {} requested scheduled tasks, page {}, rows {}, sort order {}, sort field {}",
-				jobGroup, page, rows, sortOrder, sortField);
+		log.info("User {} requested scheduled tasks, page {}, rows {}, sort order {}, sort field {}", jobGroup, page, rows, sortOrder, sortField);
 
 		return paginatedScheduledTasksDTO;
 	}
@@ -56,13 +48,10 @@ public class ScheduledTasksService {
 	public ScheduledTaskFullDTO getTaskDtoByJobName(String jobName, String jobGroup) {
 		log.info("User {} requested scheduled task with jobName: {}", jobGroup, jobName);
 
-		final ScheduledTaskFullRaw scheduledTask = jobDetailService
-				.getScheduledTaskFullRawByJobName(jobName, jobGroup);
-		final List<RecipientDTO> recipients = recipientService
-				.getAllAsDTOByJobName(jobName);
+		final ScheduledTaskFullRaw scheduledTask = jobDetailService.getScheduledTaskFullRawByJobName(jobName, jobGroup);
+		final List<RecipientDTO> recipients = recipientService.getAllAsDTOByJobName(jobName);
 		return new ScheduledTaskFullDTO(scheduledTask, recipients);
 	}
-
 
 
 	@Transactional
