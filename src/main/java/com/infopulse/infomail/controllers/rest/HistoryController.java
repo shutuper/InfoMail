@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -84,7 +85,7 @@ public class HistoryController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> deleteAllEmailsByIds(@RequestBody EmailsIdsDTO ids, Authentication authentication) {
+	public ResponseEntity<?> deleteAllEmailsByIds(@Valid @RequestBody EmailsIdsDTO ids, Authentication authentication) {
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
 			emailLogService.deleteAllByIdsAndUserEmail(ids, senderEmail);

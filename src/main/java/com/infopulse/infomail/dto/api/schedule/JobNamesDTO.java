@@ -1,4 +1,4 @@
-package com.infopulse.infomail.dto.api.emails;
+package com.infopulse.infomail.dto.api.schedule;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +10,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailsIdsDTO {
+public class JobNamesDTO {
 
 	@NotEmpty
-	private List<Long> ids;
+	private List<String> jobNames;
 
 }
