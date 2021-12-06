@@ -3,8 +3,6 @@ package com.infopulse.infomail.services.scheduler.сronDescriptor;
 import it.burning.cron.CronExpressionDescriptor;
 import it.burning.cron.CronExpressionParser;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -41,8 +41,7 @@ public class JwtUtil {
 		String token = authorizationHeader.substring(TOKEN_PREFIX.length());
 		Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
 		JWTVerifier verifier = JWT.require(algorithm).build();
-		DecodedJWT decodedJWT = verifier.verify(token);
-		return decodedJWT;
+		return verifier.verify(token);
 	}
 
 }

@@ -25,7 +25,7 @@ public class EmailSendJob extends QuartzJobBean {
 	private final AppUserEmailsInfoService appUserEmailsInfoService;
 
 	@Override
-	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+	protected void executeInternal(JobExecutionContext context) {
 		JobDetail jobDetail = context.getJobDetail();
 		String jobName = jobDetail.getKey().getName();
 		String senderEmail = jobDetail.getKey().getGroup();

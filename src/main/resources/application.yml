@@ -2,12 +2,12 @@ server:
   port: 8090
 
 logging:
-  logback:
-    rollingpolicy:
-      max-file-size: 10MB
-      max-history: 10
-  file:
-    name: logs/infomail.log
+#  logback:
+  #    rollingpolicy:
+  #      max-file-size: 10MB
+  #      max-history: 10
+  #  file:
+  #    name: logs/infomail.log
   pattern:
     dateformat: yyyy:MM:dd HH:mm:ss |
 

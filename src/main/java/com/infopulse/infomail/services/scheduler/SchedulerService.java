@@ -11,7 +11,7 @@ public interface SchedulerService<T extends Trigger, P extends Schedule> {
 
 	ScheduleBuilder<T> buildSchedule(boolean alwaysRepeat,
 	                                 int repeatCount,
-	                                 long interval) throws ParseException; // for simple triggers
+	                                 long interval); // for simple triggers
 
 	Trigger buildTrigger(JobDetail jobDetail,
 	                     ScheduleBuilder<T> scheduleBuilder,

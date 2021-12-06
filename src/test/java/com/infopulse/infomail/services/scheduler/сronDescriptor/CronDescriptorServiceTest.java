@@ -1,7 +1,6 @@
 package com.infopulse.infomail.services.scheduler.сronDescriptor;
 
 import it.burning.cron.CronExpressionParser;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class CronDescriptorServiceTest {
 
-    private CronDescriptorService descriptorService;
+    private final CronDescriptorService descriptorService;
 
     @Autowired
     CronDescriptorServiceTest(CronDescriptorService descriptorService) {

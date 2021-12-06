@@ -59,7 +59,7 @@ public class CronExpressionBuilder {
                     "?", "*", "*", "*");
             cron.isADayOfWeekType = true;
             cron.isTypeAlreadySet = false;
-        };
+        }
 
         public CronExpressionBuilder build() {return cron;}
 

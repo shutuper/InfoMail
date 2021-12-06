@@ -1,6 +1,5 @@
 package com.infopulse.infomail.security.config;
 
-import com.infopulse.infomail.models.users.roles.AppUserRole;
 import com.infopulse.infomail.security.filters.AppAuthenticationFilter;
 import com.infopulse.infomail.security.filters.AppAuthorizationFilter;
 import com.infopulse.infomail.security.jwt.JwtUtil;
@@ -18,9 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import static com.infopulse.infomail.models.users.roles.AppUserRole.*;
 

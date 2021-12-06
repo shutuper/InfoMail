@@ -1,10 +1,10 @@
 package com.infopulse.infomail.services.mail;
 
-import com.infopulse.infomail.dto.api.templates.EmailWithTemplateDTO;
 import com.infopulse.infomail.dto.api.emails.EmailsIdsDTO;
 import com.infopulse.infomail.dto.api.emails.ExecutedEmailDTO;
-import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
 import com.infopulse.infomail.dto.api.emails.RecipientDTO;
+import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.dto.api.templates.EmailWithTemplateDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailLog;
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
@@ -123,7 +123,7 @@ public class EmailLogService {
 
 
 	public Integer getTotalNumberOfUserEmails(String userEmail) {
-		log.info("User {} requasted total number of hsi templates", userEmail);
+		log.info("User {} requested total number of hsi templates", userEmail);
 		return emailLogRepository.countBySenderEmail(userEmail);
 	}
 

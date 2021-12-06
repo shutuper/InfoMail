@@ -55,7 +55,7 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	}
 
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 		String access_token = jwtUtil.createAccessToken(request, authentication); // Map<String, String> tokens = new HashMap<>();
 		response.setHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + access_token); // tokens.put(AUTHORIZATION_HEADER, access_token);
 	}
