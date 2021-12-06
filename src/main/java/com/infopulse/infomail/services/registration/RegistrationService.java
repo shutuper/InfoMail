@@ -23,49 +23,35 @@ public class RegistrationService {
 	private final ConfirmationTokenSender confirmationTokenSender;
 
 	public MessageDTO register(RegistrationRequest request) {
-		try {
-			String token = appUserService.singUp(
-					new AppUser(
-							request.getEmail(),
-							request.getPassword(),
-							AppUserRole.USER,
-							true, true, false));
+		String token = appUserService.singUp(
+				new AppUser(
+						request.getEmail(),
+						request.getPassword(),
+						AppUserRole.USER,
+						true, true, false));
 
-			confirmationTokenSender.sendConfirmationToken(request.getEmail(), token);
+		confirmationTokenSender.sendConfirmationToken(request.getEmail(), token);
 
-			String success = "success";
-			return new MessageDTO(success);
-		} catch (IllegalStateException ex) {
-			log.error(ex.getMessage());
-
-			return new MessageDTO(ex.getMessage());
-		}
+		String success = "success";
+		return new MessageDTO(success);
 	}
 
 	@Transactional
 	public MessageDTO confirmToken(String token) {
-		String result, email;
-		ConfirmationToken confirmationToken;
-		try {
-			confirmationToken = validateConfirmationToken(token);
+		ConfirmationToken confirmationToken = validateConfirmationToken(token);
 
-			confirmationTokenService.setConfirmedAt(token);
-			email = confirmationToken.getAppUser().getEmail();
-			appUserService.enableAppUser(email);
+		confirmationTokenService.setConfirmedAt(token);
+		String email = confirmationToken.getAppUser().getEmail();
+		appUserService.enableAppUser(email);
 
-			log.info("User {} have just confirmed email", email);
-
-			result = "Confirmed";
-		} catch (IllegalStateException ex) {
-			log.error(ex.getMessage());
-			result = ex.getMessage();
-		}
+		log.info("User {} have just confirmed email", email);
+		String result = "Confirmed";
 		return new MessageDTO(result);
 	}
 
 	private ConfirmationToken validateConfirmationToken(String token) throws IllegalStateException {
 		ConfirmationToken confirmationToken = confirmationTokenService
-				.getConfirmationByToken(token).orElseThrow(() -> new IllegalStateException("token not found!"));
+				.getConfirmationByToken(token).orElseThrow(() -> new IllegalStateException("Token not found!"));
 
 		if (confirmationToken.getConfirmedAt() != null)
 			throw new IllegalStateException("Email already confirmed!");

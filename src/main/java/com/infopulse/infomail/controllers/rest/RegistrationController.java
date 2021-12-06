@@ -1,15 +1,14 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.exeptions.MessageDTO;
 import com.infopulse.infomail.dto.securityRequests.RegistrationRequest;
 import com.infopulse.infomail.services.registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -20,9 +19,14 @@ public class RegistrationController {
 	private final RegistrationService registrationService;
 
 	@PostMapping
-	public MessageDTO register(@Valid @RequestBody RegistrationRequest request) throws IOException {
-		return registrationService.register(request);
-
+	public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest request) {
+		try {
+			registrationService.register(request);
+			return ResponseEntity.ok().build();
+		} catch (Exception ex) {
+			log.error(ex.getMessage());
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
 	}
 
 	// security test controller
@@ -34,13 +38,25 @@ public class RegistrationController {
 	}
 
 	@GetMapping(path = "confirm")
-	public MessageDTO confirm(@RequestParam("token") String token) {
-		return registrationService.confirmToken(token);
+	public ResponseEntity<?> confirm(@RequestParam("token") String token) {
+		try {
+			registrationService.confirmToken(token);
+			return ResponseEntity.ok().build();
+		} catch (Exception ex) {
+			log.error(ex.getMessage());
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
 	}
 
 	@GetMapping(path = "reject")
-	public MessageDTO reject(@RequestParam("token") String token) {
-		return registrationService.rejectToken(token);
+	public ResponseEntity<?> reject(@RequestParam("token") String token) {
+		try {
+			registrationService.rejectToken(token);
+			return ResponseEntity.ok().build();
+		} catch (Exception ex) {
+			log.error(ex.getMessage());
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
 	}
 
 }
