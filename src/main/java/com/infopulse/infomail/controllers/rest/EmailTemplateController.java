@@ -27,6 +27,7 @@ public class EmailTemplateController {
 
 			return ResponseEntity.ok(templateService
 					.getEmailTemplateAsDtoById(id, userEmail));
+
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			return ResponseEntity.badRequest().build();

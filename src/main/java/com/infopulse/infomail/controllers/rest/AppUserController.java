@@ -13,8 +13,8 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/users")
 @AllArgsConstructor
+@RequestMapping("api/v1/users")
 public class AppUserController {
 
 	@GetMapping(path = "email")

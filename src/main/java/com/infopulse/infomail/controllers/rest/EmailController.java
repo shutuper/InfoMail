@@ -18,15 +18,14 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/emails")
 @AllArgsConstructor
+@RequestMapping("api/v1/emails")
 public class EmailController {
 
 	private final CronSchedulerService cronSchedulerService;
 
-
 	@PostMapping
-	public ResponseEntity<EmailDTO> addEmail(@Valid @RequestBody EmailDTO emailDTO, Authentication authentication) {
+	public ResponseEntity<EmailDTO> createEmailJob(@Valid @RequestBody EmailDTO emailDTO, Authentication authentication) {
 		try {
 			List<RecipientDTO> recipients = emailDTO.getRecipients();
 			EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
@@ -35,10 +34,12 @@ public class EmailController {
 			Long userId = (Long) authentication.getCredentials();
 
 			cronSchedulerService.createTask(recipients, emailTemplateDTO, emailSchedule, userEmail, userId);
+			return new ResponseEntity<>(emailDTO, HttpStatus.CREATED);
+
 		} catch (Exception e) {
 			return new ResponseEntity<>(emailDTO, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(emailDTO, HttpStatus.CREATED);
+
 	}
 
 }

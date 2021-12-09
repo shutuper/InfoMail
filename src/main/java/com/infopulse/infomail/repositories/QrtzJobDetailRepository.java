@@ -38,7 +38,7 @@ public interface QrtzJobDetailRepository extends JpaRepository<QrtzJobDetail, St
 			""",
 			countQuery = "select count(job.order_id) from qrtz_job_details job where job.job_group = ?1",
 			nativeQuery = true)
-	Page<ScheduledTaskRaw> getAllDTObyGroup(String jobGroup, Pageable sortByAndPage);
+	Page<ScheduledTaskFullRaw> getAllDTObyGroup(String jobGroup, Pageable sortByAndPage);
 
 	@Query(value = """
 			select

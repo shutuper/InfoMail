@@ -32,7 +32,7 @@ public class QrtzJobDetailService {
 	}
 
 	public PaginatedScheduledTasksDTO getAllScheduledTaskDTObyGroup(String jobGroup, Pageable sortByAndPage) {
-		Page<ScheduledTaskRaw> tasksRaw = qrtzJobDetailRepository
+		Page<ScheduledTaskFullRaw> tasksRaw = qrtzJobDetailRepository
 				.getAllDTObyGroup(jobGroup, sortByAndPage);
 
 		List<ScheduledTaskDTO> scheduledTaskDTOS = tasksRaw.get().map(ScheduledTaskDTO::new).toList();

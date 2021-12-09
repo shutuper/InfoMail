@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-@ToString
+@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScheduledTaskFullDTO {
@@ -39,10 +40,14 @@ public class ScheduledTaskFullDTO {
 		this.body = scheduledTask.getBody();
 
 		String stateTemp = scheduledTask.getTriggerState();
-		boolean triggerIsExpired = Objects.isNull(stateTemp);
+		boolean isTriggerExpired = Objects.isNull(stateTemp);
 
-		System.out.println("\nStart at: " + scheduledTask.getStartAt() + ", end at" + scheduledTask.getEndAt());
+		setTriggerInfo(scheduledTask, stateTemp, isTriggerExpired);
 
+		this.recipients = recipients;
+	}
+
+	private void setTriggerInfo(ScheduledTaskFullRaw scheduledTask, String stateTemp, boolean triggerIsExpired) {
 		if (triggerIsExpired)
 			this.state = "FINISHED";
 		else {
@@ -55,7 +60,5 @@ public class ScheduledTaskFullDTO {
 			this.endAt = Objects.isNull(endAtTemp) ?
 					null : Timestamp.from(Instant.ofEpochMilli(endAtTemp));
 		}
-
-		this.recipients = recipients;
 	}
 }

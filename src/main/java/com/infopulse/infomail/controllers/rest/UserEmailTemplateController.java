@@ -23,10 +23,11 @@ public class UserEmailTemplateController {
 	private final UserEmailTemplateService templateService;
 
 	@PostMapping
-	public ResponseEntity<UserEmailTemplateDTO> addTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO, Authentication authentication) {
+	public ResponseEntity<UserEmailTemplateDTO> addTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO,
+	                                                        Authentication authentication) {
 		try {
-			UserEmailTemplateDTO dto = templateService.saveEmailTemplate(templateDTO, authentication);
-			return ResponseEntity.ok(dto);
+			return ResponseEntity.ok(templateService
+					.saveEmailTemplate(templateDTO, authentication));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -36,17 +37,22 @@ public class UserEmailTemplateController {
 	public ResponseEntity<List<UserTemplatesOptionsDTO>> getAllAsOptions(Authentication authentication) {
 		try {
 			String userEmail = authentication.getName();
-			return ResponseEntity.ok(templateService.getAllTemplatesAsOptions(userEmail));
+
+			return ResponseEntity.ok(templateService
+					.getAllTemplatesAsOptions(userEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
 
 	@GetMapping("{id}/dto")
-	public ResponseEntity<EmailTemplateDTO> getEmailTemplateDTO(@PathVariable("id") Long id, Authentication authentication) {
+	public ResponseEntity<EmailTemplateDTO> getEmailTemplateDTO(@PathVariable("id") Long id,
+	                                                            Authentication authentication) {
 		try {
 			String userEmail = authentication.getName();
-			return ResponseEntity.ok(templateService.getEmailTemplateDTO(id, userEmail));
+
+			return ResponseEntity.ok(templateService
+					.getEmailTemplateDTO(id, userEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -60,9 +66,9 @@ public class UserEmailTemplateController {
 	                                                                        Authentication authentication) {
 		try {
 			String userEmail = authentication.getName();
+
 			return ResponseEntity.ok(templateService
 					.getPaginatedTemplates(page, rows, sortOrder, sortField, userEmail));
-
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -70,17 +76,19 @@ public class UserEmailTemplateController {
 
 	@GetMapping("total")
 	public ResponseEntity<Integer> getTotalNumberOfTemplates(Authentication authentication) {
-
 		try {
 			String userEmail = authentication.getName();
-			return ResponseEntity.ok(templateService.getTotalNumberOfTemplates(userEmail));
+
+			return ResponseEntity.ok(templateService
+					.getTotalNumberOfTemplates(userEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<UserEmailTemplateDTO> getTemplateById(@PathVariable("id") Long id, Authentication authentication) {
+	public ResponseEntity<UserEmailTemplateDTO> getTemplateById(@PathVariable("id") Long id,
+	                                                            Authentication authentication) {
 		try {
 			String userEmail = authentication.getName();
 
@@ -93,7 +101,8 @@ public class UserEmailTemplateController {
 	}
 
 	@GetMapping("/shared/{sharingId}")
-	public ResponseEntity<UserEmailTemplateDTO> getTemplateBySharingId(@PathVariable("sharingId") String sharingId, Authentication authentication) {
+	public ResponseEntity<UserEmailTemplateDTO> getTemplateBySharingId(@PathVariable("sharingId") String sharingId,
+	                                                                   Authentication authentication) {
 		try {
 			String userEmail = authentication.getName();
 
@@ -106,7 +115,8 @@ public class UserEmailTemplateController {
 	}
 
 	@PostMapping("/shared/")
-	public ResponseEntity<?> saveSharedTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO, Authentication authentication) {
+	public ResponseEntity<?> saveSharedTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO,
+	                                            Authentication authentication) {
 		try {
 			templateService.saveSharedTemplate(templateDTO, authentication);
 			return ResponseEntity.ok().build();
@@ -116,9 +126,11 @@ public class UserEmailTemplateController {
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> deleteById(@PathVariable("id") Long id, Authentication authentication) {
+	public ResponseEntity<?> deleteById(@PathVariable("id") Long id,
+	                                    Authentication authentication) {
 		try {
 			String userEmail = (String) authentication.getPrincipal();
+
 			templateService.deleteByIdAndUserEmail(id, userEmail);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
@@ -128,9 +140,11 @@ public class UserEmailTemplateController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> deleteAllByIds(@RequestBody EmailTemplatesIdsDTO ids, Authentication authentication) {
+	public ResponseEntity<?> deleteAllByIds(@RequestBody EmailTemplatesIdsDTO ids,
+	                                        Authentication authentication) {
 		try {
 			String userEmail = (String) authentication.getPrincipal();
+
 			templateService.deleteAllByIdsAndUserEmail(ids, userEmail);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {

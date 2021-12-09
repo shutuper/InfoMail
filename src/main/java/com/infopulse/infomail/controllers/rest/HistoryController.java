@@ -29,20 +29,22 @@ public class HistoryController {
 	                                                                        Authentication authentication) {
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
+
 			return ResponseEntity.ok(emailLogService
 					.getPaginatedEmailsHistory(page, rows, sortOrder, sortField, senderEmail));
-
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<EmailWithTemplateDTO> getEmailWithTemplateById(@PathVariable("id") Long id, Authentication authentication) {
+	public ResponseEntity<EmailWithTemplateDTO> getEmailWithTemplateById(@PathVariable("id") Long id,
+	                                                                     Authentication authentication) {
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
 
-			return ResponseEntity.ok(emailLogService.getEmailWithTemplateDTO(id, senderEmail));
+			return ResponseEntity.ok(emailLogService
+					.getEmailWithTemplateDTO(id, senderEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -53,7 +55,9 @@ public class HistoryController {
 
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
-			return ResponseEntity.ok(emailLogService.getTotalNumberOfUserEmails(senderEmail));
+
+			return ResponseEntity.ok(emailLogService
+					.getTotalNumberOfUserEmails(senderEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -65,8 +69,9 @@ public class HistoryController {
 	                                                         Authentication authentication) {
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
-			ExecutedEmailDTO executedEmailDTO = emailLogService.retryFailedEmail(id, senderEmail);
-			return ResponseEntity.ok(executedEmailDTO);
+
+			return ResponseEntity.ok(emailLogService
+					.retryFailedEmail(id, senderEmail));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -76,6 +81,7 @@ public class HistoryController {
 	public ResponseEntity<?> deleteEmailById(@PathVariable("id") Long id, Authentication authentication) {
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
+
 			emailLogService.deleteByIdAndUserEmail(id, senderEmail);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
@@ -88,6 +94,7 @@ public class HistoryController {
 	public ResponseEntity<?> deleteAllEmailsByIds(@Valid @RequestBody EmailsIdsDTO ids, Authentication authentication) {
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
+
 			emailLogService.deleteAllByIdsAndUserEmail(ids, senderEmail);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {

@@ -5,7 +5,6 @@ import com.infopulse.infomail.services.registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,17 +23,8 @@ public class RegistrationController {
 			registrationService.register(request);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
-			log.error(ex.getMessage());
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
-	}
-
-	// security test controller
-	@GetMapping(path = "sayHi")
-	public String sayHi(Authentication authentication) {
-		if (authentication != null)
-			return "hi " + authentication.getPrincipal();
-		else return "hi anonymous";
 	}
 
 	@GetMapping(path = "confirm")
@@ -43,7 +33,6 @@ public class RegistrationController {
 			registrationService.confirmToken(token);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
-			log.error(ex.getMessage());
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 	}
@@ -54,7 +43,6 @@ public class RegistrationController {
 			registrationService.rejectToken(token);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
-			log.error(ex.getMessage());
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 	}

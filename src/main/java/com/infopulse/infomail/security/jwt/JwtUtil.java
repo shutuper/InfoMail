@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.infopulse.infomail.security.config.SecurityConstants.*;
@@ -22,25 +23,32 @@ public class JwtUtil {
 	public String createAccessToken(HttpServletRequest request, Authentication authentication) {
 		AppUser user = (AppUser) authentication.getPrincipal();
 		Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
+
+		return createJwtToken(request, user, algorithm);
+	}
+
+	private String createJwtToken(HttpServletRequest request, AppUser user, Algorithm algorithm) {
 		return JWT.create()
 				.withSubject(user.getUsername()) // actually email!
 				.withIssuedAt(new Date(System.currentTimeMillis()))
 				.withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_LIFETIME))
 				.withIssuer(request.getServletPath())
-				.withClaim(
-						ROLES_CLAIM, user.getAuthorities().stream()
-									.map(GrantedAuthority::getAuthority)
-									.collect(Collectors.toList())
-				).withClaim(
-						USER_ID_CLAIM, user.getUserId()
-				)
+				.withClaim(ROLES_CLAIM, parseUserRoles(user))
+				.withClaim(USER_ID_CLAIM, user.getUserId())
 				.sign(algorithm);
+	}
+
+	private List<String> parseUserRoles(AppUser user) {
+		return user.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList());
 	}
 
 	public DecodedJWT verifyAccessToken(String authorizationHeader) throws JWTVerificationException {
 		String token = authorizationHeader.substring(TOKEN_PREFIX.length());
 		Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
 		JWTVerifier verifier = JWT.require(algorithm).build();
+
 		return verifier.verify(token);
 	}
 

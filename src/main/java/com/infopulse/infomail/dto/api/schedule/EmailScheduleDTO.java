@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailScheduleDTO {
+
 	@NotNull
 	private boolean sendNow;
 

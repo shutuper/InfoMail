@@ -1,4 +1,4 @@
-package com.infopulse.infomail.configuration;
+package com.infopulse.infomail.services.scheduler.сronDescriptor;
 
 import it.burning.cron.CronExpressionParser;
 import org.springframework.context.annotation.Bean;

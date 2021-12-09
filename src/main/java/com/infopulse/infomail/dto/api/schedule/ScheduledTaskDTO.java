@@ -1,6 +1,7 @@
 package com.infopulse.infomail.dto.api.schedule;
 
 
+import com.infopulse.infomail.dto.app.ScheduledTaskFullRaw;
 import com.infopulse.infomail.dto.app.ScheduledTaskRaw;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,31 +26,34 @@ public class ScheduledTaskDTO {
 	private String state;
 	private String subject;
 
-	public ScheduledTaskDTO(ScheduledTaskRaw scheduledTaskRaw) {
+	public ScheduledTaskDTO(ScheduledTaskFullRaw scheduledTaskRaw) {
 		this.orderId = scheduledTaskRaw.getOrderId();
 		this.jobName = scheduledTaskRaw.getJobName();
 		this.description = scheduledTaskRaw.getDescription();
 		this.subject = scheduledTaskRaw.getSubject();
 
 		String stateTemp = scheduledTaskRaw.getTriggerState();
-		boolean triggerIsExpired = Objects.isNull(stateTemp);
+		boolean isTriggerExpired = Objects.isNull(stateTemp);
 
 		System.out.println("\nStart at: " + scheduledTaskRaw.getStartAt() + ", end at" + scheduledTaskRaw.getEndAt());
 
-		if (triggerIsExpired)
-			this.state = "COMPLETED";
-		else {
-			Long startAtTemp = scheduledTaskRaw.getStartAt();
-			Long endAtTemp = scheduledTaskRaw.getEndAt();
+		setTriggerInfo(scheduledTaskRaw, stateTemp, isTriggerExpired);
 
+	}
+
+	private void setTriggerInfo(ScheduledTaskFullRaw scheduledTask, String stateTemp, boolean triggerIsExpired) {
+		if (triggerIsExpired)
+			this.state = "FINISHED";
+		else {
+			Long startAtTemp = scheduledTask.getStartAt();
+			Long endAtTemp = scheduledTask.getEndAt();
 			this.state = stateTemp;
 
 			this.startAt = Objects.isNull(startAtTemp) ?
 					null : Timestamp.from(Instant.ofEpochMilli(startAtTemp));
-
 			this.endAt = Objects.isNull(endAtTemp) ?
 					null : Timestamp.from(Instant.ofEpochMilli(endAtTemp));
 		}
-
 	}
+
 }

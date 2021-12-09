@@ -12,7 +12,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -55,20 +54,13 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	}
 
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-		String access_token = jwtUtil.createAccessToken(request, authentication); // Map<String, String> tokens = new HashMap<>();
-		response.setHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + access_token); // tokens.put(AUTHORIZATION_HEADER, access_token);
+	protected void successfulAuthentication(HttpServletRequest request,
+	                                        HttpServletResponse response,
+	                                        FilterChain chain,
+	                                        Authentication authentication) {
+
+		String access_token = jwtUtil.createAccessToken(request, authentication);
+		response.setHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX.concat(access_token));
 	}
 
 }
-
-
-/*		String refresh_token = JWT.create()
-				.withSubject(user.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-				.withIssuer(request.getRequestURL().toString())
-				.sign(algorithm);
-        response.setHeader("access_token", access_token);
-        response.setHeader("refresh_token", refresh_token);
-        tokens.put("refresh_token", refresh_token);
-        */

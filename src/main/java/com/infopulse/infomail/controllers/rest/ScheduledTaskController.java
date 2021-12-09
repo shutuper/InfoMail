@@ -19,11 +19,11 @@ public class ScheduledTaskController {
 	private final ScheduledTasksService taskService;
 
 	@GetMapping
-	public ResponseEntity<PaginatedScheduledTasksDTO> getAllUserScheduledTasks(
-			@RequestParam("page") Integer page, @RequestParam("rows") Integer rows,
-			@RequestParam("sortOrder") Integer sortOrder, @RequestParam("sortField") String sortField,
-			Authentication authentication) {
-
+	public ResponseEntity<PaginatedScheduledTasksDTO> getAllUserScheduledTasks(@RequestParam("page") Integer page,
+	                                                                           @RequestParam("rows") Integer rows,
+	                                                                           @RequestParam("sortOrder") Integer sortOrder,
+	                                                                           @RequestParam("sortField") String sortField,
+	                                                                           Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
 
@@ -36,7 +36,8 @@ public class ScheduledTaskController {
 	}
 
 	@GetMapping("{jobName}/dto")
-	public ResponseEntity<ScheduledTaskFullDTO> getTaskDtoByJobName(@PathVariable("jobName") String jobName, Authentication authentication) {
+	public ResponseEntity<ScheduledTaskFullDTO> getTaskDtoByJobName(@PathVariable("jobName") String jobName,
+	                                                                Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
 
@@ -54,6 +55,7 @@ public class ScheduledTaskController {
 	                                   Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
+
 			taskService.resumeJob(jobName, jobGroup);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
@@ -67,6 +69,7 @@ public class ScheduledTaskController {
 	                                  Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
+
 			taskService.pauseJob(jobName, jobGroup);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
@@ -78,6 +81,7 @@ public class ScheduledTaskController {
 	public ResponseEntity<?> pauseAllUserJobs(Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
+
 			taskService.pauseAllUserJobs(jobGroup);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
@@ -89,6 +93,7 @@ public class ScheduledTaskController {
 	public ResponseEntity<?> resumeAllUserJobs(Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
+
 			taskService.resumeAllUserJobs(jobGroup);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
@@ -102,6 +107,7 @@ public class ScheduledTaskController {
 	                                              Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
+
 			taskService.deleteAllByNames(jobNamesDTO.getJobNames(), jobGroup);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
@@ -114,6 +120,7 @@ public class ScheduledTaskController {
 	                                                 Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
+
 			taskService.deleteJob(jobName, jobGroup);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
