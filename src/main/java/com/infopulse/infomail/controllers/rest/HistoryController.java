@@ -27,78 +27,51 @@ public class HistoryController {
 	                                                                        @RequestParam("sortOrder") Integer sortOrder,
 	                                                                        @RequestParam("sortField") String sortField,
 	                                                                        Authentication authentication) {
-		try {
-			String senderEmail = (String) authentication.getPrincipal();
+		String senderEmail = (String) authentication.getPrincipal();
 
-			return ResponseEntity.ok(emailLogService
-					.getPaginatedEmailsHistory(page, rows, sortOrder, sortField, senderEmail));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(emailLogService
+				.getPaginatedEmailsHistory(page, rows, sortOrder, sortField, senderEmail));
 	}
 
 	@GetMapping("{id}")
 	public ResponseEntity<EmailWithTemplateDTO> getEmailWithTemplateById(@PathVariable("id") Long id,
 	                                                                     Authentication authentication) {
-		try {
-			String senderEmail = (String) authentication.getPrincipal();
+		String senderEmail = (String) authentication.getPrincipal();
 
-			return ResponseEntity.ok(emailLogService
-					.getEmailWithTemplateDTO(id, senderEmail));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(emailLogService
+				.getEmailWithTemplateDTO(id, senderEmail));
 	}
 
 	@GetMapping("total")
 	public ResponseEntity<Integer> getTotalNumberOfUserEmails(Authentication authentication) {
+		String senderEmail = (String) authentication.getPrincipal();
 
-		try {
-			String senderEmail = (String) authentication.getPrincipal();
-
-			return ResponseEntity.ok(emailLogService
-					.getTotalNumberOfUserEmails(senderEmail));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
-
+		return ResponseEntity.ok(emailLogService
+				.getTotalNumberOfUserEmails(senderEmail));
 	}
 
 	@PutMapping("{id}")
 	public ResponseEntity<ExecutedEmailDTO> retryFailedEmail(@PathVariable("id") Long id,
 	                                                         Authentication authentication) {
-		try {
-			String senderEmail = (String) authentication.getPrincipal();
+		String senderEmail = (String) authentication.getPrincipal();
 
-			return ResponseEntity.ok(emailLogService
-					.retryFailedEmail(id, senderEmail));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(emailLogService
+				.retryFailedEmail(id, senderEmail));
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteEmailById(@PathVariable("id") Long id, Authentication authentication) {
-		try {
-			String senderEmail = (String) authentication.getPrincipal();
+		String senderEmail = (String) authentication.getPrincipal();
 
-			emailLogService.deleteByIdAndUserEmail(id, senderEmail);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			return ResponseEntity.badRequest().build();
-		}
+		emailLogService.deleteByIdAndUserEmail(id, senderEmail);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
 	public ResponseEntity<?> deleteAllEmailsByIds(@Valid @RequestBody IdsDTO ids, Authentication authentication) {
-		try {
-			String senderEmail = (String) authentication.getPrincipal();
+		String senderEmail = (String) authentication.getPrincipal();
 
-			emailLogService.deleteAllByIdsAndUserEmail(ids, senderEmail);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		emailLogService.deleteAllByIdsAndUserEmail(ids, senderEmail);
+		return ResponseEntity.ok().build();
 	}
 }

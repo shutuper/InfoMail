@@ -103,10 +103,12 @@ public class EmailLogService {
 	public ExecutedEmailDTO retryFailedEmail(Long emailId, String senderEmail) {
 		EmailLog emailLog = getEmailLogByIdAndSenderEmail(emailId, senderEmail);
 
-		if (emailLog.getEmailStatus().isSent())
-			throw new IllegalStateException(
-					String.format("Can't retry sending email with id %s, it's not failed", emailId)
-			);
+		if (emailLog.getEmailStatus().isSent()) {
+			String message = String.format("Can't retry sending email with id %s, it's not failed", emailId);
+			log.error(message);
+			throw new IllegalStateException(message);
+		}
+
 
 		AppUserEmailsInfo userInfo = emailLog.getUserInfo();
 		Map<RecipientType, List<String>> groupedRecipients = recipientService
@@ -128,8 +130,11 @@ public class EmailLogService {
 
 	public EmailLog getEmailLogByIdAndSenderEmail(Long emailId, String senderEmail) {
 		return emailLogRepository.findByIdAndSenderEmail(emailId, senderEmail).orElseThrow(
-				() -> new IllegalStateException(
-						String.format("Can't find email with id %s, user: %s", emailId, senderEmail))
+				() -> {
+					String message = String.format("Can't find email with id %s, user: %s", emailId, senderEmail);
+					log.error(message);
+					return new IllegalStateException(message);
+				}
 		);
 	}
 
