@@ -17,6 +17,8 @@ public class AppUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		return appUserRepository
 				.findAppUserByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException(String.format("User %s doesn't exist", email)));
+				.orElseThrow(
+						() -> new UsernameNotFoundException(String.format("User %s doesn't exist", email))
+				);
 	}
 }

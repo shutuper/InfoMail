@@ -1,9 +1,9 @@
 package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
-import com.infopulse.infomail.dto.api.templates.EmailTemplatesIdsDTO;
 import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
 import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
+import com.infopulse.infomail.dto.app.IdsDTO;
 import com.infopulse.infomail.services.mail.UserEmailTemplateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -140,7 +140,7 @@ public class UserEmailTemplateController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> deleteAllByIds(@RequestBody EmailTemplatesIdsDTO ids,
+	public ResponseEntity<?> deleteAllByIds(@Valid @RequestBody IdsDTO ids,
 	                                        Authentication authentication) {
 		try {
 			String userEmail = (String) authentication.getPrincipal();

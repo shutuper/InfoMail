@@ -1,7 +1,7 @@
 package com.infopulse.infomail.repositories;
 
-import com.infopulse.infomail.dto.api.schedule.ScheduledTaskFullDTO;
-import com.infopulse.infomail.dto.app.ScheduledTaskFullRaw;
+import com.infopulse.infomail.dto.api.schedule.ScheduledTaskWithEmailDTO;
+import com.infopulse.infomail.dto.app.ScheduledTaskRaw;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -27,17 +27,17 @@ class QrtzJobDetailRepositoryTest {
     @Disabled(DISABLE_REASON)
     @Test
     void getDTOByJobName_thenIsPresent() {
-        Optional<ScheduledTaskFullRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName(jobName, jobGroup);
+        Optional<ScheduledTaskRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName(jobName, jobGroup);
 
         assertTrue(dtoByJobName.isPresent());
-        ScheduledTaskFullDTO scheduledTaskFullDTO = new ScheduledTaskFullDTO(dtoByJobName.get(), null);
-        System.out.println("scheduledTaskFullDTO = " + scheduledTaskFullDTO);
+        ScheduledTaskWithEmailDTO scheduledTaskWithEmailDTO = new ScheduledTaskWithEmailDTO(dtoByJobName.get(), null);
+        System.out.println("scheduledTaskFullDTO = " + scheduledTaskWithEmailDTO);
 
     }
 
     @Test
     void getDTOByJobName_thenNotPresent() {
-        Optional<ScheduledTaskFullRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName("not found job name", "not found job group");
+        Optional<ScheduledTaskRaw> dtoByJobName = qrtzJobDetailRepository.getDTOByJobName("not found job name", "not found job group");
 
         assertFalse(dtoByJobName.isPresent());
     }

@@ -1,9 +1,9 @@
 package com.infopulse.infomail.services.mail;
 
 import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
-import com.infopulse.infomail.dto.api.templates.EmailTemplatesIdsDTO;
 import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
 import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
+import com.infopulse.infomail.dto.app.IdsDTO;
 import com.infopulse.infomail.models.templates.UserEmailTemplate;
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.repositories.templates.UserEmailTemplateRepository;
@@ -152,7 +152,7 @@ public class UserEmailTemplateService {
 	}
 
 	@Transactional
-	public UserEmailTemplate saveSharedTemplate(UserEmailTemplateDTO emailTemplateDTO, Authentication authentication) {
+	public void saveSharedTemplate(UserEmailTemplateDTO emailTemplateDTO, Authentication authentication) {
 		log.info("User {} save shared template as new UserEmailTemplate", authentication.getName());
 		Long userId = (Long) authentication.getCredentials();
 		String shareLink = UUID.randomUUID().toString();
@@ -164,7 +164,7 @@ public class UserEmailTemplateService {
 				emailTemplateDTO.getBody(),
 				shareLink);
 
-		return userEmailTemplateRepository.save(emailTemplate);
+		userEmailTemplateRepository.save(emailTemplate);
 	}
 
 	@Transactional
@@ -175,7 +175,7 @@ public class UserEmailTemplateService {
 	}
 
 	@Transactional
-	public void deleteAllByIdsAndUserEmail(EmailTemplatesIdsDTO ids, String userEmail) {
+	public void deleteAllByIdsAndUserEmail(IdsDTO ids, String userEmail) {
 		log.info("User {} delete UserEmailTemplates by ids: {}", userEmail, ids.getIds().toString());
 		userEmailTemplateRepository.deleteAllByAppUser_EmailAndIdIn(userEmail, ids.getIds());
 	}

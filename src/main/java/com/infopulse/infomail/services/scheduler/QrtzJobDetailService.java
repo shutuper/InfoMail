@@ -2,7 +2,6 @@ package com.infopulse.infomail.services.scheduler;
 
 import com.infopulse.infomail.dto.api.schedule.PaginatedScheduledTasksDTO;
 import com.infopulse.infomail.dto.api.schedule.ScheduledTaskDTO;
-import com.infopulse.infomail.dto.app.ScheduledTaskFullRaw;
 import com.infopulse.infomail.dto.app.ScheduledTaskRaw;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
 import com.infopulse.infomail.repositories.QrtzJobDetailRepository;
@@ -26,32 +25,40 @@ public class QrtzJobDetailService {
 	public QrtzJobDetail findQrtzJobDetailByJobKey(JobKey jobKey) {
 		String jobName = jobKey.getName();
 
-		return qrtzJobDetailRepository.findByJobName(jobName).orElseThrow(
+		return qrtzJobDetailRepository
+				.findByJobName(jobName)
+				.orElseThrow(
 				() -> new IllegalStateException(String.format("Job %s does not exist", jobName))
 		);
 	}
 
 	public PaginatedScheduledTasksDTO getAllScheduledTaskDTObyGroup(String jobGroup, Pageable sortByAndPage) {
-		Page<ScheduledTaskFullRaw> tasksRaw = qrtzJobDetailRepository
+		Page<ScheduledTaskRaw> tasksRaw = qrtzJobDetailRepository
 				.getAllDTObyGroup(jobGroup, sortByAndPage);
 
-		List<ScheduledTaskDTO> scheduledTaskDTOS = tasksRaw.get().map(ScheduledTaskDTO::new).toList();
+		List<ScheduledTaskDTO> scheduledTaskDTOS = tasksRaw
+				.get()
+				.map(ScheduledTaskDTO::new)
+				.toList();
 
 		return new PaginatedScheduledTasksDTO(scheduledTaskDTOS, tasksRaw.getTotalElements());
 	}
 
-	public ScheduledTaskFullRaw getScheduledTaskFullRawByJobName(String jobName, String jobGroup) {
-		return qrtzJobDetailRepository.getDTOByJobName(jobName, jobGroup).orElseThrow(
+	public ScheduledTaskRaw getScheduledTaskFullRawByJobName(String jobName, String jobGroup) {
+		return qrtzJobDetailRepository
+				.getDTOByJobName(jobName, jobGroup).orElseThrow(
 				() -> new IllegalStateException(String.format("Job %1$s and group %2$s does not exist", jobName, jobGroup))
 		);
 	}
 
 	public void deleteAllByNamesAndGroup(List<String> jobNames, String jobGroup) {
-		qrtzJobDetailRepository.deleteAllByJobNameInAndJobGroup(jobNames, jobGroup);
+		qrtzJobDetailRepository
+				.deleteAllByJobNameInAndJobGroup(jobNames, jobGroup);
 	}
 
 	public void deleteByJobNameAndGroup(String jobName, String jobGroup) {
-		qrtzJobDetailRepository.deleteByJobNameAndJobGroup(jobName, jobGroup);
+		qrtzJobDetailRepository
+				.deleteByJobNameAndJobGroup(jobName, jobGroup);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.infopulse.infomail.services.scheduler.tasks;
 
-import com.infopulse.infomail.dto.api.schedule.ScheduledTaskFullDTO;
+import com.infopulse.infomail.dto.api.schedule.ScheduledTaskWithEmailDTO;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class ScheduledTasksServiceTest {
     @Disabled(DISABLE_REASON)
     @Test
     void getTaskDtoByJobName() {
-        ScheduledTaskFullDTO dto = tasksService.getTaskDtoByJobName(jobName, jobGroup);
+        ScheduledTaskWithEmailDTO dto = tasksService.getTaskDtoByJobName(jobName, jobGroup);
 
         assertNotNull(dto);
         assertFalse(dto.getRecipients().isEmpty());

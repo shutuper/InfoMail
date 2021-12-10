@@ -21,20 +21,23 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AppUserService {
 
-	//private final static String USER_NOT_FOUND = "user with email %s not found";
+	private static final int CONFIRMATION_TOKEN_LIVE_TIME = 30;
+
 	private final AppUserRepository appUserRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final ConfirmationTokenService confirmationTokenService;
-	public static Long ADMIN_ID = 0L;
-	public static final String ADMIN_EMAIL = "admin@infomail.com";
 
-	@PostConstruct
+	public static Long ADMIN_ID = 0L; // redundant
+	public static final String ADMIN_EMAIL = "admin@infomail.com"; // redundant
+
+
+	@PostConstruct // redundant methode
 	private void init() {
 		AppUser admin = appUserRepository.findAppUserByEmail(ADMIN_EMAIL).orElse(
 				new AppUser(ADMIN_EMAIL, passwordEncoder.encode("password"), AppUserRole.USER,
 						true, true, true));
 		appUserRepository.save(admin);
-		ADMIN_ID=admin.getUserId();
+		ADMIN_ID = admin.getUserId();
 		log.info("\n==============================================\n" +
 				"Admin: " + admin +
 				"\n==============================================\n");
@@ -45,7 +48,7 @@ public class AppUserService {
 		Optional<AppUser> optOldUser = appUserRepository
 				.findAppUserByEmail(appUser.getEmail());
 
-		// One token per 30 minutes
+		// One token per CONFIRMATION_TOKEN_LIVE_TIME minutes
 		String token = getValidConfirmTokenOrNewOne(appUser, optOldUser) // UUID.randomUUID().toString();
 				.orElseThrow(() -> new IllegalStateException("User already has valid token"));
 
@@ -63,9 +66,10 @@ public class AppUserService {
 	}
 
 
-	//Next methods are utils -------------------------------------------------------------------------------------------------------
+	//Next methods are utils ------------------------------------------------------------------------------------------
 
-	private Optional<String> getValidConfirmTokenOrNewOne(AppUser appUser, Optional<AppUser> optOldUser) throws IllegalStateException {
+	private Optional<String> getValidConfirmTokenOrNewOne(AppUser appUser,
+	                                                      Optional<AppUser> optOldUser) throws IllegalStateException {
 		if (optOldUser.isPresent()) {
 			AppUser oldUser = optOldUser.get();
 
@@ -82,10 +86,10 @@ public class AppUserService {
 
 					confirmationTokenService.deleteConfirmationTokenById(confirmationToken.get().getTokenId());
 					confirmationTokenService.flushRepository();
-				} else return Optional.empty();
+				} else
+					return Optional.empty();
 
 				log.info("Generating new confirmation token for {}", oldUser.getEmail());
-
 				return getNewSavedToken(oldUser);
 			}
 		}
@@ -102,6 +106,7 @@ public class AppUserService {
 	private Optional<String> getNewSavedToken(AppUser appUser) {
 		String token = UUID.randomUUID().toString();
 		saveNewConfirmationToken(appUser, token); // saving new token
+
 		return Optional.of(token);
 	}
 
@@ -113,11 +118,11 @@ public class AppUserService {
 		ConfirmationToken confirmationToken = new ConfirmationToken(
 				token,
 				LocalDateTime.now(),
-				LocalDateTime.now().plusMinutes(30),
+				LocalDateTime.now().plusMinutes(CONFIRMATION_TOKEN_LIVE_TIME),
 				appUser
 		);
-		log.info("Saving {}'s new confirmation token to database", appUser.getEmail());
 
+		log.info("Saving {}'s new confirmation token to database", appUser.getEmail());
 		confirmationTokenService.saveConfirmationToken(confirmationToken);
 	}
 }

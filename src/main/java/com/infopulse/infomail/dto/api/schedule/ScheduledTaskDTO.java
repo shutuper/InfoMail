@@ -1,7 +1,6 @@
 package com.infopulse.infomail.dto.api.schedule;
 
 
-import com.infopulse.infomail.dto.app.ScheduledTaskFullRaw;
 import com.infopulse.infomail.dto.app.ScheduledTaskRaw;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +25,7 @@ public class ScheduledTaskDTO {
 	private String state;
 	private String subject;
 
-	public ScheduledTaskDTO(ScheduledTaskFullRaw scheduledTaskRaw) {
+	public ScheduledTaskDTO(ScheduledTaskRaw scheduledTaskRaw) {
 		this.orderId = scheduledTaskRaw.getOrderId();
 		this.jobName = scheduledTaskRaw.getJobName();
 		this.description = scheduledTaskRaw.getDescription();
@@ -35,15 +34,12 @@ public class ScheduledTaskDTO {
 		String stateTemp = scheduledTaskRaw.getTriggerState();
 		boolean isTriggerExpired = Objects.isNull(stateTemp);
 
-		System.out.println("\nStart at: " + scheduledTaskRaw.getStartAt() + ", end at" + scheduledTaskRaw.getEndAt());
-
 		setTriggerInfo(scheduledTaskRaw, stateTemp, isTriggerExpired);
-
 	}
 
-	private void setTriggerInfo(ScheduledTaskFullRaw scheduledTask, String stateTemp, boolean triggerIsExpired) {
+	void setTriggerInfo(ScheduledTaskRaw scheduledTask, String stateTemp, boolean triggerIsExpired) {
 		if (triggerIsExpired)
-			this.state = "FINISHED";
+			this.state = "COMPLETED";
 		else {
 			Long startAtTemp = scheduledTask.getStartAt();
 			Long endAtTemp = scheduledTask.getEndAt();

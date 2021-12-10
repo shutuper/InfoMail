@@ -39,7 +39,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CronSchedulerService implements SchedulerService<CronTrigger, EmailSchedule> {
 
-	//	public final static String messageTemplateIdProp = "emailTemplateId";
 	private final QrtzJobDetailService qrtzJobDetailService;
 	private final AppUserEmailsInfoService appUserEmailsInfoService;
 	private final Scheduler scheduler;
@@ -102,15 +101,9 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 			                                                             emailSchedule) throws ParseException {
 		RepeatType scheduleRepeat = emailSchedule.getRepeatAt();
 		String cronDescription;
-		log.info(emailSchedule.toString());
-		if (Objects.isNull(scheduleRepeat) || scheduleRepeat.equals(RepeatType.NOTHING)) {
-//			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy:MM:dd HH:mm");
-//			cronDescription = "Start at " + (
-//					emailSchedule.isSendNow() ?
-//							LocalDateTime.now().format(dtf) : emailSchedule.getSendDateTime().format(dtf)
-//			);
+
+		if (Objects.isNull(scheduleRepeat) || scheduleRepeat.equals(RepeatType.NOTHING))
 			return new CronExpWithDesc();
-		}
 
 		String cronExpression = CronGenerator.generate(emailSchedule);
 		CronExpression.validateExpression(cronExpression);
@@ -125,6 +118,7 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	public ScheduleBuilder<CronTrigger> buildSchedule(CronExpression cronExpression) {
 		if (Objects.isNull(cronExpression))
 			return null;
+
 		return CronScheduleBuilder.cronSchedule(cronExpression);
 	}
 
@@ -143,9 +137,9 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 		boolean startNow = emailSchedule.isSendNow();
 
 		LocalDateTime sendDateTime = emailSchedule.getSendDateTime();
-		if (sendDateTime != null) {
+		if (sendDateTime != null)
 			sendDateTime = sendDateTime.minusMinutes(1);
-		}
+
 
 		Date startAt = parseDateFromLocal(sendDateTime);
 		Date endAt = parseDateFromLocal(emailSchedule.getEndDate());

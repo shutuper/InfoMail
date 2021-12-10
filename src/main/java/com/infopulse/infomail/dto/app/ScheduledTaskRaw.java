@@ -15,4 +15,7 @@ public interface ScheduledTaskRaw {
 	Long getEndAt();
 
 	String getSubject();
+
+	String getBody();
+
 }

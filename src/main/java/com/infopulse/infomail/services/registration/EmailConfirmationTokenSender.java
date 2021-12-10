@@ -20,13 +20,16 @@ public class EmailConfirmationTokenSender implements ConfirmationTokenSender {
 	private String confirmationTokenLink;
 	@Value("${application.email.rejection.tokenLink}")
 	private String rejectionTokenLink;
-	private final JavaMailSender mailSender;
 	@Value("${application.email.confirmation.subject}")
 	private String subject;
+
+	private final JavaMailSender mailSender;
+
 
 	public EmailConfirmationTokenSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
 	}
+
 
 	@Async
 	@Override
@@ -34,12 +37,15 @@ public class EmailConfirmationTokenSender implements ConfirmationTokenSender {
 		try {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
 			helper.setText(getHtmlText(to, token), true);
 			helper.setTo(to);
 			helper.setSubject(subject);
 			helper.setFrom(sentFrom);
+
 			mailSender.send(mimeMessage);
 			log.info("Confirmation token sent to {}", to);
+
 		} catch (MessagingException e) {
 			log.error("Failed sending email to {}", to, e);
 			throw new IllegalStateException("failed to send email");

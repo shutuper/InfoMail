@@ -24,8 +24,6 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 	@Transactional
 	Optional<AppUser> findAppUserByEmail(String email);
 
-	Optional<AppUser> findAppUserByUserId(Long userId);
-
 	void deleteAppUserByUserId(Long userId);
 
 }

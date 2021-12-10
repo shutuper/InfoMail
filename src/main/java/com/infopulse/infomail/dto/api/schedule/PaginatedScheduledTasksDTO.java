@@ -13,6 +13,7 @@ import java.util.List;
 public class PaginatedScheduledTasksDTO {
 
 	private List<ScheduledTaskDTO> tasks;
+
 	private Long totalNumberOfRows;
 
 }

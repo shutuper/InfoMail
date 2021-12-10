@@ -22,7 +22,4 @@ public interface SchedulerService<T extends Trigger, P extends Schedule> {
 	                         String description,
 	                         Class<? extends Job> jobClass);
 
-
-
-
 }

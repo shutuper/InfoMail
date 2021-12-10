@@ -1,10 +1,10 @@
 package com.infopulse.infomail.services.mail;
 
-import com.infopulse.infomail.dto.api.emails.EmailsIdsDTO;
 import com.infopulse.infomail.dto.api.emails.ExecutedEmailDTO;
 import com.infopulse.infomail.dto.api.emails.RecipientDTO;
 import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
 import com.infopulse.infomail.dto.api.templates.EmailWithTemplateDTO;
+import com.infopulse.infomail.dto.app.IdsDTO;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
 import com.infopulse.infomail.models.mail.EmailLog;
 import com.infopulse.infomail.models.mail.enums.EmailStatus;
@@ -27,12 +27,10 @@ import java.util.stream.Collectors;
 @Service
 public class EmailLogService {
 
-//	@Value("${spring.quartz.properties.org.quartz.scheduler.instanceName}")
-//	private String SCHEDULER_NAME;
-
 	private final EmailLogRepository emailLogRepository;
 	private final EmailSenderService emailSenderService;
 	private final RecipientService recipientService;
+
 
 	public EmailLogService(EmailLogRepository emailLogRepository,
 	                       // @Lazy because of cycle dependency
@@ -43,6 +41,7 @@ public class EmailLogService {
 		this.recipientService = recipientService;
 	}
 
+
 	private static ExecutedEmailDTO convertToDto(EmailLog emailLog) {
 		return new ExecutedEmailDTO(
 				emailLog.getId(),
@@ -52,17 +51,17 @@ public class EmailLogService {
 		);
 	}
 
-
 	public EmailWithTemplateDTO getEmailWithTemplateDTO(Long emailId, String senderEmail) {
 		EmailLog emailLog = getEmailLogByIdAndSenderEmail(emailId, senderEmail);
 		AppUserEmailsInfo userInfo = emailLog.getUserInfo();
 
 		ExecutedEmailDTO email = EmailLogService.convertToDto(emailLog);
 		EmailTemplateDTO template = new EmailTemplateDTO(userInfo.getEmailTemplate());
-		List<RecipientDTO> recipients = recipientService.getAllAsDTOByUserInfoId(userInfo.getId());
+
+		List<RecipientDTO> recipients = recipientService
+				.getAllAsDTOByUserInfoId(userInfo.getId());
 
 		EmailWithTemplateDTO emailWithTemplateDTO = new EmailWithTemplateDTO(email, template, recipients);
-
 		log.info("User {} requested: {}", senderEmail, emailWithTemplateDTO);
 		return emailWithTemplateDTO;
 	}
@@ -136,13 +135,15 @@ public class EmailLogService {
 
 	@Transactional
 	public void deleteByIdAndUserEmail(Long id, String userEmail) {
-		emailLogRepository.deleteByIdAndSenderEmail(id, userEmail);
+		emailLogRepository
+				.deleteByIdAndSenderEmail(id, userEmail);
 		log.info("User {} deleted email with id: {}", userEmail, id);
 	}
 
 	@Transactional
-	public void deleteAllByIdsAndUserEmail(EmailsIdsDTO ids, String userEmail) {
-		emailLogRepository.deleteAllBySenderEmailAndIdIn(userEmail, ids.getIds());
+	public void deleteAllByIdsAndUserEmail(IdsDTO ids, String userEmail) {
+		emailLogRepository
+				.deleteAllBySenderEmailAndIdIn(userEmail, ids.getIds());
 		log.info("User {} deleted all emails which are in: {}", userEmail, ids);
 	}
 

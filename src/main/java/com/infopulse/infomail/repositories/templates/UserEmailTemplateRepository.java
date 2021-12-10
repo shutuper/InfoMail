@@ -12,15 +12,19 @@ import java.util.Optional;
 @Repository
 public interface UserEmailTemplateRepository extends JpaRepository<UserEmailTemplate, Long> {
 
-	Optional<UserEmailTemplate> findByIdAndAppUser_Email(Long id, String userEmail);
+	Optional<UserEmailTemplate> findByIdAndAppUser_Email(Long id,
+	                                                     String userEmail);
 
 	Optional<UserEmailTemplate> findBySharingLink(String sharingLink);
 
-	List<UserEmailTemplate> findAllByAppUser_Email(String userEmail, Pageable sortedByIdDesc);
+	List<UserEmailTemplate> findAllByAppUser_Email(String userEmail,
+	                                               Pageable sortedByIdDesc);
 
-	void deleteByIdAndAppUser_Email(Long id, String userEmail);
+	void deleteByIdAndAppUser_Email(Long id,
+	                                String userEmail);
 
-	void deleteAllByAppUser_EmailAndIdIn(String userEmail, List<Long> ids);
+	void deleteAllByAppUser_EmailAndIdIn(String userEmail,
+	                                     List<Long> ids);
 
 	Integer countByAppUser_Email(String userEmail);
 

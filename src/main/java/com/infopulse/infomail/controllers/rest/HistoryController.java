@@ -1,8 +1,8 @@
 package com.infopulse.infomail.controllers.rest;
 
-import com.infopulse.infomail.dto.api.templates.EmailWithTemplateDTO;
-import com.infopulse.infomail.dto.api.emails.EmailsIdsDTO;
 import com.infopulse.infomail.dto.api.emails.ExecutedEmailDTO;
+import com.infopulse.infomail.dto.api.templates.EmailWithTemplateDTO;
+import com.infopulse.infomail.dto.app.IdsDTO;
 import com.infopulse.infomail.services.mail.EmailLogService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +91,7 @@ public class HistoryController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> deleteAllEmailsByIds(@Valid @RequestBody EmailsIdsDTO ids, Authentication authentication) {
+	public ResponseEntity<?> deleteAllEmailsByIds(@Valid @RequestBody IdsDTO ids, Authentication authentication) {
 		try {
 			String senderEmail = (String) authentication.getPrincipal();
 

@@ -2,7 +2,7 @@ package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.api.schedule.JobNamesDTO;
 import com.infopulse.infomail.dto.api.schedule.PaginatedScheduledTasksDTO;
-import com.infopulse.infomail.dto.api.schedule.ScheduledTaskFullDTO;
+import com.infopulse.infomail.dto.api.schedule.ScheduledTaskWithEmailDTO;
 import com.infopulse.infomail.services.scheduler.tasks.ScheduledTasksService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +36,8 @@ public class ScheduledTaskController {
 	}
 
 	@GetMapping("{jobName}/dto")
-	public ResponseEntity<ScheduledTaskFullDTO> getTaskDtoByJobName(@PathVariable("jobName") String jobName,
-	                                                                Authentication authentication) {
+	public ResponseEntity<ScheduledTaskWithEmailDTO> getTaskDtoByJobName(@PathVariable("jobName") String jobName,
+	                                                                     Authentication authentication) {
 		try {
 			String jobGroup = authentication.getName();
 

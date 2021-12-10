@@ -21,7 +21,8 @@ public class ConfirmationTokenService {
 	}
 
 	public Optional<ConfirmationToken> getConfirmationByToken(String token) {
-		return confirmationTokenRepository.findByToken(token);
+		return confirmationTokenRepository
+				.findByToken(token);
 	}
 
 	public void setConfirmedAt(String token) {
@@ -30,15 +31,18 @@ public class ConfirmationTokenService {
 	}
 
 	public Optional<ConfirmationToken> getConfirmationTokenByAppUserId(Long appUserId) {
-		return confirmationTokenRepository.findByAppUserUserId(appUserId);
+		return confirmationTokenRepository
+				.findByAppUserUserId(appUserId);
 	}
 
 	public void deleteConfirmationTokenById(Long tokenId) {
-		confirmationTokenRepository.deleteConfirmationTokenByTokenId(tokenId);
+		confirmationTokenRepository
+				.deleteConfirmationTokenByTokenId(tokenId);
 	}
 
 	public void deleteConfirmationTokenByAppUserId(Long appUserId) {
-		confirmationTokenRepository.deleteConfirmationTokenByAppUserUserId(appUserId);
+		confirmationTokenRepository
+				.deleteConfirmationTokenByAppUserUserId(appUserId);
 	}
 
 	public void flushRepository() {

@@ -13,12 +13,16 @@ public interface EmailLogRepository extends JpaRepository<EmailLog, Long> {
 
 	Integer countBySenderEmail(String senderEmail);
 
-	List<EmailLog> findAllBySenderEmail(String senderEmail, Pageable sortedByIdDesc);
+	List<EmailLog> findAllBySenderEmail(String senderEmail,
+	                                    Pageable sortedByIdDesc);
 
-	void deleteByIdAndSenderEmail(Long id, String userEmail);
+	void deleteByIdAndSenderEmail(Long id,
+	                              String userEmail);
 
-	Optional<EmailLog> findByIdAndSenderEmail(Long id, String userEmail);
+	Optional<EmailLog> findByIdAndSenderEmail(Long id,
+	                                          String userEmail);
 
-	void deleteAllBySenderEmailAndIdIn(String senderEmail, List<Long> ids);
+	void deleteAllBySenderEmailAndIdIn(String senderEmail,
+	                                   List<Long> ids);
 
 }
