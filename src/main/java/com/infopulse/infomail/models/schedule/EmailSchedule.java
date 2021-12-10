@@ -1,12 +1,10 @@
 package com.infopulse.infomail.models.schedule;
 
 import com.infopulse.infomail.dto.api.schedule.EmailScheduleDTO;
+import com.infopulse.infomail.exceptions.EmailScheduleException;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -16,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Builder
 @Getter
 @Setter
@@ -57,37 +56,40 @@ public class EmailSchedule implements Schedule {
 	}
 
 	public static EmailSchedule fromDTO(EmailScheduleDTO dto) {
-		EmailScheduleBuilder builder =
-				EmailSchedule
-						.builder()
-						.sendNow(dto.isSendNow())
-						.daysOfWeek(dto.getDaysOfWeek())
-						.dayOfMonth(dto.getDayOfMonth())
-						.dayOfWeek(dto.getDayOfWeek())
-						.numberOfWeek(dto.getNumberOfWeek())
-						.month(dto.getMonth());
+		try {
+			EmailScheduleBuilder builder =
+					EmailSchedule
+							.builder()
+							.sendNow(dto.isSendNow())
+							.daysOfWeek(dto.getDaysOfWeek())
+							.dayOfMonth(dto.getDayOfMonth())
+							.dayOfWeek(dto.getDayOfWeek())
+							.numberOfWeek(dto.getNumberOfWeek())
+							.month(dto.getMonth());
 
-		RepeatType repeatAt = dto.getRepeatAt();
-		if(Objects.isNull(repeatAt))
-			return builder
-					.repeatAt(RepeatType.NOTHING)
-//					.endDate(LocalDate.now())
-					.build();
+			RepeatType repeatAt = dto.getRepeatAt();
+			if (Objects.isNull(repeatAt))
+				return builder
+						.repeatAt(RepeatType.NOTHING)
+						.build();
 
-		Timestamp sendDateTime = dto.getSendDateTime();
-		Timestamp endDate = dto.getEndDate();
+			Timestamp sendDateTime = dto.getSendDateTime();
+			Timestamp endDate = dto.getEndDate();
 
-		if(repeatAt.equals(RepeatType.NOTHING)) {
-			checkSendDateTime(sendDateTime, builder);
-			builder
-				.repeatAt(repeatAt);
-//				.endDate(LocalDate.now());
-		} else {
-			builder.repeatAt(repeatAt);
-			checkSendDateTime(sendDateTime, builder);
-			checkEndDate(endDate, builder);
+			if (repeatAt.equals(RepeatType.NOTHING)) {
+				checkSendDateTime(sendDateTime, builder);
+				builder
+						.repeatAt(repeatAt);
+			} else {
+				builder.repeatAt(repeatAt);
+				checkSendDateTime(sendDateTime, builder);
+				checkEndDate(endDate, builder);
+			}
+			return builder.build();
+		} catch (NullPointerException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new EmailScheduleException(ex);
 		}
-		return builder.build();
 	}
 
 	private static void checkEndDate(Timestamp endDate, EmailScheduleBuilder builder) {

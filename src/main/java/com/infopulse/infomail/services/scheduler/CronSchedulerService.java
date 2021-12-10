@@ -1,16 +1,16 @@
 package com.infopulse.infomail.services.scheduler;
 
-import com.infopulse.infomail.dto.app.CronExpWithDesc;
-import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
 import com.infopulse.infomail.dto.api.emails.RecipientDTO;
+import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
+import com.infopulse.infomail.dto.app.CronExpWithDesc;
 import com.infopulse.infomail.models.mail.AppUserEmailsInfo;
-import com.infopulse.infomail.models.schedule.EmailSchedule;
-import com.infopulse.infomail.models.templates.EmailTemplate;
 import com.infopulse.infomail.models.mail.enums.RepeatType;
 import com.infopulse.infomail.models.quartz.QrtzJobDetail;
-import com.infopulse.infomail.services.mail.RecipientService;
+import com.infopulse.infomail.models.schedule.EmailSchedule;
+import com.infopulse.infomail.models.templates.EmailTemplate;
 import com.infopulse.infomail.services.mail.AppUserEmailsInfoService;
 import com.infopulse.infomail.services.mail.EmailTemplateService;
+import com.infopulse.infomail.services.mail.RecipientService;
 import com.infopulse.infomail.services.scheduler.cronGenerator.CronGenerator;
 import com.infopulse.infomail.services.scheduler.jobs.EmailSendJob;
 import com.infopulse.infomail.services.scheduler.сronDescriptor.CronDescriptorService;
@@ -72,29 +72,34 @@ public class CronSchedulerService implements SchedulerService<CronTrigger, Email
 	                       EmailTemplateDTO emailTemplateDTO,
 	                       EmailSchedule emailSchedule,
 	                       String userEmail,
-	                       Long userId) throws ParseException, SchedulerException {
+	                       Long userId) {
 
 		EmailTemplate emailTemplate = emailTemplateService.saveEmailTemplate(
 				emailTemplateDTO,
 				userId,
 				userEmail);
 
-		CronExpWithDesc cronExpWithDesc = generateCronExpressionWithDescription(emailSchedule);
+		try {
+			CronExpWithDesc cronExpWithDesc = generateCronExpressionWithDescription(emailSchedule);
 
-		ScheduleBuilder<CronTrigger> scheduleBuilder = buildSchedule(cronExpWithDesc.getCronExpression());
+			ScheduleBuilder<CronTrigger> scheduleBuilder = buildSchedule(cronExpWithDesc.getCronExpression());
 
-		JobDetail jobDetail = buildJobDetail(
-				userEmail,
-				emailTemplate.getId(),
-				cronExpWithDesc.getCronDescription(),
-				EmailSendJob.class);
+			JobDetail jobDetail = buildJobDetail(
+					userEmail,
+					emailTemplate.getId(),
+					cronExpWithDesc.getCronDescription(),
+					EmailSendJob.class);
 
-		Trigger trigger = buildTrigger(
-				jobDetail,
-				scheduleBuilder,
-				emailSchedule);
+			Trigger trigger = buildTrigger(
+					jobDetail,
+					scheduleBuilder,
+					emailSchedule);
 
-		scheduleJob(jobDetail, trigger, recipients, emailTemplate);
+			scheduleJob(jobDetail, trigger, recipients, emailTemplate);
+		} catch (SchedulerException | ParseException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new RuntimeException(ex);
+		}
 	}
 
 	public CronExpWithDesc generateCronExpressionWithDescription(EmailSchedule
