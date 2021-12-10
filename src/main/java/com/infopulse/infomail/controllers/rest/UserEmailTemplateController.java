@@ -75,21 +75,6 @@ public class UserEmailTemplateController {
 				.getEmailTemplateAsDtoById(id, userEmail));
 	}
 
-	@GetMapping("/shared/{sharingId}")
-	public ResponseEntity<UserEmailTemplateDTO> getTemplateBySharingId(@PathVariable("sharingId") String sharingId,
-	                                                                   Authentication authentication) {
-		String userEmail = authentication.getName();
-
-		return ResponseEntity.ok(templateService
-				.getTemplateAsDtoBySharingId(sharingId, userEmail));
-	}
-
-	@PostMapping("/shared/")
-	public ResponseEntity<?> saveTemplateBySharingId(@Valid @RequestBody String sharingId,
-												Authentication authentication) {
-		templateService.saveTemplateBySharingId(sharingId, authentication);
-		return ResponseEntity.ok().build();
-	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteById(@PathVariable("id") Long id,
