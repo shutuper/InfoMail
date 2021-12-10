@@ -22,7 +22,7 @@ public class RegistrationController {
 		try {
 			registrationService.register(request);
 			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
+		} catch (IllegalStateException ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 	}
@@ -32,7 +32,7 @@ public class RegistrationController {
 		try {
 			registrationService.confirmToken(token);
 			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
+		} catch (IllegalStateException ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 	}
@@ -42,7 +42,7 @@ public class RegistrationController {
 		try {
 			registrationService.rejectToken(token);
 			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
+		} catch (IllegalStateException ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 	}
