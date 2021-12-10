@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = EmailScheduleException.class)
-    protected ResponseEntity<?> EmailScheduleExceptionHandler(RuntimeException ex) {
+    protected ResponseEntity<?> emailScheduleExceptionHandler(RuntimeException ex) {
         return ResponseEntity.badRequest().build();
     }
 

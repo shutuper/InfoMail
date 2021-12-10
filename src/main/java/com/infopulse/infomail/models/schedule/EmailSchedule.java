@@ -88,7 +88,7 @@ public class EmailSchedule implements Schedule {
 			return builder.build();
 		} catch (NullPointerException ex) {
 			log.error(ex.getMessage(), ex);
-			throw new EmailScheduleException(ex);
+			throw new EmailScheduleException(ex.getMessage());
 		}
 	}
 
