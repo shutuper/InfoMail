@@ -24,108 +24,74 @@ public class ScheduledTaskController {
 	                                                                           @RequestParam("sortOrder") Integer sortOrder,
 	                                                                           @RequestParam("sortField") String sortField,
 	                                                                           Authentication authentication) {
-		try {
-			String jobGroup = authentication.getName();
+		String jobGroup = authentication.getName();
 
-			return ResponseEntity.ok(taskService
-					.getUserPaginatedTasks(page, rows, sortOrder, sortField, jobGroup));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
-
+		return ResponseEntity.ok(taskService
+				.getUserPaginatedTasks(page, rows, sortOrder, sortField, jobGroup));
 	}
 
 	@GetMapping("{jobName}/dto")
 	public ResponseEntity<ScheduledTaskWithEmailDTO> getTaskDtoByJobName(@PathVariable("jobName") String jobName,
 	                                                                     Authentication authentication) {
-		try {
-			String jobGroup = authentication.getName();
+		String jobGroup = authentication.getName();
 
-			return ResponseEntity.ok(taskService
-					.getTaskDtoByJobName(jobName, jobGroup));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
-
+		return ResponseEntity.ok(taskService
+				.getTaskDtoByJobName(jobName, jobGroup));
 	}
 
 
 	@PatchMapping("resume/{jobName}")
 	public ResponseEntity<?> resumeJob(@PathVariable("jobName") String jobName,
 	                                   Authentication authentication) {
-		try {
-			String jobGroup = authentication.getName();
+		String jobGroup = authentication.getName();
 
-			taskService.resumeJob(jobName, jobGroup);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		taskService.resumeJob(jobName, jobGroup);
+		return ResponseEntity.ok().build();
 	}
 
 
 	@PatchMapping("pause/{jobName}")
 	public ResponseEntity<?> pauseJob(@PathVariable("jobName") String jobName,
 	                                  Authentication authentication) {
-		try {
-			String jobGroup = authentication.getName();
+		String jobGroup = authentication.getName();
 
-			taskService.pauseJob(jobName, jobGroup);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		taskService.pauseJob(jobName, jobGroup);
+		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("pauseAll")
 	public ResponseEntity<?> pauseAllUserJobs(Authentication authentication) {
-		try {
-			String jobGroup = authentication.getName();
+		String jobGroup = authentication.getName();
 
-			taskService.pauseAllUserJobs(jobGroup);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		taskService.pauseAllUserJobs(jobGroup);
+		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("resumeAll")
 	public ResponseEntity<?> resumeAllUserJobs(Authentication authentication) {
-		try {
-			String jobGroup = authentication.getName();
+		String jobGroup = authentication.getName();
 
-			taskService.resumeAllUserJobs(jobGroup);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		taskService.resumeAllUserJobs(jobGroup);
+		return ResponseEntity.ok().build();
 	}
 
 
 	@DeleteMapping()
 	public ResponseEntity<?> deleteAllJobsByNames(@Valid @RequestBody JobNamesDTO jobNamesDTO,
 	                                              Authentication authentication) {
-		try {
-			String jobGroup = authentication.getName();
+		String jobGroup = authentication.getName();
 
-			taskService.deleteAllByNames(jobNamesDTO.getJobNames(), jobGroup);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		taskService.deleteAllByNames(jobNamesDTO.getJobNames(), jobGroup);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("{jobName}")
 	public ResponseEntity<?> deleteJobByNameAndGroup(@PathVariable("jobName") String jobName,
 	                                                 Authentication authentication) {
-		try {
-			String jobGroup = authentication.getName();
+		String jobGroup = authentication.getName();
 
-			taskService.deleteJob(jobName, jobGroup);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		taskService.deleteJob(jobName, jobGroup);
+		return ResponseEntity.ok().build();
 	}
 
 

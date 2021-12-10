@@ -64,26 +64,46 @@ public class ScheduledTasksService {
 
 
 	@Transactional
-	public void pauseJob(String jobName, String jobGroup) throws SchedulerException {
-		scheduler.pauseJob(generateJobKey(jobName, jobGroup));
+	public void pauseJob(String jobName, String jobGroup) {
+		try {
+			scheduler.pauseJob(generateJobKey(jobName, jobGroup));
+		} catch (SchedulerException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
 		log.info("Job {} is paused", jobName);
 	}
 
 	@Transactional
-	public void resumeJob(String jobName, String jobGroup) throws SchedulerException {
-		scheduler.resumeJob(generateJobKey(jobName, jobGroup));
+	public void resumeJob(String jobName, String jobGroup) {
+		try {
+			scheduler.resumeJob(generateJobKey(jobName, jobGroup));
+		} catch (SchedulerException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
 		log.info("Job {} is resumed", jobName);
 	}
 
 	@Transactional
-	public void resumeAllUserJobs(String jobGroup) throws SchedulerException {
-		scheduler.resumeJobs(GroupMatcher.groupEquals(jobGroup));
+	public void resumeAllUserJobs(String jobGroup) {
+		try {
+			scheduler.resumeJobs(GroupMatcher.groupEquals(jobGroup));
+		} catch (SchedulerException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
 		log.info("Job with group {} are resumed", jobGroup);
 	}
 
 	@Transactional
-	public void pauseAllUserJobs(String jobGroup) throws SchedulerException {
-		scheduler.pauseJobs(GroupMatcher.groupEquals(jobGroup));
+	public void pauseAllUserJobs(String jobGroup) {
+		try {
+			scheduler.pauseJobs(GroupMatcher.groupEquals(jobGroup));
+		} catch (SchedulerException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
 		log.info("Job with group {} are paused", jobGroup);
 	}
 
