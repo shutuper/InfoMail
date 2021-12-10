@@ -41,9 +41,11 @@ public class EmailTemplateService {
 	public EmailTemplate getEmailTemplateById(Long id, String userEmail) {
 		log.info("User {} requested EmailTemplate with id: {}", userEmail, id);
 		return emailTemplateRepository.findByIdAndAppUser_Email(id, userEmail)
-				.orElseThrow(() -> new IllegalStateException(
-						String.format("EmailTemplate with id %s does not exist", id)
-				));
+				.orElseThrow(() -> {
+					String message = String.format("EmailTemplate with id %s does not exist", id);
+					log.error(message);
+					return new IllegalStateException(message);
+				});
 	}
 
 	public EmailTemplateDTO getEmailTemplateAsDtoById(Long id, String userEmail) {

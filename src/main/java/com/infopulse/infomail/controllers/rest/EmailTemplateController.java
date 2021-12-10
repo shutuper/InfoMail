@@ -22,16 +22,10 @@ public class EmailTemplateController {
 	@GetMapping("{id}")
 	public ResponseEntity<EmailTemplateDTO> getTemplateById(@PathVariable("id") Long id,
 	                                                        Authentication authentication) {
-		try {
-			String userEmail = (String) authentication.getPrincipal();
+		String userEmail = (String) authentication.getPrincipal();
 
-			return ResponseEntity.ok(templateService
-					.getEmailTemplateAsDtoById(id, userEmail));
-
-		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(templateService
+				.getEmailTemplateAsDtoById(id, userEmail));
 	}
 
 }
