@@ -4,6 +4,7 @@ import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
 import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
 import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
 import com.infopulse.infomail.dto.app.IdsDTO;
+import com.infopulse.infomail.exceptions.UserEmailTemplateException;
 import com.infopulse.infomail.models.templates.UserEmailTemplate;
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.repositories.templates.UserEmailTemplateRepository;
@@ -94,6 +95,7 @@ public class UserEmailTemplateService {
 	}
 
 	public UserEmailTemplateDTO getTemplateAsDtoBySharingId(String sharingId, String userEmail) {
+		validateSharingId(sharingId);
 		return new UserEmailTemplateDTO(getTemplateBySharingId(sharingId, userEmail));
 	}
 
@@ -149,20 +151,34 @@ public class UserEmailTemplateService {
 		);
 	}
 
-	@Transactional
-	public void saveSharedTemplate(UserEmailTemplateDTO emailTemplateDTO, Authentication authentication) {
-		log.info("User {} save shared template as new UserEmailTemplate", authentication.getName());
+	public void saveTemplateBySharingId(String sharingId, Authentication authentication) {
+		log.info("User {} save shared template by sharing id {}", authentication.getName(), sharingId);
+
+		validateSharingId(sharingId);
+
+		UserEmailTemplate templateBySharingId = getTemplateBySharingId(sharingId, authentication.getName());
+
 		Long userId = (Long) authentication.getCredentials();
 		String shareLink = UUID.randomUUID().toString();
 
 		UserEmailTemplate emailTemplate = new UserEmailTemplate(
 				new AppUser(userId),
-				emailTemplateDTO.getName(),
-				emailTemplateDTO.getSubject(),
-				emailTemplateDTO.getBody(),
+				templateBySharingId.getName(),
+				templateBySharingId.getSubject(),
+				templateBySharingId.getBody(),
 				shareLink);
 
 		userEmailTemplateRepository.save(emailTemplate);
+	}
+
+	private void validateSharingId(String sharingId) {
+		try {
+			UUID.fromString(sharingId);
+		} catch (IllegalArgumentException ex) {
+			String message = String.format("Template sharing id %s invalid!", sharingId);
+			log.error(message);
+			throw new UserEmailTemplateException(message);
+		}
 	}
 
 	@Transactional

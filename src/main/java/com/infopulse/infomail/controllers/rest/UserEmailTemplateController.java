@@ -25,37 +25,25 @@ public class UserEmailTemplateController {
 	@PostMapping
 	public ResponseEntity<UserEmailTemplateDTO> addTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO,
 	                                                        Authentication authentication) {
-		try {
-			return ResponseEntity.ok(templateService
-					.saveEmailTemplate(templateDTO, authentication));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(templateService
+				.saveEmailTemplate(templateDTO, authentication));
 	}
 
 	@GetMapping("options")
 	public ResponseEntity<List<UserTemplatesOptionsDTO>> getAllAsOptions(Authentication authentication) {
-		try {
-			String userEmail = authentication.getName();
+		String userEmail = authentication.getName();
 
-			return ResponseEntity.ok(templateService
-					.getAllTemplatesAsOptions(userEmail));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(templateService
+				.getAllTemplatesAsOptions(userEmail));
 	}
 
 	@GetMapping("{id}/dto")
 	public ResponseEntity<EmailTemplateDTO> getEmailTemplateDTO(@PathVariable("id") Long id,
 	                                                            Authentication authentication) {
-		try {
-			String userEmail = authentication.getName();
+		String userEmail = authentication.getName();
 
-			return ResponseEntity.ok(templateService
-					.getEmailTemplateDTO(id, userEmail));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(templateService
+				.getEmailTemplateDTO(id, userEmail));
 	}
 
 	@GetMapping
@@ -64,91 +52,60 @@ public class UserEmailTemplateController {
 	                                                                        @RequestParam("sortOrder") Integer sortOrder,
 	                                                                        @RequestParam("sortField") String sortField,
 	                                                                        Authentication authentication) {
-		try {
-			String userEmail = authentication.getName();
+		String userEmail = authentication.getName();
 
-			return ResponseEntity.ok(templateService
-					.getPaginatedTemplates(page, rows, sortOrder, sortField, userEmail));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(templateService
+				.getPaginatedTemplates(page, rows, sortOrder, sortField, userEmail));
 	}
 
 	@GetMapping("total")
 	public ResponseEntity<Integer> getTotalNumberOfTemplates(Authentication authentication) {
-		try {
-			String userEmail = authentication.getName();
+		String userEmail = authentication.getName();
 
-			return ResponseEntity.ok(templateService
-					.getTotalNumberOfTemplates(userEmail));
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(templateService
+				.getTotalNumberOfTemplates(userEmail));
 	}
 
 	@GetMapping("{id}")
 	public ResponseEntity<UserEmailTemplateDTO> getTemplateById(@PathVariable("id") Long id,
 	                                                            Authentication authentication) {
-		try {
-			String userEmail = authentication.getName();
+		String userEmail = authentication.getName();
 
-			return ResponseEntity.ok(templateService
-					.getEmailTemplateAsDtoById(id, userEmail));
-		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(templateService
+				.getEmailTemplateAsDtoById(id, userEmail));
 	}
 
 	@GetMapping("/shared/{sharingId}")
 	public ResponseEntity<UserEmailTemplateDTO> getTemplateBySharingId(@PathVariable("sharingId") String sharingId,
 	                                                                   Authentication authentication) {
-		try {
-			String userEmail = authentication.getName();
+		String userEmail = authentication.getName();
 
-			return ResponseEntity.ok(templateService
-					.getTemplateAsDtoBySharingId(sharingId, userEmail));
-		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			return ResponseEntity.badRequest().build();
-		}
+		return ResponseEntity.ok(templateService
+				.getTemplateAsDtoBySharingId(sharingId, userEmail));
 	}
 
 	@PostMapping("/shared/")
-	public ResponseEntity<?> saveSharedTemplate(@Valid @RequestBody UserEmailTemplateDTO templateDTO,
-	                                            Authentication authentication) {
-		try {
-			templateService.saveSharedTemplate(templateDTO, authentication);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+	public ResponseEntity<?> saveTemplateBySharingId(@Valid @RequestBody String sharingId,
+												Authentication authentication) {
+		templateService.saveTemplateBySharingId(sharingId, authentication);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteById(@PathVariable("id") Long id,
 	                                    Authentication authentication) {
-		try {
-			String userEmail = (String) authentication.getPrincipal();
+		String userEmail = (String) authentication.getPrincipal();
 
-			templateService.deleteByIdAndUserEmail(id, userEmail);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			return ResponseEntity.badRequest().build();
-		}
+		templateService.deleteByIdAndUserEmail(id, userEmail);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
 	public ResponseEntity<?> deleteAllByIds(@Valid @RequestBody IdsDTO ids,
 	                                        Authentication authentication) {
-		try {
-			String userEmail = (String) authentication.getPrincipal();
+		String userEmail = (String) authentication.getPrincipal();
 
-			templateService.deleteAllByIdsAndUserEmail(ids, userEmail);
-			return ResponseEntity.ok().build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
+		templateService.deleteAllByIdsAndUserEmail(ids, userEmail);
+		return ResponseEntity.ok().build();
 	}
 }
