@@ -1,7 +1,7 @@
 package com.infopulse.infomail.services.registration;
 
-import com.infopulse.infomail.dto.exeptions.MessageDTO;
 import com.infopulse.infomail.dto.securityRequests.RegistrationRequest;
+import com.infopulse.infomail.exceptions.RegistrationException;
 import com.infopulse.infomail.models.confirmation.ConfirmationToken;
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.models.users.roles.AppUserRole;
@@ -22,31 +22,36 @@ public class RegistrationService {
 	private ConfirmationTokenService confirmationTokenService;
 	private final ConfirmationTokenSender confirmationTokenSender;
 
-	public MessageDTO register(RegistrationRequest request) {
-		String token = appUserService.singUp(
-				new AppUser(
-						request.getEmail(),
-						request.getPassword(),
-						AppUserRole.USER,
-						true, true, false));
+	public void register(RegistrationRequest request) {
+		try {
+			String token = appUserService.singUp(
+					new AppUser(
+							request.getEmail(),
+							request.getPassword(),
+							AppUserRole.USER,
+							true, true, false));
 
-		confirmationTokenSender.sendConfirmationToken(request.getEmail(), token);
-
-		String success = "success";
-		return new MessageDTO(success);
+			confirmationTokenSender.sendConfirmationToken(request.getEmail(), token);
+		} catch (IllegalStateException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new RegistrationException(ex.getMessage());
+		}
 	}
 
 	@Transactional
-	public MessageDTO confirmToken(String token) {
-		ConfirmationToken confirmationToken = validateConfirmationToken(token);
+	public void confirmToken(String token) {
+		try {
+			ConfirmationToken confirmationToken = validateConfirmationToken(token);
 
-		confirmationTokenService.setConfirmedAt(token);
-		String email = confirmationToken.getAppUser().getEmail();
-		appUserService.enableAppUser(email);
+			confirmationTokenService.setConfirmedAt(token);
+			String email = confirmationToken.getAppUser().getEmail();
+			appUserService.enableAppUser(email);
 
-		log.info("User {} have just confirmed email", email);
-		String result = "Confirmed";
-		return new MessageDTO(result);
+			log.info("User {} have just confirmed email", email);
+		} catch (IllegalStateException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new RegistrationException(ex.getMessage());
+		}
 	}
 
 	private ConfirmationToken validateConfirmationToken(String token) throws IllegalStateException {
@@ -66,12 +71,17 @@ public class RegistrationService {
 	}
 
 	@Transactional
-	public MessageDTO rejectToken(String token) {
-		ConfirmationToken confirmationToken = validateConfirmationToken(token);
-		AppUser currentUser = confirmationToken.getAppUser();
-		String userEmail = currentUser.getEmail();
-		confirmationTokenService.deleteConfirmationTokenById(confirmationToken.getTokenId());
-		appUserService.deleteUnConfirmedAppUser(currentUser.getUserId());
-		return new MessageDTO(String.format("Unconfirmed account: %s is successfully deleted!", userEmail));
+	public String rejectToken(String token) {
+		try {
+			ConfirmationToken confirmationToken = validateConfirmationToken(token);
+			AppUser currentUser = confirmationToken.getAppUser();
+			String userEmail = currentUser.getEmail();
+			confirmationTokenService.deleteConfirmationTokenById(confirmationToken.getTokenId());
+			appUserService.deleteUnConfirmedAppUser(currentUser.getUserId());
+			return String.format("Unconfirmed account: %s is successfully deleted!", userEmail);
+		} catch (IllegalStateException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new RegistrationException(ex.getMessage());
+		}
 	}
 }

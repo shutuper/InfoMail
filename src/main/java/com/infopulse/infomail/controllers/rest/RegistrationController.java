@@ -19,32 +19,20 @@ public class RegistrationController {
 
 	@PostMapping
 	public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest request) {
-		try {
-			registrationService.register(request);
-			return ResponseEntity.ok().build();
-		} catch (IllegalStateException ex) {
-			return ResponseEntity.badRequest().body(ex.getMessage());
-		}
+		registrationService.register(request);
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping(path = "confirm")
 	public ResponseEntity<?> confirm(@RequestParam("token") String token) {
-		try {
-			registrationService.confirmToken(token);
-			return ResponseEntity.ok().build();
-		} catch (IllegalStateException ex) {
-			return ResponseEntity.badRequest().body(ex.getMessage());
-		}
+		registrationService.confirmToken(token);
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping(path = "reject")
-	public ResponseEntity<?> reject(@RequestParam("token") String token) {
-		try {
-			registrationService.rejectToken(token);
-			return ResponseEntity.ok().build();
-		} catch (IllegalStateException ex) {
-			return ResponseEntity.badRequest().body(ex.getMessage());
-		}
+	public ResponseEntity<String> reject(@RequestParam("token") String token) {
+		return ResponseEntity.ok(registrationService
+				.rejectToken(token));
 	}
 
 }
