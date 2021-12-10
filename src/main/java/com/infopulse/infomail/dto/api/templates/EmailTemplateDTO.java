@@ -17,6 +17,7 @@ public class EmailTemplateDTO {
 	private String body;
 
 	public EmailTemplateDTO(Template template) {
+		this.id = template.getId();
 		this.subject = template.getSubject();
 		this.body = template.getBody();
 	}

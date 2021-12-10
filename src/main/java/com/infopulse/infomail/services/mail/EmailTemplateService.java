@@ -49,7 +49,7 @@ public class EmailTemplateService {
 	}
 
 	public EmailTemplateDTO getEmailTemplateAsDtoById(Long id, String userEmail) {
-		return getEmailTemplateById(id, userEmail).toDto();
+		return new EmailTemplateDTO(getEmailTemplateById(id, userEmail));
 	}
 
 
