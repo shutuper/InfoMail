@@ -1,6 +1,9 @@
 package com.infopulse.infomail.dto.api.templates;
 
-import lombok.*;
+import com.infopulse.infomail.models.templates.UserEmailTemplate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
@@ -23,4 +26,13 @@ public class UserEmailTemplateDTO {
 	private String userEmail;
 	private String sharingLink;
 
+	public UserEmailTemplateDTO(UserEmailTemplate template) {
+		this(
+			template.getId(),
+			template.getName(),
+			template.getSubject(),
+			template.getBody(),
+			template.getUserEmail(),
+			template.getSharingLink());
+	}
 }

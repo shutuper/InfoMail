@@ -82,8 +82,7 @@ public class UserEmailTemplateService {
 	}
 
 	public UserEmailTemplateDTO getEmailTemplateAsDtoById(Long id, String userEmail) {
-		return getEmailTemplateById(id, userEmail)
-				.toDto();
+		return new UserEmailTemplateDTO(getEmailTemplateById(id, userEmail));
 	}
 
 	public UserEmailTemplate getTemplateBySharingId(String sharingId, String userEmail) {
@@ -95,8 +94,7 @@ public class UserEmailTemplateService {
 	}
 
 	public UserEmailTemplateDTO getTemplateAsDtoBySharingId(String sharingId, String userEmail) {
-		return getTemplateBySharingId(sharingId, userEmail)
-				.toDto();
+		return new UserEmailTemplateDTO(getTemplateBySharingId(sharingId, userEmail));
 	}
 
 	@Transactional
