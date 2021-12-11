@@ -5,6 +5,7 @@ import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
 import com.infopulse.infomail.dto.api.templates.UserTemplatesOptionsDTO;
 import com.infopulse.infomail.dto.app.IdsDTO;
 import com.infopulse.infomail.services.mail.UserEmailTemplateService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@SecurityRequirement(name = "Authorization")
 @RequestMapping("/api/v1/usertemplates")
 @AllArgsConstructor
 public class UserEmailTemplateController {

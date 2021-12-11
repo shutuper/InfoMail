@@ -5,6 +5,7 @@ import com.infopulse.infomail.dto.api.emails.RecipientDTO;
 import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
 import com.infopulse.infomail.models.schedule.EmailSchedule;
 import com.infopulse.infomail.services.scheduler.CronSchedulerService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,9 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@SecurityRequirement(name = "Authorization")
 @RequestMapping("api/v1/emails")
+@AllArgsConstructor
 public class EmailController {
 
 	private final CronSchedulerService cronSchedulerService;

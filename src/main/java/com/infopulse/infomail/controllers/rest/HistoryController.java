@@ -4,6 +4,7 @@ import com.infopulse.infomail.dto.api.emails.ExecutedEmailDTO;
 import com.infopulse.infomail.dto.api.templates.EmailWithTemplateDTO;
 import com.infopulse.infomail.dto.app.IdsDTO;
 import com.infopulse.infomail.services.mail.EmailLogService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@SecurityRequirement(name = "Authorization")
 @RequestMapping("/api/v1/history")
 @AllArgsConstructor
 public class HistoryController {

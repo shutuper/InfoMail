@@ -2,6 +2,7 @@ package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.securityRequests.RegistrationRequest;
 import com.infopulse.infomail.services.registration.RegistrationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,9 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@SecurityRequirement(name = "Authorization")
 @RequestMapping(path = "api/v1/registration")
+@AllArgsConstructor
 public class RegistrationController {
 
 	private final RegistrationService registrationService;

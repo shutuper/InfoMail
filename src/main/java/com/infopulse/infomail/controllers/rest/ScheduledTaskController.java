@@ -4,6 +4,7 @@ import com.infopulse.infomail.dto.api.schedule.JobNamesDTO;
 import com.infopulse.infomail.dto.api.schedule.PaginatedScheduledTasksDTO;
 import com.infopulse.infomail.dto.api.schedule.ScheduledTaskWithEmailDTO;
 import com.infopulse.infomail.services.scheduler.tasks.ScheduledTasksService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@AllArgsConstructor
+@SecurityRequirement(name = "Authorization")
 @RequestMapping("/api/v1/tasks")
+@AllArgsConstructor
 public class ScheduledTaskController {
 
 	private final ScheduledTasksService taskService;

@@ -2,6 +2,7 @@ package com.infopulse.infomail.controllers.rest;
 
 import com.infopulse.infomail.dto.api.templates.UserEmailTemplateDTO;
 import com.infopulse.infomail.services.mail.UserEmailTemplateService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@SecurityRequirement(name = "Authorization")
 @RequestMapping("/api/v1/sharedtemplates")
 @AllArgsConstructor
 public class SharedEmailTemplateController {
