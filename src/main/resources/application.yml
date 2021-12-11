@@ -77,6 +77,11 @@ spring:
   #          connectiontimeout: 5000
   #          timeout: 3000
   #          writetimeout: 5000
+
+springdoc:
+  api-docs:
+    path: '/api/v1/api-docs'
+
 application:
   email:
     sentFrom: ${infomail.email}

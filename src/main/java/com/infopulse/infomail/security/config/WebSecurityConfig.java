@@ -18,7 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
-import static com.infopulse.infomail.models.users.roles.AppUserRole.*;
+import static com.infopulse.infomail.models.users.roles.AppUserRole.USER;
 
 @Configuration
 @AllArgsConstructor
@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(authenticationFilter)
 				.addFilterAfter(authorizationFilter, authenticationFilter.getClass())
 				.authorizeRequests()
-				.antMatchers("/api/v*/users", "/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate").permitAll()
+				.antMatchers("/api/v*/users", "/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate", "/swagger-ui.html", "/swagger-ui/**", "/api/v*/api-docs/**").permitAll()
 				.antMatchers("/**").hasRole(USER.name())
 //				.antMatchers("/**").permitAll()
 				.anyRequest().authenticated()
