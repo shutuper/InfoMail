@@ -1,28 +1,46 @@
 services:
 
-  mailhog:
-    image: mailhog/mailhog
-    restart: always
-    logging:
-      driver: 'none'  # disable saving logs
+  #  mailhog:
+  #    image: mailhog/mailhog
+  #    restart: always
+  #    logging:
+  #      driver: 'none'  # disable saving logs
+  #    ports:
+  #      - 1025:1025 # smtp server
+  #      - 8025:8025 # web ui
+  #
+  #  database:
+  #      image: postgres
+  #      ports:
+  #        - "8034:5432"
+  #      environment:
+  #        POSTGRES_USER: infomail
+  #        POSTGRES_PASSWORD: infomail
+  #        POSTGRES_DB: infomail
+  #      networks:
+  #        - infomail-net
+  infomail:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - 1025:1025 # smtp server
-      - 8025:8025 # web ui
+      - "8190:8190"
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    networks:
+      - cicd_default
 
-  database:
-    image: postgres
+  client:
+    build:
+      context: D:\Study_JaBa\Infomail-frontend\
+      dockerfile: Dockerfile
     ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_USER: infomail
-      POSTGRES_PASSWORD: infomail
-      POSTGRES_DB: infomail
+      - "4222:4200"
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    networks:
+      - cicd_default
 
-#  infomail:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8090:8090"
-#  # stdin_open: true # docker run -i
-#  # tty: true        # docker run -t
+networks:
+  cicd_default:
+    driver: bridge

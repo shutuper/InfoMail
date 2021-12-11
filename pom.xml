@@ -11,10 +11,11 @@
     <groupId>com.infopulse</groupId>
     <artifactId>InfoMail</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>InfoMail</name>
+    <name>infomail</name>
     <description>InfoMail</description>
     <properties>
         <java.version>17</java.version>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
     <dependencies>
         <dependency>
@@ -50,7 +51,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.24.jre7</version>
+            <version>42.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>

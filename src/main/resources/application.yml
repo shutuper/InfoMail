@@ -1,13 +1,13 @@
 server:
-  port: 8090
+  port: 8190
 
 logging:
-#  logback:
-  #    rollingpolicy:
-  #      max-file-size: 10MB
-  #      max-history: 10
-  #  file:
-  #    name: logs/infomail.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 10
+  file:
+    name: logs/infomail.log
   pattern:
     dateformat: yyyy:MM:dd HH:mm:ss |
 
@@ -57,9 +57,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/infomail #5433
-    username: postgres #infomail
-    password: 2222 #infomail
+    url: jdbc:postgresql://195.250.62.211:8033/infomail #5454
+    username: root #infomail
+    password: root #infomail
 
   #  mail:
   #    host: 'localhost'
