@@ -4,7 +4,7 @@ import com.infopulse.infomail.security.filters.AppAuthenticationFilter;
 import com.infopulse.infomail.security.filters.AppAuthorizationFilter;
 import com.infopulse.infomail.security.jwt.JwtUtil;
 import com.infopulse.infomail.services.security.AppUserDetailsService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -24,14 +24,24 @@ import org.springframework.web.filter.CorsFilter;
 import static com.infopulse.infomail.models.users.roles.AppUserRole.USER;
 
 @Configuration
-@AllArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Value("${infomail.apiUrl}")
+	private String frontURL;
 
 	private final JwtUtil jwtUtil;
 	private final PasswordEncoder passwordEncoder;
 	private final AppUserDetailsService userDetailsService;
 	private final AppAuthorizationFilter authorizationFilter;
+
+	public WebSecurityConfig(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AppUserDetailsService userDetailsService, AppAuthorizationFilter authorizationFilter) {
+		this.jwtUtil = jwtUtil;
+		this.passwordEncoder = passwordEncoder;
+		this.userDetailsService = userDetailsService;
+		this.authorizationFilter = authorizationFilter;
+	}
+
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -69,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		config.addAllowedOrigin("http://localhost:4200");
+		config.addAllowedOrigin(frontURL);
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
 		config.addExposedHeader("*");
