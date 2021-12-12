@@ -1,5 +1,31 @@
 services:
 
+  infomail:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8190:8190"
+    networks:
+      - cicd_default
+#    stdin_open: true # docker run -i
+#    tty: true        # docker run -t
+
+  client:
+    build:
+      context: D:\Study_JaBa\Infomail-frontend\
+      dockerfile: Dockerfile
+    ports:
+      - "4222:80"
+    networks:
+      - cicd_default
+#    stdin_open: true # docker run -i
+#    tty: true        # docker run -t
+
+networks:
+  cicd_default:
+    driver: bridge
+
   #  mailhog:
   #    image: mailhog/mailhog
   #    restart: always
@@ -19,28 +45,3 @@ services:
   #        POSTGRES_DB: infomail
   #      networks:
   #        - infomail-net
-  infomail:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8190:8190"
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-    networks:
-      - cicd_default
-
-  client:
-    build:
-      context: D:\Study_JaBa\Infomail-frontend\
-      dockerfile: Dockerfile
-    ports:
-      - "4222:4200"
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-    networks:
-      - cicd_default
-
-networks:
-  cicd_default:
-    driver: bridge
