@@ -78,7 +78,7 @@ public class EmailSenderService {
 			transactionManager.commit(status);
 			log.info("Email with id {} is successfully resent", emailLog.getId());
 		} catch (Exception exception) {
-			String expMessage = exception.getMessage();
+			String expMessage = emailLogService.getValidExceptionMessage(exception.getMessage());
 
 			log.error(String.format("Sending email with id %s is failed again", emailLog.getId()),
 					exception);

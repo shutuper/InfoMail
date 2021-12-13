@@ -99,6 +99,12 @@ public class EmailLogService {
 		return emailLogRepository.save(emailLog);
 	}
 
+	String getValidExceptionMessage(String message) {
+		if (message.length() > 290)
+			message = message.substring(0, 290);
+		return message;
+	}
+
 	@Transactional
 	public ExecutedEmailDTO retryFailedEmail(Long emailId, String senderEmail) {
 		EmailLog emailLog = getEmailLogByIdAndSenderEmail(emailId, senderEmail);
