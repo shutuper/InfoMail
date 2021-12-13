@@ -1,5 +1,5 @@
 server:
-  port: 8190
+  port: 8028
 
 logging:
   logback:
@@ -57,7 +57,7 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://195.250.62.211:8033/infomail #5454
+    url: jdbc:postgresql://${infomail.dbHost}/infomail #5454
     username: root #infomail
     password: root #infomail
 

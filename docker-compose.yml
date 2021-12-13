@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8190:8190"
+      - "8028:8028"
     networks:
       - cicd_default
 #    stdin_open: true # docker run -i
@@ -16,7 +16,7 @@ services:
       context: D:\Study_JaBa\Infomail-frontend\
       dockerfile: Dockerfile
     ports:
-      - "4222:80"
+      - "8027:80"
     networks:
       - cicd_default
 #    stdin_open: true # docker run -i

@@ -27,7 +27,7 @@ import static com.infopulse.infomail.models.users.roles.AppUserRole.USER;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Value("${infomail.apiUrl}")
+	@Value("${infomail.frontUrl}")
 	private String frontURL;
 
 	private final JwtUtil jwtUtil;
@@ -45,16 +45,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		final AppAuthenticationFilter authenticationFilter = new AppAuthenticationFilter(jwtUtil, authenticationManagerBean());
+		final AppAuthenticationFilter authenticationFilter = new AppAuthenticationFilter(
+				jwtUtil,
+				authenticationManagerBean());
+
 		http.cors().and().csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 				.addFilter(authenticationFilter)
 				.addFilterAfter(authorizationFilter, authenticationFilter.getClass())
 				.authorizeRequests()
-				.antMatchers("/api/v*/users", "/api/v*/registration", "/api/v*/registration/**", "api/v*/authenticate", "/swagger-ui.html", "/swagger-ui/**", "/api/v*/api-docs/**").permitAll()
+				.antMatchers(
+						"/api/v*/users",
+						"/api/v*/registration",
+						"/api/v*/registration/**",
+						"api/v*/authenticate",
+						"/swagger-ui.html",
+						"/swagger-ui/**",
+						"/api/v*/api-docs/**"
+				).permitAll()
 				.antMatchers("/**").hasRole(USER.name())
-//				.antMatchers("/**").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.exceptionHandling()

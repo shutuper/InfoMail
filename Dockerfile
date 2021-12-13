@@ -1,4 +1,4 @@
 FROM openjdk:17
 ADD target/infomail.jar infomail.jar
-EXPOSE 8190
+EXPOSE 8028
 ENTRYPOINT ["java","-jar","infomail.jar"]
