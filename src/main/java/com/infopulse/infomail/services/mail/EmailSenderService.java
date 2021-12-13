@@ -61,13 +61,13 @@ public class EmailSenderService {
 					exception);
 			transactionManager.rollback(status);
 			emailLogService.saveNewEmailLog(
-					appUserEmailsInfo, expMessage,
+					appUserEmailsInfo, emailLogService.getValidExceptionMessage(expMessage),
 					EmailStatus.FAILED, senderEmail);
 		}
 	}
 
 	public EmailLog resendFailedMimeEmail(EmailTemplate email,
-	                                  Map<RecipientType, List<String>> groupedRecipients, EmailLog emailLog) {
+	                                      Map<RecipientType, List<String>> groupedRecipients, EmailLog emailLog) {
 		TransactionDefinition def = new DefaultTransactionDefinition();
 		TransactionStatus status = transactionManager.getTransaction(def);
 		EmailLog result;

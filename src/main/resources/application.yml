@@ -51,9 +51,6 @@ spring:
           auth: true
           starttls:
             enable: true
-          connectiontimeout: 20000
-          timeout: 5000
-          writetimeout: 10000
 
   datasource:
     driver-class-name: org.postgresql.Driver
