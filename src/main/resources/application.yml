@@ -39,8 +39,8 @@ spring:
             non_contextual_creation: true
 
   mail:
-    host: smtp.gmail.com
-    port: 587
+    host: ${infomail.mailHost}
+    port: ${infomail.mailPort}
     username: ${infomail.email}
     password: ${infomail.password}
     properties:
@@ -51,29 +51,15 @@ spring:
           auth: true
           starttls:
             enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${infomail.dbHost}/infomail #5454
-    username: root #infomail
-    password: root #infomail
-
-  #  mail:
-  #    host: 'localhost'
-  #    port: 1025
-  #    username: infomail
-  #    password: infomail
-  #    properties:
-  #      mail:
-  #        smtp:
-  #          ssl:
-  #            trust: "*"
-  #          auth: true
-  #          starttls:
-  #            enable: true
-  #          connectiontimeout: 5000
-  #          timeout: 3000
-  #          writetimeout: 5000
+    url: jdbc:postgresql://${infomail.dbHost}/infomail
+    username: ${infomail.dbUsername}
+    password: ${infomail.dbPassword}
 
 springdoc:
   api-docs:
