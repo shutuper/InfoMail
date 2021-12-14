@@ -1,47 +1,52 @@
 services:
 
   infomail:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: lastzloid/infomail_back  #name of infomail_back image
     ports:
       - "8028:8028"
+    environment:
+      MAIL_HOST: localhost
+      MAIL_PORT: 1025
+      MAIL_EMAIL: infomail
+      MAIL_PASSWORD: infomail
+      DB_HOST: localhost:8026
+      DB_USERNAME: infomail
+      DB_PASSWORD: infomail
+      INFOMAIL_FRONT_URL: http://localhost:4200
+      INFOMAIL_FRONT_REG_LINK: http://localhost:4200/#/auth/registration/
+      INFOMAIL_SECURITY_SECRET: onfn923oiNkfJj32fsl230cdl3mcLNL42lfl932O23Fknlfsdlsf32f04f
     networks:
       - cicd_default
-#    stdin_open: true # docker run -i
-#    tty: true        # docker run -t
 
   client:
-    build:
-      context: D:\Study_JaBa\Infomail-frontend\
-      dockerfile: Dockerfile
+    image: lastzloid/infomail_front  #name of infomail_front image
     ports:
-      - "8027:80"
+      - "4200:80"
     networks:
       - cicd_default
-#    stdin_open: true # docker run -i
-#    tty: true        # docker run -t
+
+  database:
+      image: postgres
+      ports:
+        - "8026:5432"
+      environment:
+        POSTGRES_USER: infomail
+        POSTGRES_PASSWORD: infomail
+        POSTGRES_DB: infomail
+      networks:
+        - cicd_default
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+    networks:
+      - cicd_default
 
 networks:
   cicd_default:
     driver: bridge
-
-  #  mailhog:
-  #    image: mailhog/mailhog
-  #    restart: always
-  #    logging:
-  #      driver: 'none'  # disable saving logs
-  #    ports:
-  #      - 1025:1025 # smtp server
-  #      - 8025:8025 # web ui
-  #
-  #  database:
-  #      image: postgres
-  #      ports:
-  #        - "8034:5432"
-  #      environment:
-  #        POSTGRES_USER: infomail
-  #        POSTGRES_PASSWORD: infomail
-  #        POSTGRES_DB: infomail
-  #      networks:
-  #        - infomail-net
