@@ -183,7 +183,6 @@ public class UserEmailTemplateService {
 
 	@Transactional
 	public void deleteByIdAndUserEmail(Long id, String userEmail) {
-		log.info(String.valueOf(getEmailTemplateById(id, userEmail)));
 		log.info("User {} delete UserEmailTemplate by id: {}", userEmail, id);
 		userEmailTemplateRepository.deleteByIdAndAppUser_Email(id, userEmail);
 	}
