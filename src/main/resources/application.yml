@@ -13,9 +13,6 @@ logging:
 
 spring:
 
-  config:
-    import: sec.yml
-
   quartz:
     job-store-type: jdbc
     jdbc:
@@ -39,10 +36,10 @@ spring:
             non_contextual_creation: true
 
   mail:
-    host: ${infomail.mailHost}
-    port: ${infomail.mailPort}
-    username: ${infomail.email}
-    password: ${infomail.password}
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_EMAIL}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -57,9 +54,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${infomail.dbHost}/infomail
-    username: ${infomail.dbUsername}
-    password: ${infomail.dbPassword}
+    url: jdbc:postgresql://${DB_HOST}/infomail
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
 springdoc:
   api-docs:
@@ -67,11 +64,12 @@ springdoc:
 
 application:
   email:
-    sentFrom: ${infomail.email}
+    sentFrom: ${MAIL_EMAIL}
     confirmation:
-      tokenLink: ${infomail.reg-link}confirm?token=
+      tokenLink: ${INFOMAIL_FRONT_REG_LINK}confirm?token=
       subject: InfoMail - email confirmation
     rejection:
-      tokenLink: ${infomail.reg-link}reject?token=
+      tokenLink: ${INFOMAIL_FRONT_REG_LINK}reject?token=
   security:
-    secret: ${infomail.secret}
+    secret: ${INFOMAIL_SECURITY_SECRET}
+    frontUrl: ${INFOMAIL_FRONT_URL}

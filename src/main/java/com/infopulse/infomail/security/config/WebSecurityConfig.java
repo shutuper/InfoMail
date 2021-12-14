@@ -27,7 +27,7 @@ import static com.infopulse.infomail.models.users.roles.AppUserRole.USER;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Value("${infomail.frontUrl}")
+	@Value("${application.security.frontUrl}")
 	private String frontURL;
 
 	private final JwtUtil jwtUtil;
