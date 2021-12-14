@@ -12,6 +12,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(value = {IllegalStateException.class, IllegalArgumentException.class})
+    protected ResponseEntity<?> errorHandler(RuntimeException ex) {
+        return ResponseEntity.badRequest().build();
+    }
+
     @ExceptionHandler(value = EmailScheduleException.class)
     protected ResponseEntity<?> emailScheduleExceptionHandler(RuntimeException ex) {
         return ResponseEntity.badRequest().build();
