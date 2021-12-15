@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,6 +29,24 @@ import java.util.stream.Collectors;
 public class UserEmailTemplateService {
 
 	private final UserEmailTemplateRepository userEmailTemplateRepository;
+	private final List<UserEmailTemplateDTO> basicTemplates = new ArrayList<>(){{
+		add(new UserEmailTemplateDTO(
+				0L,
+				"My template 1",
+				"Welcome to Infomail",
+				"<b>Welcome to Infomail</b><div>How about scheduling several emails?<br></div>",
+				"",
+				""
+		));
+		add(new UserEmailTemplateDTO(
+				0L,
+				"My template 2",
+				"Do you know about Infomail Templates?",
+				"<div><span><b>We're so excited that you've decided to create a new template!&nbsp;</b></span><br></div><div><font size=\"4\">Now that you're here, let's make sure you know how to get the most out of Infomail Templates.</font></div><div><font size=\"4\">- Create a new template</font></div><div><font size=\"4\">- Give your template a name</font></div><div><font size=\"4\">- Edit your template</font></div><div><font size=\"4\">- Open and share to your friends or collegues</font></div>",
+				"",
+				""
+		));
+	}};
 
 	public List<UserEmailTemplateDTO> getPaginatedTemplates(Integer page,
 	                                                        Integer rows,
@@ -97,6 +116,23 @@ public class UserEmailTemplateService {
 	public UserEmailTemplateDTO getTemplateAsDtoBySharingId(String sharingId, String userEmail) {
 		validateSharingId(sharingId);
 		return new UserEmailTemplateDTO(getTemplateBySharingId(sharingId, userEmail));
+	}
+
+	public void addBasicTemplates(AppUser user) {
+
+		basicTemplates.forEach((emailTemplateDTO) -> {
+
+			log.info("User {} save basic UserEmailTemplate", user.getEmail());
+			String shareLink = UUID.randomUUID().toString();
+
+			UserEmailTemplate template = new UserEmailTemplate(
+					user,
+					emailTemplateDTO.getName(),
+					emailTemplateDTO.getSubject(),
+					emailTemplateDTO.getBody(),
+					shareLink);
+			userEmailTemplateRepository.save(template);
+		});
 	}
 
 	@Transactional

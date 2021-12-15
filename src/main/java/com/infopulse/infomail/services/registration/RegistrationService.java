@@ -5,6 +5,7 @@ import com.infopulse.infomail.exceptions.RegistrationException;
 import com.infopulse.infomail.models.confirmation.ConfirmationToken;
 import com.infopulse.infomail.models.users.AppUser;
 import com.infopulse.infomail.models.users.roles.AppUserRole;
+import com.infopulse.infomail.services.mail.UserEmailTemplateService;
 import com.infopulse.infomail.services.security.AppUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class RegistrationService {
 	private final AppUserService appUserService;
 	private ConfirmationTokenService confirmationTokenService;
 	private final ConfirmationTokenSender confirmationTokenSender;
+	private final UserEmailTemplateService templateService;
 
 	public void register(RegistrationRequest request) {
 		try {
@@ -44,9 +46,11 @@ public class RegistrationService {
 			ConfirmationToken confirmationToken = validateConfirmationToken(token);
 
 			confirmationTokenService.setConfirmedAt(token);
-			String email = confirmationToken.getAppUser().getEmail();
+			AppUser appUser = confirmationToken.getAppUser();
+			String email = appUser.getEmail();
 			appUserService.enableAppUser(email);
 
+			templateService.addBasicTemplates(appUser);	//add basic templates
 			log.info("User {} have just confirmed email", email);
 		} catch (IllegalStateException ex) {
 			log.error(ex.getMessage(), ex);
