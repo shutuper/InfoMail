@@ -8,6 +8,9 @@
 > 2) Schedule email sending on date;
 > 3) Resend emails at specified intervals;
 
+## Project presentation
+[infomail-presentation  ](https://docs.google.com/presentation/d/1b3__UhovdmZHmPkEundb0FxifjXbJPbz/edit?usp=sharing&ouid=100645824107772636818&rtpof=true&sd=true)
+
 ## 2. Where to find front-end part of the project
 Here is the front-end part of our project: [infomail-frontend](https://github.com/Lastzlo/Infomail-frontend).
 
