@@ -1,29 +1,29 @@
 services:
 
-#  infomail:
-#    image: lastzloid/infomail_back  #name of infomail_back image
-#    ports:
-#      - "8028:8028"
-#    environment:
-#      MAIL_HOST: localhost
-#      MAIL_PORT: 1025
-#      MAIL_EMAIL: infomail
-#      MAIL_PASSWORD: infomail
-#      DB_HOST: localhost:8026
-#      DB_USERNAME: infomail
-#      DB_PASSWORD: infomail
-#      INFOMAIL_FRONT_URL: http://localhost:4200
-#      INFOMAIL_FRONT_REG_LINK: http://localhost:4200/#/auth/registration/
-#      INFOMAIL_SECURITY_SECRET: onfn923oiNkfJj32fsl230cdl3mcLNL42lfl932O23Fknlfsdlsf32f04f
-#    networks:
-#      - cicd_default
+  infomail:
+    image: shutuper/infomail-back  #name of infomail-back image
+    ports:
+      - "8028:8028"
+    environment:
+      MAIL_HOST: localhost
+      MAIL_PORT: 1025
+      MAIL_EMAIL: infomail
+      MAIL_PASSWORD: infomail
+      DB_HOST: localhost:8026
+      DB_USERNAME: infomail
+      DB_PASSWORD: infomail
+      INFOMAIL_FRONT_URL: http://localhost:4200
+      INFOMAIL_FRONT_REG_LINK: http://localhost:4200/#/auth/registration/
+      INFOMAIL_SECURITY_SECRET: onfn923oiNkfJj32fsl230cdl3mcLNL42lfl932O23Fknlfsdlsf32f04f
+    networks:
+      - cicd_default
 
-#  client:
-#    image: lastzloid/infomail_front  #name of infomail_front image
-#    ports:
-#      - "4200:80"
-#    networks:
-#      - cicd_default
+  client:
+    image: lastzloid/infomail_front  #name of infomail_front image
+    ports:
+      - "4200:80"
+    networks:
+      - cicd_default
 
   database:
       image: postgres

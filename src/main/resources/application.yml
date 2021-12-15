@@ -63,6 +63,8 @@ springdoc:
     path: '/api/v1/api-docs'
 
 application:
+  timezone:
+    default: ${INFOMAIL_DEFAULT_TIMEZONE}
   email:
     sentFrom: ${MAIL_EMAIL}
     confirmation:
