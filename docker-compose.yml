@@ -12,6 +12,7 @@ services:
       DB_HOST: localhost:8026
       DB_USERNAME: infomail
       DB_PASSWORD: infomail
+      INFOMAIL_DEFAULT_TIMEZONE: Europe/Kiev
       INFOMAIL_FRONT_URL: http://localhost:4200
       INFOMAIL_FRONT_REG_LINK: http://localhost:4200/#/auth/registration/
       INFOMAIL_SECURITY_SECRET: onfn923oiNkfJj32fsl230cdl3mcLNL42lfl932O23Fknlfsdlsf32f04f
