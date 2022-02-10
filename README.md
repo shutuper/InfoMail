@@ -19,7 +19,6 @@
 
 ### Project links
 
-* [infomail-presentation  ](https://docs.google.com/presentation/d/1b3__UhovdmZHmPkEundb0FxifjXbJPbz/edit?usp=sharing&ouid=100645824107772636818&rtpof=true&sd=true) - project presentation
 * [infomail](http://195.250.62.211:8027/) - InfoMail site
 * [mailHog](http://195.250.62.211:8026/) - MailHog mail service (when you register on the site or send a message)
 * [swagger-ui](http://195.250.62.211:8028/swagger-ui/index.html?configUrl=/api/v1/api-docs/swagger-config) - API
