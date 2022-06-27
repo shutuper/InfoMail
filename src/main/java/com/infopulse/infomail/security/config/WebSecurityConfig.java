@@ -4,6 +4,9 @@ import com.infopulse.infomail.security.filters.AppAuthenticationFilter;
 import com.infopulse.infomail.security.filters.AppAuthorizationFilter;
 import com.infopulse.infomail.security.jwt.JwtUtil;
 import com.infopulse.infomail.services.security.AppUserDetailsService;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,26 +25,22 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import static com.infopulse.infomail.models.users.roles.AppUserRole.USER;
+import static lombok.AccessLevel.PRIVATE;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = PRIVATE)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@NonFinal
 	@Value("${application.security.frontUrl}")
-	private String frontURL;
+	String frontURL;
 
-	private final JwtUtil jwtUtil;
-	private final PasswordEncoder passwordEncoder;
-	private final AppUserDetailsService userDetailsService;
-	private final AppAuthorizationFilter authorizationFilter;
-
-	public WebSecurityConfig(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AppUserDetailsService userDetailsService, AppAuthorizationFilter authorizationFilter) {
-		this.jwtUtil = jwtUtil;
-		this.passwordEncoder = passwordEncoder;
-		this.userDetailsService = userDetailsService;
-		this.authorizationFilter = authorizationFilter;
-	}
-
+	JwtUtil jwtUtil;
+	PasswordEncoder passwordEncoder;
+	AppUserDetailsService userDetailsService;
+	AppAuthorizationFilter authorizationFilter;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {

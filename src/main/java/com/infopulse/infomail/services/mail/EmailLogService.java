@@ -12,16 +12,14 @@ import com.infopulse.infomail.models.mail.enums.RecipientType;
 import com.infopulse.infomail.repositories.EmailLogRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -146,44 +144,24 @@ public class EmailLogService {
 
 	@Transactional
 	public void deleteByIdAndUserEmail(Long id, String userEmail) {
-		emailLogRepository
-				.deleteByIdAndSenderEmail(id, userEmail);
+		emailLogRepository.deleteByIdAndSenderEmail(id, userEmail);
 		log.info("User {} deleted email with id: {}", userEmail, id);
 	}
 
 	@Transactional
 	public void deleteAllByIdsAndUserEmail(IdsDTO ids, String userEmail) {
-		emailLogRepository
-				.deleteAllBySenderEmailAndIdIn(userEmail, ids.getIds());
+		emailLogRepository.deleteAllBySenderEmailAndIdIn(userEmail, ids.getIds());
 		log.info("User {} deleted all emails which are in: {}", userEmail, ids);
 	}
 
 	@Transactional
-	public List<ExecutedEmailDTO> getPaginatedEmailsHistory(Integer page,
-	                                                        Integer rows,
-	                                                        Integer sortOrder,
-	                                                        String sortField,
-	                                                        String senderEmail) {
+	public Page<ExecutedEmailDTO> getEmailsHistoryPage(String senderEmail, Pageable pageable) {
+		Page<EmailLog> emailLogs = emailLogRepository.findAllBySenderEmail(senderEmail, pageable);
 
-		Sort sort = Sort.by(sortField);
-		sort = sortOrder > 0 ? sort.ascending() : sort.descending();
-		Pageable pageable = PageRequest.of(
-				page,
-				rows,
-				sort);
+		log.info("User {} requested emails history, page {}, rows {}, sort {}",
+				senderEmail, pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 
-		List<EmailLog> emailLogs = emailLogRepository.findAllBySenderEmail(senderEmail, pageable);
-
-		log.info("User {} requested emails history, page {}, rows {}, sort order {}, sort field {}",
-				senderEmail, page, rows, sortOrder, sortField);
-
-		return emailLogsToExecutedEmails(emailLogs);
-	}
-
-	private List<ExecutedEmailDTO> emailLogsToExecutedEmails(List<EmailLog> emailLogs) {
-		return emailLogs.stream()
-				.map(EmailLogService::convertToDto)
-				.collect(Collectors.toList());
+		return emailLogs.map(EmailLogService::convertToDto);
 	}
 
 }

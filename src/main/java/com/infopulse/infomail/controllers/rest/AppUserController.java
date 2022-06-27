@@ -30,7 +30,7 @@ public class AppUserController {
 	@GetMapping// if user is not authed => authentication = null
 	public Boolean isAuthed(Authentication authentication) {
 		log.info("User {} is checking for authentication", authentication);
-		return !Objects.isNull(authentication);
+		return Objects.nonNull(authentication);
 	}
 
 }

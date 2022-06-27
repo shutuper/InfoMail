@@ -5,6 +5,11 @@ import com.infopulse.infomail.dto.api.emails.RecipientDTO;
 import com.infopulse.infomail.dto.api.templates.EmailTemplateDTO;
 import com.infopulse.infomail.models.schedule.EmailSchedule;
 import com.infopulse.infomail.services.scheduler.CronSchedulerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +34,18 @@ public class EmailController {
 	private final CronSchedulerService cronSchedulerService;
 
 	@PostMapping
-	public ResponseEntity<EmailDTO> createEmailJob(@Valid @RequestBody EmailDTO emailDTO, Authentication authentication) {
+	@Operation(summary = "Permissions: authenticated user",
+			description = "Send email template to multiply users by schedule schedule")
+	@ApiResponse(
+			responseCode = "201", description = "Email scheduled",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmailDTO.class))
+	)
+	@ApiResponse(
+			responseCode = "400", description = "Bad request",
+			content = @Content
+	)
+	public ResponseEntity<EmailDTO> createEmailJob(@Valid @RequestBody EmailDTO emailDTO,
+	                                               Authentication authentication) {
 		List<RecipientDTO> recipients = emailDTO.getRecipients();
 		EmailTemplateDTO emailTemplateDTO = emailDTO.getEmailTemplate();
 		EmailSchedule emailSchedule = EmailSchedule.fromDTO(emailDTO.getEmailSchedule());

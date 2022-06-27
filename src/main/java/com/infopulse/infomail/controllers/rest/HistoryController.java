@@ -7,12 +7,13 @@ import com.infopulse.infomail.services.mail.EmailLogService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,15 +25,11 @@ public class HistoryController {
 	private final EmailLogService emailLogService;
 
 	@GetMapping
-	public ResponseEntity<List<ExecutedEmailDTO>> getPaginatedEmailsHistory(@RequestParam("page") Integer page,
-	                                                                        @RequestParam("rows") Integer rows,
-	                                                                        @RequestParam("sortOrder") Integer sortOrder,
-	                                                                        @RequestParam("sortField") String sortField,
+	public ResponseEntity<Page<ExecutedEmailDTO>> getPaginatedEmailsHistory(Pageable pageable,
 	                                                                        Authentication authentication) {
 		String senderEmail = (String) authentication.getPrincipal();
 
-		return ResponseEntity.ok(emailLogService
-				.getPaginatedEmailsHistory(page, rows, sortOrder, sortField, senderEmail));
+		return ResponseEntity.ok(emailLogService.getEmailsHistoryPage(senderEmail, pageable));
 	}
 
 	@GetMapping("{id}")
